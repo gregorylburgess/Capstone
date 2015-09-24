@@ -1,0 +1,89 @@
+Automated acoustic tracking of aquatic animals: scales, design
+and deployment of listening station arrays
+-----------------------------------------------------------
+* Any aquatic species to which a
+transmitter can be attached or implanted without modifying the behaviour of the animal is potentially suited to this
+technology.
+
+* Investigated gate/curtain and positional array setups
+
+* Summary of issues: practical concerns, database, and analytical issues
+
+* VR2 are cheap: 50 units for same price as 3-4
+
+* The VR2 is a fully submerged receiver that continuously
+monitors the environment for the presence of a unique, digitally coded transmitter signal (Lacroix and Voegeli 2000).
+VR2 receivers are single-channel, omnidirectional units that
+record the time, date and identity of animals fitted with
+acoustic transmitters that swim within range of the unit
+(Lacroix and Voegeli 2000; Voegeli et al. 2001)
+
+**Advantages of acoustic arrays**
+* active monitoring
+	* labor intensive (limiting temporal windows)
+	* must physically remain near animal
+	* passive monitoring works when people arent/cant be there (safety)
+	* vessel proximity can affect animal behavior
+	* one focal individual representative of entire species
+* acoustic array
+	* high inital labor, but no maintenance
+	* set and forget
+	* natural behavior
+	* can tag many individuals
+	
+* Important to identify study goals: 
+	* home range vs migration routes
+	* spatial scale
+	* temporal scale: 
+		* position -overlapping aray
+		* residency - curtain/gate
+		* presence/absence - gate/sparse array "fisheries setup"
+		* long term survivorship? - only occasional pings necessary
+	
+* Human activity/use affect sensor setup and topology.
+	* boats are noisy, probably need submerged bouys
+
+* if you need high res positional data, use active tracking or radio linked monitoring systems
+	* expensive, labor intensive, high maintenance
+	* geographically limited <1km^2
+
+* senosrs can provide indications of movements based on sequential detections.
+* analytical process (weighted means) can increase positional accuracy
+
+**Gates**
+* fewer sensors than an array
+* detects animals crossing the gate
+* double curtain can give directional information
+* distance between sensors is important as it affects detection %
+	* missing a detection can lead to invalid conclusions about animal movement
+
+
+**Rules of thumb**
+* Flotation bouys block shadow cause acoustic shadow
+* position in water column affects detection
+* Fouling organisms are bad (barnacles, algae, hydroids)
+* code collisions are bad
+* noise is bad
+	* animals make noise (shrimp, oysters, barnacles)
+	* wave action and air bubbles are bad
+	* areas of high flow
+	* high levels of matter suspended in water
+	* boats make noise
+* bottom substrate is important
+	* hard surfaces block/refelct shound
+	* sand/mud will absorb it
+* pincnoclines/thermoclines can cause refraction/reflection
+* Attenuation caused by spreading and absorbtion by water
+* attenuation @ 30db/km in fresh, 2db/km in salt
+* 600m range in fresh, 800 in estuarine
+* tl;dr: do field tests
+	* cover temporal & situational discrepencies
+		* day/night
+		* seasonal
+		* storm
+		* wind
+		* tidal changes
+		* human activity
+
+* range test hang transmitter off edge of boat, move away from sensor
+
