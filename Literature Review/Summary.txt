@@ -1,15 +1,13 @@
-Automated acoustic tracking of aquatic animals: scales, design
+1 Automated acoustic tracking of aquatic animals: scales, design
 and deployment of listening station arrays
 -----------------------------------------------------------
-* Any aquatic species to which a
-transmitter can be attached or implanted without modifying the behaviour of the animal is potentially suited to this
-technology.
+* Any aquatic species to which a transmitter can be attached or implanted without modifying the behaviour of the animal is potentially suited to this technology.
 
 * Investigated gate/curtain and positional array setups
 
 * Summary of issues: practical concerns, database, and analytical issues
 
-* VR2 are cheap: 50 units for same price as 3-4
+* VR2 are cheap: 50 units for same price as 3-4 radio tags
 
 * The VR2 is a fully submerged receiver that continuously
 monitors the environment for the presence of a unique, digitally coded transmitter signal (Lacroix and Voegeli 2000).
@@ -86,4 +84,200 @@ acoustic transmitters that swim within range of the unit
 		* human activity
 
 * range test hang transmitter off edge of boat, move away from sensor
+
+2 Constrained Coverage for Mobile Sensor Networks
+--------------------------------------------------------------------------------
+* Discover network configuration to maximize network coverage, while maintaining k neighbors
+* Used point force simulation:
+	* each node exerts a pushing force on other nodes to maximize coverage
+	* each node is attracted strongly attracted to othernodes if it has less than K neighbors.
+	* balancing these forces results in optimal k-neighbor coverage
+* sensors capable of omnidirectional movement
+* sensors had knowledge of neighbors
+
+3 Performance of an ultrasonic telemetry positioning system under varied environmental conditions
+-----------------------------------------------------------------------------------
+* Comparing x/y pos of tags determined by GPS and VPS
+	* "Horizontal Positional Error" (HPEm) = euclidian dist between VPS and GPS
+	* "Positional Efficiecny" % of pings captured
+	* Study sites @ Estuary, River, Coast
+* Geometry of sensor array determined by "viewing angle"
+	* viewing angle = degree of vision required to view entire array from one sensors perspective.
+	* wide angle means sensor is in the middle, narrow means at edges
+	* Test configurations varied between 127 deg @ river and 242 @ Costal
+	* wider angles have smaller HPEms
+	* wider angles have smaller positional efficcientcy
+		* more detections at edge of array
+			* unkown reason for low detections
+				*50m for costal/ravine
+				* 200-300 m for estuary
+
+* DO FIELD TESTS
+
+* avoid potential signal blockers (giant kelp)
+
+* General Linear Mixed Models (GLMM) indicate that array geometry was consistently the most important predictor of positioning performance. 
+
+* Environmental noise and water movement also emerged as additional predictors of performance at several sites
+
+* Importance of testing array geometries. 
+* Water quality parameters should be monitored and receiver mooring designs should be considered
+
+* The quality and efficiency of positioning by telemetry systems relies upon variables controlled by the researcher as well as upon environmental conditions
+
+* User controlled variables:
+	* sensor topology
+	* speed of sound at site
+	* mooring design
+* Environmental variables can block and mask acousitc signals
+
+4 Fast Sensor Placement Algorithms for Fusion-based Target Detection
+------------------------------------------------------------------
+* Goal was to "Cover" target "surveilance spots"
+
+* Define "coverage" as function of probability of detection (Pd) and probablilty of false positive (Pf).
+
+* Constraint: Use the fewest possible # of sensors to achieve coverage.
+
+* Exponential big O
+
+* Suggest using divide and conquer, fiding local solution for each surveilance spot, then combining for a global solution.  Polynoimal time, but inefficcient global solution.
+
+* Suggest alternate divide and conquer, where sensor count is minimized by choosing spots that cover multiple spots until those spots are covered, then add sensors until other spots are covered.
+	* Enables "reuse" of previous solutions.  Building solution
+	* Individual sensors become less useful as tehy are streched to cover more points.
+	* Can result in multiple sensors overlaped to achieve coverage.
+
+* Clustering algorithm improved runtime and reduced num sensors reqd by clustering geographically close surveilence spots and solving for indivudal clusters.
+
+** Possible to implement this algorithim within our framework by utilizing behavior location to define "surveilence locations".  Use high projected sensor count to see how sensor count/coverage are correlated.
+
+5 Probabilistic Sensing Model for Sensor Placement Optimization Based on Line-of-Sight Coverage
+--------------------------------------------------------------------------------------
+* Context: Wireless sensor networks - small inexpensive sensor devices, with limited sensing, storage, processing, communication.
+
+* 4 main considerations: Performance, reliability, engergy saving, cost minimization.
+
+* Requirement: Cover all areas of interest, sometimes sensor overlap is required, sometimes one sensor is ok.
+
+* Deterministic methods assume omnidirectional disk sensing models, which ignore terrain allow for deterministic solutions. As a result, theoretical coverage is overestimated in practice.
+
+* Antennas and microphones have non uniform 3-D reception fields that depend on factors like orientation, dist, and env factors.
+
+* Coverage is not binary, but probabilistic.
+
+* Sensor height is important -> 3d space
+
+* Fig 2 & 3 show LOS
+
+** In 3d space, a lattice might not be a flat layer.  Optimal layout probably won't be flat
+
+* Example of video surveilence coverage of urban environment
+
+6 Close proximity detection interference with acoustic telemetry: the importance of considering tag power output in low ambient noise environments
+-----------------------------------------------------------------------------------------
+* Bigger tags can be more powerful.  
+* Tags size limited by animal size.  
+* Misconception: Stronger signal = better.
+* High tag power = stronger CPDI
+* Losses caused by spreading, reflection, scattering, absorption, refraction.
+* "Donut effect": Short range signals don't get registered.
+* Close Proximity Detection Interference (CPDI)
+* Most people concerned with max distance, not min dist.
+* Investigate CPDI in 3 environments to assess CPDI effect
+* Wind decreases CPDI as it makes noise + the surface irregular and so less reflection
+* Cumberland sound, Baffin Island, Nunavut, Canada: 
+	* CPDI observed for two high powered tags: 
+		V16-6H tag
+		8.3% @ 55m, 
+		88.8% @ 370m
+
+		V13-2H tag
+		17.9% @ 55m
+		88.4@ 221m
+
+	* 30 m depth, hard seafloor
+	* sensors 5m off seafloor
+	* 8 VR2W 69 kHz acoustic receivers at varying distances form sensor
+
+
+* Lake Charlotte, Nova Scotia, Canada:
+	* More pings than expected
+		* due to signal reflection off surface + hard bottom
+		* periods of high wind distrupt reflections
+	* 40m depth, soft mud bottom
+	* 3m off seafloor
+
+* Jupiter, Florida, USA
+	* reef, lots of human activity, consistent currents	
+	* 20m depth, 1.5m of sand over hard reef
+	* 2m off seafloor
+	* Lower CPDI 
+		* site is windy + exposed = irregular surface and so no reflection
+		* Boat noise drowns out echos
+		* Reef animals (fauna) make noise
+		* Sand absorbed reflections
+	* Background noise lowered CPDI, but decreased detection range
+		
+7 The value of Information in Fishery Management
+--------------------------------------------------
+* Researchers advocate for more money to spend on information gathering
+* Those resources could be spent on actual management
+* Information gathering reduces uncertainty
+	* resonable to assume diminishing returns on goodness of decision
+* Collect the optimal ammount of information
+* Finite research budgets mean money spent on one thing is less spent on another
+	* opportunity cost
+* Sea lampreys
+	* $15m annual budget
+	* assessing which streams should be treated accounts for 30% of $ alloted for treatment
+	* used cheaper "adaptive management approach
+	* more killed since more spent on treatment
+	* less accurate assessment of how many are killed
+* Estimated cost of global network of MPAs sufficcient for biodiversity protection and fisheries sustainability estimated at $5-19B USD.  
+* Gathering information is expensive
+* It is belieived that MPAs will be more effective if places are carefully chosen.
+* No consensus on "optimal" configuration
+	* Beleived that many alternative configurations will emerge as "optimal"
+		* indicates that configurations may be only slightly impacted by sub-optimal
+		* obviously there are still "bad" designs
+* Exists resarch on performance of less costly methods for defining MPAs
+	* mixed results
+* Litte research into quantification of cost for defining MPAs to effectiveness of resulting MPA netowrks
+* all else being equal, more reserves = less chance of failing to protect a critical location
+* Faster, less accurate assessments result in faster results
+* The longer you take to assess, the longer the species suffer
+* investment in information gathering should be carefully weighed against other areas of management
+
+8 Mobile Sensor Network Deployment using Potential Fields: A Distributed, Scalable Solution to the Area Coverage Problem
+--------------------------------------------------------------------------------------------------------------------------
+* Mobile Sensor Network
+* Potential Forces
+* Convergence is a property of the algorithm
+* Model says
+	* Each node has an electrostatic chagre, so do walls
+	* Theres a viscous friction on the floor
+		* Guarantees that nodes will evenutally settle
+	* Nodes start clustered together
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
