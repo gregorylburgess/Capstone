@@ -1,39 +1,52 @@
 \chapter{Introduction}
-Static Acoustic Observation Networks (SAONs) are often used in the biological sciences to study aquatic animal migration and habitat.  These networks are comprised of self-contained, stationary sensors (hydrophones) that continuously listen for acoustic transmissions released by sonic tags carried by individual animals.  The transmissions released by these tags carry serial identification numbers that can be used to verify that a particular individual was within detection range of a specific sensor at a given time.  Acoustic networks are relatively inexpensive (compared to GPS/VHF Radio/Sateallite tags).  The primary goal of any tracking study is to obtain a high number of high quality data points (relating individual animals to space and time) in order to gain some insight into animal behavior.  SAONs provide a way to generate a large volume of data points at low cost, resulting in cost-efficient data points.  However, unless these data points are captured, the cost efficiency of SAONs is lost.  Within SAONs, data capture rates are highly dependent upon the chosen locations for sensors within the study area.  The malplacement of sensors (in locations that interfere with the reception of data or where no tagged individuals are present) leads to low data returns, wasted resources, and diminished cost-efficiency.  We present an application that takes advantage of high resolution bathymetry, flexible behavioral modeling, and simplified acoustic propagation models to maximize the data recovery of a SAON.  Our application provides a reproducible, customizable, and distributable method for generating optimal sensor placements and analytical network metrics.
+Static Acoustic Observation Networks (SAONs) are often used in the biological sciences to study aquatic animal migration and habitat.  These networks are comprised of self-contained, stationary sensors (hydrophones) that continuously listen for acoustic transmissions released by sonic tags carried by individual animals.  The transmissions released by these tags carry serial identification numbers that can be used to verify that a particular individual was within detection range of a specific sensor at a given time.  Acoustic networks are relatively inexpensive (compared to GPS/VHF Radio/Satellite tags).  The primary goal of any tracking study is to obtain a high number of high quality data points (relating individual animals to space and time) in order to gain some insight into animal behavior.  SAONs provide a way to generate a large volume of data points at low cost, resulting in cost-efficient data points.  However, unless these data points are captured, the cost efficiency of SAONs is lost.  Within SAONs, data capture rates are highly dependent upon the chosen locations for sensors within the study area.  The malplacement of sensors (in locations that interfere with the reception of data or where no tagged individuals are present) leads to low data returns, wasted resources, and diminished cost-efficiency.  We present an application that takes advantage of high resolution bathymetry, flexible behavioral modeling, and simplified acoustic propagation models to maximize the data recovery of a SAON.  Our application provides a reproducible, customizable, and distributable method for generating optimal sensor placements and analytical network metrics.
 
 \section{Static Acoustic Observation Networks}
-\paragraph{Construction}
+\subsection{Sensor Assembly}
 [Diagram of rigging]
-SAONs are composed of stationary rigs that are responsible for maintaining the chosen location for a sensor.  Because animal positional data is interpolated from the position of nearby sensors, it is important that sensors are deployed accurately and maintain their position throughout the entire experiment.  This is best accomplished by attaching sensors to permanent emplacements  (such as a rigid metal frame driven into a rocky substrate) that will resist substantial amounts of force (such as strong currents and curious animals).  However, when it is not always possible to create such permanent emplacements (perhaps due to regulation or extreme depth), more creative approaches are called for.  A popular rigging consists of an acoustic sensor attached to a length of wire/rope with a strong float on one end, and a substantial ballast with an acoustic quick release on the other.  Such a rig can be dropped in the ocean and allowed to sink to its desired location.  Obviously, various situations will require different rig designs and may contribute significantly to network costs (acoustic releases can cost up to \$4000 each).
+SAONs are composed of stationary rigs that are responsible for maintaining the chosen location for a sensor.  Because positional data is interpolated from the position of nearby sensors, it is important that sensors are deployed accurately and maintain their position throughout the entire experiment\cite{Heupel2006}.  This is best accomplished by attaching sensors to permanent emplacements  (such as a rigid metal frame driven into a rocky substrate) that will resist substantial amounts of force (such as strong currents and curious animals).  However, when it is not always possible to create such permanent emplacements (perhaps due to regulation or extreme depth), more creative approaches are called for.  A popular rigging consists of an acoustic sensor attached to a length of wire/rope with a strong float on one end, and a substantial ballast with an acoustic quick release on the other\cite{Heupel2006}.  Such a rig can be dropped in the ocean and allowed to sink to its desired location.  Obviously, various situations will require different rig designs and may contribute significantly to network costs (acoustic releases cost approximately \$2700 per piece).
 
-\paragraph{Deployment}
+\subsection{Sensor Deployment \& Recovery}
+The labor required for sensor deployment and recovery depends on the design of the sensor assembly.  Creating a permanent, rigid emplacement for a sensor can require multiple divers, special equipment,  and hours of underwater elbow grease.  Recovery of a permanent, rigid emplacement will most likely require a diver to physically remove the sensor from its emplacement. Deployment of ballast/float assemblies can be as simple as dropping the assembly overboard.  Recovering a ballast/float assembly simply requires signaling the acoustic release with a hydrophone and allowing the buoy to carry the sensor assembly to the surface.
+
+\subsection{Tag Deployment}
+The most challenging and time consuming task in animal tracking is the physical deposition/implantation of tags on/into the individuals to be tracked.  In the case of marine tracking, this can be particularly challenging as animals must be located, captured, tagged, and released relatively quickly to avoid over-stressing the animals.  Improper handling/release of an animal can result in its death and the loss of a tag.  All telemetry technologies will eventually require interaction with the individual to be tracked, and acoustic tracking is no different.
+
+\subsection{Comparison of Technologies}
+\subsubsection{Very High Frequency Radio}
+Very High Frequency radio (VHF) tracking involves attaching a VHF transmitter to an animal, and then using a VHF antenna and receiver to receive transmissions.  VHF transmissions have effective ranges on the order of tens of kilometers.  Transmissions from VHS devices do not generally contain positional data, but instead serve as a means to estimate the distance and direction of a VHS device.  Positional data is derived by noting the direction and strength of a signal from several different observational positions, and estimating the transmitter's position by triangulation\cite{USDA}.  In a marine setting, VHF observation is generally performed from a plane or boat\cite{Wikipedia_RadioTracking}.
+
+\subparagraph{Sateallite/GPS}
+Satellite and GPS tracking are distinct but related technologies that rely on a network of satellites (either ARGOS or GPS, respectively) to compute the positional data of a tag. GPS tags rely on the GPS network of satellites to triangulate a tag's three dimensional position. GPS telemetry may be stored on-board a tag (requiring later retrieval), or transmitted via satellite to a remote server\cite{USDA}. Satellite tags operate by transmitting messages to the ARGOS satellite system, which computes a tag's position by observing the Doppler effect on a tag's transmission\cite{ARGOS}.  Because the telemetry from satellite tags is transmitted back to remote servers, data recovery is automatic.  Both technologies have fairly poor penetration into the ocean, and so GPS/Satellite transmissions generally occur only when an animal is near the surface of the ocean.  This can lead to data sets with large spatial/temporal gaps between detections.  Additionally, neither technology is desirable for observing animals that reside at significant depths.  Due to the high cost of Satellite/GPS technology, studies using this technology generally have very small sample sizes.  
 
 
-\paragraph{Recovery}
+\subsection{Advantages of Acoustic Networks}
+After initial deployment, SAONs require no maintenance and incur no operating costs (unlike satellite and VHF radio technologies).  This means that SAONs can operate around the clock, and in conditions that would otherwise make it unsafe/impossible for field researchers to track animals (e.g. in a storm)\cite{Heupel2006}.  However, it is necessary to retrieve the acoustic sensors at the end of the study in order to recover data\cite{Heupel2006}.  Finally, SAONs allow for passive animal monitoring, removing the potential disruption of natural behavior caused by active tracking (e.g. aircraft/boat noise/shadow scaring animals)\cite{Heupel2006}.  SAONs also function at greater depths than satellite/VHF-based systems.  Because the reception of acoustic transmissions (by acoustic sensors) occurs at the resident depth of the target species, an acoustic tag's transmission need not penetrate to the surface to be detected (unlike Satellite and GPS based systems).
+
+
 
 
 \section{The Cost of Data}
-Larger sample sizes and study areas (since a greater number of sensors and tags can be purchased).  
-
-
-\paragraph{Cost of Alternative Technologies}
-SAONs are relatively cheap, with acoustic sensors costing approximately \$4000 (including moorings and acoustic releases), and acoustic tags costing approximately \$350 each.  Moorings for acoustic receivers can be significantly more expensive, with acoustic releases costing nearly three times more.  However, these costs are still significantly more affordable than GPS-based tags and collars, which cost upwards of \$6000 each.  Additionally, recurring service fees and per-transmission charges may apply.  A seemingly cheaper alternative is the VHS radio collar, which costs about \$300 each, but requires active fieldwork to obtain each data point.  The cost of paying field researcher to track these animals will significantly outweigh any initial cost savings.  
-
+\subsection{Cost of Alternative Technologies}
+SAONs are relatively cheap, with acoustic sensors costing approximately \$1300, and acoustic tags costing approximately \$330 each.  Moorings for acoustic receivers can be significantly more expensive, with acoustic releases costing slightly more than twice the cost of a receiver.  However, these costs are still significantly more affordable than satellite-based tags and collars, which cost upwards of \$6000 each.  Additionally, recurring service fees and per-transmission charges may apply to data transferred over the satellite network.  A seemingly cheaper alternative is the VHS radio tag, which costs about \$??? each, but requires active monitoring to obtain each data point.  The cost of paying for vehicles(boats/planes) and crews to periodically collect locational data will significantly outweigh any initial cost savings.
 
 \begin{table}[h!]
 		\caption{Cost Summary of Alternative Technologies}
 		\label{tab:table1}
 		\begin{tabular}{l l l l}
-Technology&Tag/Collar&Sensor&Maintenance Cost\\
+Technology&Tag&Sensor&Operating Cost\\
 \hline
-			VHF Radio Collar/Tag & \$300          & \$???  & Salary of field researcher\\
-			Satellite Tag 	     & \$2000-\$4000  & \$0    & Service fees (~\$1000-\$2000 per tag)\\
-			Acoustic Network 	 & \$300          & \$1500 & \$0\\
+			VHF Radio Tag		 & \$300          & \$???  & Agents \& Transport\\
+			Satellite Tag 	     & \$3000-\$5000\cite{wildlifetracking}  & \$0    & Service fees\\
+			Acoustic Network 	 & \$330          & \$1300 & \$0\\
 		\end{tabular}
+		\begin{center}
+			
+		\end{center}
 \end{table}
 
-\paragraph{Maintenance}
-  This means that SAONs can operate around the clock, and in conditions that would otherwise make it unsafe/impossible for field researchers to track animals (e.g. in a storm).  However, it is necessary to retrieve the acoustic sensors at the end of the study in order to recover data.  Finally, SAONs allow for passive animal monitoring, removing the potential disruption of natural behavior caused by active tracking (e.g. boat noise/shadow scaring animals).  
+\subsection{Operating Costs}
+While SAONs require no maintenance to operate, both Satellite and VHF based systems can incur operating costs while deployed.  Satellite tags will require very little maintenance (precluding animal mortality), but satellite network operators may charge for access to and transmission over their network\cite{wildlifetracking}.  VHF systems require little maintenance, but do require active field work in order to obtain positional information.  Because a tag's location is interpolated from observations of its VHS signal from multiple locations, it is necessary for a field agent to routinely collect these observations to obtain telemetry data.  VHF networks have perhaps the highest operating cost, requiring a salary for one or more field agent(s) and transportation costs (renting a boat/plane).  The operating costs for each technology should be included in the total cost of data collection, and subsequently the cost effectiveness of each solution.
   
   
 [http://www.wildlifetracking.org/faq.shtml]
@@ -42,20 +55,47 @@ Technology&Tag/Collar&Sensor&Maintenance Cost\\
 
 VR2's cost ~\$1.5k each, tags cost ~\$350 each.  http://www.gulfcounty-fl.gov/pdf/882532513025603.pdf 
 
+\subsection{Cost Efficciency}
+\begin{table}[h!]
+	\caption{Lifespan \& Total Expected Transmissions}
+	\label{tab:table1}
+	\begin{tabular}{l l l l l}
+		Technology&Model&Transmit Period&Expected Lifespan&Expected Transmits\\
+		\hline
+		VHF Radio Tag		& Telonics FIS-550	& 1s	& 76 days	    & 273,600\\
+		Satellite Tag		& Telonics ST-18	& 60s	& 117 days		& 168,480\\
+		Acoustic Tag		& Vemco VR-13		& 90s	& 1,135 days	& 1,089,600\\
+	\end{tabular}
+\begin{center}
+Should be a caption
+\end{center}
+\end{table}
+
+http://vemco.com/products/v7-to-v16-69khz/
+http://www.wildlifetracking.org/faq.shtml
+http://www.telonics.com/literature/st-18/
+http://www.mrcmekong.org/assets/Publications/Catch-and-Culture/catchmar02vol7.3.pdf
 \subsection{Quality of Data}
 Data fusion for better localizations.
 
-\section{State of the Art}
 
+
+
+
+
+
+
+
+\section{State of the Art}
 
 \subsection{"Rules of Thumb for Sensor Placement"}
 Heuple 
 
 \subsection{Existing Metrics}
-\paragraph{Data Recovery Rate}
+\subsection{Data Recovery Rate}
 The most common metric used in analyzing the success of animal tracking studies is the data recovery rate (total pings released/total pings recovered).    
 
-\paragraph{delta}
+\subsection{delta}
 Potential for data fusion
 
 \subsection{Scale of Experiments}
@@ -68,9 +108,9 @@ Potential for data fusion
 \subsection{Bathymetric File Support}
 \subsection{Bathymetric Shadowing}
 \subsection{Modeling Animal Movement and Habitat}
-\paragraph{Ornstein-Uhlenbeck}
+\subsection{Ornstein-Uhlenbeck}
 This is a paragraph about OU.
-\paragraph{Random Walk}
+\subsection{Random Walk}
 \subsection{Evaluation of Sensor Emplacements}
 \subsection{Selection of Optimal Emplacements}
 
