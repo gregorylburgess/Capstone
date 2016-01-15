@@ -1,6 +1,9 @@
 \chapter{Introduction}
 Static Acoustic Observation Networks (SAONs) are often used in the biological sciences to study aquatic animal migration and habitat.  These networks are comprised of self-contained, stationary sensors (hydrophones) that continuously listen for acoustic transmissions released by sonic tags carried by individual animals.  The transmissions released by these tags carry serial identification numbers that can be used to verify that a particular individual was within detection range of a specific sensor at a given time.  Acoustic networks are relatively inexpensive (compared to GPS/VHF Radio/Satellite tags).  The primary goal of any tracking study is to obtain a high number of high quality data points (relating individual animals to space and time) in order to gain some insight into animal behavior.  SAONs provide a way to generate a large volume of data points at low cost, resulting in cost-efficient data points.  However, unless these data points are captured, the cost efficiency of SAONs is lost.  Within SAONs, data capture rates are highly dependent upon the chosen locations for sensors within the study area.  The malplacement of sensors (in locations that interfere with the reception of data or where no tagged individuals are present) leads to low data returns, wasted resources, and diminished cost-efficiency.  We present an application that takes advantage of high resolution bathymetry, flexible behavioral modeling, and simplified acoustic propagation models to maximize the data recovery of a SAON.  Our application provides a reproducible, customizable, and distributable method for generating optimal sensor placements and analytical network metrics.
 
+
+
+
 \section{Static Acoustic Observation Networks}
 \subsection{Sensor Assembly}
 [Diagram of rigging]
@@ -19,7 +22,6 @@ Very High Frequency radio (VHF) tracking involves attaching a VHF transmitter to
 \subparagraph{Sateallite/GPS}
 Satellite and GPS tracking are distinct but related technologies that rely on a network of satellites (either ARGOS or GPS, respectively) to compute the positional data of a tag. GPS tags rely on the GPS network of satellites to triangulate a tag's three dimensional position. GPS telemetry may be stored on-board a tag (requiring later retrieval), or transmitted via satellite to a remote server\cite{USDA}. Satellite tags operate by transmitting messages to the ARGOS satellite system, which computes a tag's position by observing the Doppler effect on a tag's transmission\cite{ARGOS}.  Because the telemetry from satellite tags is transmitted back to remote servers, data recovery is automatic.  Both technologies have fairly poor penetration into the ocean, and so GPS/Satellite transmissions generally occur only when an animal is near the surface of the ocean.  This can lead to data sets with large spatial/temporal gaps between detections.  Additionally, neither technology is desirable for observing animals that reside at significant depths.  Due to the high cost of Satellite/GPS technology, studies using this technology generally have very small sample sizes.  
 
-
 \subsection{Advantages of Acoustic Networks}
 After initial deployment, SAONs require no maintenance and incur no operating costs (unlike satellite and VHF radio technologies).  This means that SAONs can operate around the clock, and in conditions that would otherwise make it unsafe/impossible for field researchers to track animals (e.g. in a storm)\cite{Heupel2006}.  However, it is necessary to retrieve the acoustic sensors at the end of the study in order to recover data\cite{Heupel2006}.  Finally, SAONs allow for passive animal monitoring, removing the potential disruption of natural behavior caused by active tracking (e.g. aircraft/boat noise/shadow scaring animals)\cite{Heupel2006}.  SAONs also function at greater depths than satellite/VHF-based systems.  Because the reception of acoustic transmissions (by acoustic sensors) occurs at the resident depth of the target species, an acoustic tag's transmission need not penetrate to the surface to be detected (unlike Satellite and GPS based systems).
 
@@ -28,21 +30,18 @@ After initial deployment, SAONs require no maintenance and incur no operating co
 
 \section{The Cost of Data}
 \subsection{Cost of Alternative Technologies}
-SAONs are relatively cheap, with acoustic sensors costing approximately \$1300, and acoustic tags costing approximately \$330 each.  Moorings for acoustic receivers can be significantly more expensive, with acoustic releases costing slightly more than twice the cost of a receiver.  However, these costs are still significantly more affordable than satellite-based tags and collars, which cost upwards of \$6000 each.  Additionally, recurring service fees and per-transmission charges may apply to data transferred over the satellite network.  A seemingly cheaper alternative is the VHS radio tag, which costs about \$??? each, but requires active monitoring to obtain each data point.  The cost of paying for vehicles(boats/planes) and crews to periodically collect locational data will significantly outweigh any initial cost savings.
+SAONs are relatively cheap, with acoustic sensors costing ~\$1300, and acoustic tags costing ~\$330 each.  Moorings for acoustic receivers can be significantly more expensive, with acoustic releases costing slightly more than twice the cost of a receiver.  However, these costs are still significantly more affordable than satellite-based tags and collars, which cost upwards of \$5000 each\cite{wildlifetracking}.  Additionally, recurring service fees and per-transmission charges may apply to data transferred over the satellite network.  VHS radio tags are a seemingly cheaper alternative at \$223 per unit, but require active monitoring to obtain each data point.  The cost of paying for vehicles(boats/planes) and crews to periodically collect telemetry from these tags will significantly outweigh any initial cost savings.
 
 \begin{table}[h!]
-		\caption{Cost Summary of Alternative Technologies}
-		\label{tab:table1}
+		\label{CostAltTech}
 		\begin{tabular}{l l l l}
-Technology&Tag&Sensor&Operating Cost\\
+Technology&Tag Cost&Receiver Cost&Operating Cost\\
 \hline
-			VHF Radio Tag		 & \$300          & \$???  & Agents \& Transport\\
-			Satellite Tag 	     & \$3000-\$5000\cite{wildlifetracking}  & \$0    & Service fees\\
-			Acoustic Network 	 & \$330          & \$1300 & \$0\\
+			VHF Radio Tag		 & \$223\cite{telonicsFIS-550}           & \$2940\cite{telonicsTR-5}  & Agents \& Transport\\
+			Satellite Tag 	     & \$3000-\$5000\cite{wildlifetracking}  & \$0    					  & Service fees\\
+			Acoustic Network 	 & \$330         						 & \$1300 					  & \$0\\
 		\end{tabular}
-		\begin{center}
-			
-		\end{center}
+		\caption{Cost Summary of Alternative Technologies}
 \end{table}
 
 \subsection{Operating Costs}
@@ -57,26 +56,36 @@ VR2's cost ~\$1.5k each, tags cost ~\$350 each.  http://www.gulfcounty-fl.gov/pd
 
 \subsection{Cost Efficciency}
 \begin{table}[h!]
-	\caption{Lifespan \& Total Expected Transmissions}
-	\label{tab:table1}
+	\label{ExpectedLife&Tx}
 	\begin{tabular}{l l l l l}
-		Technology&Model&Transmit Period&Expected Lifespan&Expected Transmits\\
+		Technology&Tag Model&Transmit Period&Expected Lifespan&Expected Transmissions\\
 		\hline
-		VHF Radio Tag		& Telonics FIS-550	& 1s	& 76 days	    & 273,600\\
+		VHF Radio Tag		& Telonics FIS-040	& 1s	& 0.7 days	    & 60,480\\
 		Satellite Tag		& Telonics ST-18	& 60s	& 117 days		& 168,480\\
 		Acoustic Tag		& Vemco VR-13		& 90s	& 1,135 days	& 1,089,600\\
 	\end{tabular}
-\begin{center}
-Should be a caption
-\end{center}
+\caption{Lifespan \& Total Expected Transmissions}
 \end{table}
+
+
+\begin{table}[h!]
+	\label{PricePerTx}
+	\begin{tabular}{l l l l l}
+		Technology&Tag Model&Tag Price&Expected Transmissions&Price Per Transmission\\
+		\hline
+		VHF Radio Tag		& Telonics FIS-040	& \$199		& 60,480	& \$$3.29e^{-3}$\\
+		Satellite Tag		& Telonics ST-18	& \$3000	& 168,480	& \$$1.78e^{-2}$\\
+		Acoustic Tag		& Vemco VR-13		& \$330		& 1,089,600	& \$$3.03e^{-4}$\\
+	\end{tabular}
+	\caption{Price per Transmissions}
+\end{table}
+
 
 http://vemco.com/products/v7-to-v16-69khz/
 http://www.wildlifetracking.org/faq.shtml
 http://www.telonics.com/literature/st-18/
 http://www.mrcmekong.org/assets/Publications/Catch-and-Culture/catchmar02vol7.3.pdf
-\subsection{Quality of Data}
-Data fusion for better localizations.
+
 
 
 
@@ -88,19 +97,46 @@ Data fusion for better localizations.
 
 \section{State of the Art}
 
-\subsection{"Rules of Thumb for Sensor Placement"}
-Heuple 
+\subsection{Rules of Thumb for Sensor Placement}
+\label{RulesOfThumb}
+While animal tracking studies draw upon hard data to draw conclusions, the methodology for collecting this data is based upon loose rules of thumb driven by anecdotal evidence.  Heupel et al's highly cited 2006 paper distills their prior experience with animal tracking into "rules of thumb" for designing a SAON.  These rules focus on generalized considerations such as avoiding areas of high noise, bathymetric obstruction, 
 
-\subsection{Existing Metrics}
-\subsection{Data Recovery Rate}
-The most common metric used in analyzing the success of animal tracking studies is the data recovery rate (total pings released/total pings recovered).    
+While Heupel et al's publication gives sound advice on design issues that warrant warrant consideration, the discussion of analytical methods for measuring said issues falls out of the publication's scope.
 
-\subsection{delta}
+\subsection{Data Quality}
+\label{dataQuality}
+First consider a number of receivers placed in a tight cluster.
+If the target species were highly sedentary, and the receiver cluster was placed around the area where a large number of individuals were captured and tagged, then the study would very likely yield a high Data Recovery Rate, but that dataset would be of little use in determining the spatial distribution of that species, as the data would be limited to the small area in which the receiver cluster was placed.  On the other hand, this dataset would be highly useful in confirming the sedentary nature of the species and defining a small home range.  Additionally, data from multiple receivers could be combined to provide high-resolution telemetry for the location of an animal over time (see section~\ref{dataFusion}).  This high-resolution telemetry could be used to infer co-location of two individuals giving insight into social movement behaviors such as schooling and mating.  
+
+If the target species tended to roam over a large home range, then it is likely the cluster would receive only a few pings.  In this case, little data will be gathered in regards to the extent of the specie's home range, but high resolution telemetry can be gathered for a short time if the animal passes through the cluster.  This might be useful in identifying particular corridors that individuals prefer.
+
+Now consider a number of receivers placed in an array very far apart from each other over a very large spatial area.
+If the target species were highly sedentary, then individuals might show up on one or two receivers.  If many individuals were tagged, then the dataset could indicate the spatial distribution of the species over a large area.  The data on particular individuals would likely be very low resolution, as detection by a single receiver only tracks proximity.  
+
+If the target species tended to roam over a large home range, then it is likely the receiver array would pick up an individual animal over a number of distant sensors.  This data could be used to detect potential corridors for animal movement, establish individual home ranges, and to identify the spatial distribution of the species over a large area.  Again, the telemetry for individual animals would be very low, but the detection of many individuals by a single receiver could indicate areas of interest for future research.
+
+\subsection{Metrics}
+\subsubsection{Data Recovery Rate}
+\label{DataRecoveryRate}
+The most common metric used in analyzing the success of animal tracking studies is the Data Recovery Rate (DRR) ($\frac{\mbox{total pings emitted}}{\mbox{total pings recovered}}$).  While it may seem intuitive to understand data recovery rates as an indicator of the quality of the dataset, one must bear in mind the objective of the study.  As illustrated in section~\ref{dataQuality}, the objective of the study defines how useful a particular dataset is in addressing a research question.  Therefore, Data Recovery Rate should be treated simply as a measure of how complete a particular dataset is, and how strongly it can support a claim.  
+
+\subsubsection{Sample Size}
+\label{sampleSize}
+Another important factor to consider is the number of tagged individuals within a dataset.  A dataset for a single tagged individual, no matter how complete, will not offer very much support to any conclusions drawn.  At the same time, a dataset for a large number of individuals, with very low data recovery rates may not provide enough individual telemetry to draw a conclusion at all.
+
+\subsubsection{Network Sparsity (Delta)}
+\label{delta}
+
 Potential for data fusion
+
+
+
 
 \subsection{Scale of Experiments}
 
+
 \subsection{Oversights}
+
 
 \section{Requirements}
 \subsection{Scope of Tool}
