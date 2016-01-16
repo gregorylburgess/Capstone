@@ -105,8 +105,17 @@ While Heupel et al's publication gives sound advice on design issues that warran
 
 \subsection{Data Quality}
 \label{dataQuality}
-First consider a number of receivers placed in a tight cluster.
-If the target species were highly sedentary, and the receiver cluster was placed around the area where a large number of individuals were captured and tagged, then the study would very likely yield a high Data Recovery Rate, but that dataset would be of little use in determining the spatial distribution of that species, as the data would be limited to the small area in which the receiver cluster was placed.  On the other hand, this dataset would be highly useful in confirming the sedentary nature of the species and defining a small home range.  Additionally, data from multiple receivers could be combined to provide high-resolution telemetry for the location of an animal over time (see section~\ref{dataFusion}).  This high-resolution telemetry could be used to infer co-location of two individuals giving insight into social movement behaviors such as schooling and mating.  
+
+\subsubsection{Data Resolution}
+\label{dataResolution}
+Acoustic receivers like the Vemco VR2 log detections of acoustic transmissions as a tuple of time, tag number, and transmission strength.  The strength of the received transmission can be used to approximate the distance between the tag and receiver.  Data from a single receiver has a fairly high uncertainty (low resolution) of the exact position of the transmitting tag because only a single distance can be observed.  If multiple receivers are in close enough proximity to receive the same signal, the position of the tag can be extrapolated with much higher certainty (high resolution).  This extrapolation is useful for increasing the resolution of tagged individuals, allowing for the tracking of fine movements within a three-dimensional space.  This increase in resolution does however have a price.  Detection of a tag by more than one receiver requires that those receivers have overlapping detection ranges.  Assuming a fixed number of receivers, placing receivers closer together reduces the actual coverage area of the array.  Thus, the coverage area of the array is inversely correlated with the resolution of the array.  Alternatively, purchasing more receivers will achieve a higher resolution, but increases the cost of the array.
+
+
+\subsubsection{Meaningful Data}
+\label{meaningfulData}
+Obviously the number of sensors and the size of the research area determine Data Resolution.  However, high-resolution data, while desirable, is not always critical to the study.  First consider a number of receivers placed in a tight cluster.
+
+If the target species were highly sedentary, and the receiver cluster was placed around the area where a large number of individuals were captured and tagged, then the study would very likely yield a high Data Recovery Rate, but that dataset would be of little use in determining the spatial distribution of that species, as the data would be limited to the small area in which the receiver cluster was placed.  On the other hand, this dataset would be highly useful in confirming the sedentary nature of the species and defining a small home range.  Additionally, data from multiple receivers could be combined to provide high-resolution telemetry for the location of an animal over time (see section~\ref{dataResolution}).  This high-resolution telemetry could be used to infer co-location of two individuals giving insight into social movement behaviors such as schooling and mating.  
 
 If the target species tended to roam over a large home range, then it is likely the cluster would receive only a few pings.  In this case, little data will be gathered in regards to the extent of the specie's home range, but high resolution telemetry can be gathered for a short time if the animal passes through the cluster.  This might be useful in identifying particular corridors that individuals prefer.
 
@@ -118,15 +127,17 @@ If the target species tended to roam over a large home range, then it is likely 
 \subsection{Metrics}
 \subsubsection{Data Recovery Rate}
 \label{DataRecoveryRate}
-The most common metric used in analyzing the success of animal tracking studies is the Data Recovery Rate (DRR) ($\frac{\mbox{total pings emitted}}{\mbox{total pings recovered}}$).  While it may seem intuitive to understand data recovery rates as an indicator of the quality of the dataset, one must bear in mind the objective of the study.  As illustrated in section~\ref{dataQuality}, the objective of the study defines how useful a particular dataset is in addressing a research question.  Therefore, Data Recovery Rate should be treated simply as a measure of how complete a particular dataset is, and how strongly it can support a claim.  
+The most common metric used in analyzing the success of animal tracking studies is the Data Recovery Rate (DRR): ($\frac{total\_pings\_emitted}{total\_pings\_recovered}$).  While it may seem intuitive to understand data recovery rates as an indicator of the quality of the dataset, one must bear in mind the objective of the study.  As illustrated in section~\ref{dataQuality}, the objective of the study defines how useful a particular dataset is in addressing a research question.  Therefore, Data Recovery Rate should be treated simply as a measure of how complete a particular dataset is, and how strongly it can support a claim.  
 
 \subsubsection{Sample Size}
 \label{sampleSize}
 Another important factor to consider is the number of tagged individuals within a dataset.  A dataset for a single tagged individual, no matter how complete, will not offer very much support to any conclusions drawn.  At the same time, a dataset for a large number of individuals, with very low data recovery rates may not provide enough individual telemetry to draw a conclusion at all.
 
-\subsubsection{Network Sparsity (Delta)}
+\subsubsection{Network Sparsity}
 \label{delta}
+In their 2013 publication, Pedersen and Weng propose a new metric: Network Sparsity ($\delta$) as a means to measure the sparseness of an acoustic network.  This metric is useful in quickly expressing the density and intent of an acoustic network.  A $\delta$ of 0 describes an array of receivers that are virtually stacked on top each other.  A$delta$ between 0 and 1 indicates that receivers are placed such that their detection ranges overlap (a smaller $\delta$ indicates more overlap).  A $\delta$ of 1 signifies that receivers in the array are positioned such that their detection ranges are just touching but not overlapping.  A $\delta$ greater than 1 indicates that the receivers are farther apart, and that there are gaps between receiver coverage areas.  
 
+With this definition, it becomes obvious that 
 Potential for data fusion
 
 
