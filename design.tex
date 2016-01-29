@@ -1,5 +1,48 @@
 \chapter{Design}
 
+\section{Program Requirements}
+
+
+\subsection{Motivation}
+While the detriments to SAON technologies are well-known \cite{Akbarzadeh2013}, \cite{Heupel2006}, \cite{Howard2002},  \cite{Kessel2015}, \cite{Steel2014} there few tools/services to analytically design SAONs around them.  Further, none of these tools/services are free and open-source.
+
+
+\paragraph{Cost Efficiency}
+\label{motivationCost}
+In section~\ref{CostAltTech}, we discuss the costs of marine telemetry systems, noting that acoustic telemetry systems produce data at a significantly lower ($\ge$10x cheaper) cost than VHF or GPS/Satellite based technologies.  In order to maintain the cost-efficiency of acoustic technology, at least 10$\%$ of the produced transmissions must be captured by the SAON's receiver array.  Given the numerous (but avoidable) impediments to reception of these acoustic signals (\ref{RulesOfThumb}), the array-design process becomes critical to maintaining the cost-efficiency of SAON technologies.  A free network design tool would help to maintain the cost-efficiency of SAONs by eliminating costs surrounding their design and evaluation.  
+
+
+\paragraph{Metrics}
+\label{motivationMetrics}
+The computation of network metrics (Absoloute Recovery Rate, Unique Recovery Rate, Network Sparsity) is very labor intensive at large scale.  Additionally, the process of computation may vary from experiment to experiment.  An automated tool would solve both issues by providing a fast, simple, repeatable, and well-documented method for computation.  Metrics from such a tool would be useful in directly comparing different network deigns.
+
+
+\paragraph{Transparency}
+\label{motivationTransparency}
+An open-sourced tool/service would make the design process more transparent, permitting peer-review and modification.  This would provide increased confidence in the process, and increased adoption of the tool.  This in turn would allow for increased efficiency in SAON design, leading to higher data recovery rates, better data quality, increased return-on-investment, and the ability to better address scientific-research questions.
+
+
+\subsection{Supported Workflows}
+\paragraph{Static Analysis}
+As mentioned in section~\ref{motivationMetrics}, a primary motive for this tool was the ability to create a repeatable means of measuring the performance of a SAON.  To this end, the ability to measure an existing network design is important.  Users should be presented with network metrics after specifying bathymetry, receiver locations, network properties, and an animal model for a given study site.
+
+
+\paragraph{Optimal Design}
+The primary motive for this tool is the ability to design optimal SAONs.  Users should be presented with a network design (optimal receiver locations), and network metrics after specifying bathymetry, the number of receivers in the network, network properties, and an animal model for a given study site.
+
+
+\paragraph{Optimal Addition}
+Similar to the problem of optimal design, is the problem of optimal addition: the augmentation of an already existing SAON.  Users should be presented with a network design (optimal augmenting receiver locations), and network metrics after specifying bathymetry, the number of receivers to add to the network, network properties, existing receiver locations, and an animal model for a given study site.
+
+
+\subsection{Bathymetric File Support}
+\subsection{Evaluation of Sensor Emplacements}
+\subsection{Selection of Optimal Emplacements}
+
+\subsection{Bathymetric Shadowing}
+
+
+
 \section{Animal Modeling}
 Animals exhibit many different movement models and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution and thus the network configuration that should be deployed to capture their movement.  Our program models account for both the habitat and movement preferences of the target species by allowing for various optional parameters and functions.
 
@@ -18,7 +61,7 @@ The Ornstein-Uhlenbeck(OU) model assumes that over time, animals will prefer to 
 Some animals exhibit the preference to reside within a specific section of the water column; for example, prey animals may prefer hiding in reef heads at the bottom of the water column, while predators will prefer to hover several meters off the bottom.  This preference can be incorporated into the behavioral model by specifying mean (Preferred Depth) and standard deviation(SD of Preferred Depth) values.  These values are given as a measure of the distance (in meters) from the bottom.  For example, specifying a depth of '0' for "Preferred Depth" indicates that the animal prefers to live on the sea floor, while a value of '5' indicates that the animal prefers to live 5m off the sea floor.  Allowing a standard deviation value allows for the modeling of animals that tend to be sedentary within the water column (a small deviation), and those that migrate through the water column (a large deviation).
 
 \subsection{Restricted Vertical Habitat Range}
-Some animals will live only in a specific depth range.  For example, a deep sea fish may live only in depths of 300-400 meters.  To incorporate this into the behavioral model, users can specify a minimum and maximum vertical habitat range for their animal.  If this option is used, the program will only simulate animals in cells whose depths are between the minimum and maximum depths.  
+Some animals will live only in a specific depth range.  For example, a deep sea fish may live only in depths of 300-400 meters.  To incorporate this into the behavioral model, users can specify a minimum and maximum vertical habitat range for their animal.  If this option is selected, the program will only simulate animals in cells whose depths are between the minimum and maximum depths.  
 
 
 \section{Sensor Projection}

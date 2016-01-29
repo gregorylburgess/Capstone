@@ -99,48 +99,53 @@ http://www.mrcmekong.org/assets/Publications/Catch-and-Culture/catchmar02vol7.3.
 
 \subsection{Rules of Thumb for Sensor Placement}
 \label{RulesOfThumb}
-While animal tracking studies draw upon hard data to draw conclusions, the methodology for collecting this data is based upon loose rules of thumb driven by anecdotal evidence.  Heupel et al's highly cited 2006 paper distills their prior experience with animal tracking into "rules of thumb" for designing a SAON.  These rules focus on generalized considerations such as avoiding areas of high noise, bathymetric obstruction, 
+While animal tracking studies draw upon hard data to draw conclusions, the methodology for collecting this data is based upon loose rules of thumb driven by anecdotal evidence.  Heupel et al's highly cited 2006 paper distills their prior experience with animal tracking into "rules of thumb" for designing a SAON.  These rules focus on generalized considerations such as avoiding areas of high noise, bathymetric obstruction, and acoustic echoing\cite{Heupel2006}.  
 
-While Heupel et al's publication gives sound advice on design issues that warrant warrant consideration, the discussion of analytical methods for measuring said issues falls out of the publication's scope.
+While Heupel et al's publication gives sound advice on design issues that warrant warrant consideration, the discussion of analytical methods for measuring these issues falls out of the publication's scope.
+
+
+\subsection{Metrics}
+\subsubsection{Data Recovery Rate}
+\label{DataRecoveryRate}
+The most common metric used in analyzing the success of animal tracking studies is the Data Recovery Rate (DRR): ($\frac{pings\_emitted}{pings\_recovered}$).  While it may seem intuitive to understand data recovery rates as an indicator of the quality of the dataset, one must bear in mind the objective of the study.  As illustrated in section~\ref{dataQuality}, the objective of the study defines how useful a particular dataset is in addressing a research question.  Therefore, Data Recovery Rate should be treated simply as a measure of how complete a particular dataset is, and how strongly it can support a claim.  
+
+\paragraph{Unique & Absoloute Data Recovery Rates}
+When discussing recovery rates, the Absoloute Data Recovery Rate (ADRR) and Unique Data Recovery Rate (UDRR) can give insight into the qualities of a particular network design.  ADRR is computed as the total number of pings that were received by all sensors in the network, divided by the total number of emitted pings.  This means, that data recovery rates of more than 100$\%$ are possible.  
+
+\subsubsection{Network Sparsity}
+\label{delta}
+Network Sparsity ($\delta$) is a unit-less measure of the observational qualities of an acoustic network.  This metric is useful in quickly expressing the density and intent of an acoustic network.  For a list of n receivers within a SAON $r_1$, $r_2$, $r_3$, ... $r_n$, let $a_i$ ($1\le i \le n$) be the distance to receiver $r_i$'s nearest neighbor.  Then, a is the median over all $a_i$.  $d_r$ is given as the detection range of a sensor.  Network sparsity is defined as $\frac{a}{2d_r}$.  
+
+A $\delta$ of 0 describes an array of receivers that are virtually stacked on top each other.  A $delta$ between 0 and 1 indicates that receivers are placed such that their detection ranges overlap (a smaller $\delta$ indicates more overlap).  A $\delta$ of 1 signifies that receivers in the array are positioned such that their detection ranges are just touching but not overlapping.  A $\delta$ greater than 1 indicates that the receivers are farther apart, and that there are gaps between receiver coverage areas.  
+With this definition, it becomes obvious that Network Sparsity is a positive indicator for data
+fusion (section~\ref{dataFusion}), and data resolution(section~\ref{dataFusion}).
+
+
+\subsubsection{Sample Size}
+\label{sampleSize}
+Another important factor to consider is the number of tagged individuals within a dataset.  A dataset for a single tagged individual, no matter how complete, will not offer very much support to any conclusions drawn.  At the same time, a dataset for a large number of individuals, with very low data recovery rates may not provide enough individual telemetry to draw a conclusion at all.
 
 \subsection{Data Quality}
 \label{dataQuality}
 
 \subsubsection{Data Resolution}
 \label{dataResolution}
-Acoustic receivers like the Vemco VR2 log detections of acoustic transmissions as a tuple of time, tag number, and transmission strength.  The strength of the received transmission can be used to approximate the distance between the tag and receiver.  Data from a single receiver has a fairly high uncertainty (low resolution) of the exact position of the transmitting tag because only a single distance can be observed.  If multiple receivers are in close enough proximity to receive the same signal, the position of the tag can be extrapolated with much higher certainty (high resolution).  This extrapolation is useful for increasing the resolution of tagged individuals, allowing for the tracking of fine movements within a three-dimensional space.  This increase in resolution does however have a price.  Detection of a tag by more than one receiver requires that those receivers have overlapping detection ranges.  Assuming a fixed number of receivers, placing receivers closer together reduces the actual coverage area of the array.  Thus, the coverage area of the array is inversely correlated with the resolution of the array.  Alternatively, purchasing more receivers will achieve a higher resolution, but increases the cost of the array.
+\label{dataFusion}
+Acoustic receivers like the Vemco VR2 log detections of acoustic transmissions as a tuple of time, tag number, and transmission strength.  The strength of the received transmission can be used to approximate the distance between the tag and receiver.  Data from a single receiver has a fairly low certainty of the exact position (low resolution) of the transmitting tag because only a single distance can be observed.  If multiple receivers are in close enough proximity to receive the same transmission, the strength of the transmission observed from several different known, fixed positions can be used to triangulate a more precise position (higher resolution).  This process of combining multiple observations into a more accurate observation, known as \textbf{Data Fusion}, is useful for increasing the resolution of tagged individuals and allows for the tracking of fine movements within a three-dimensional space.  This increase in resolution does however have a price.  Detection of a tag by more than one receiver requires that those receivers have overlapping detection ranges.  Assuming a fixed number of receivers, placing receivers closer together reduces the actual coverage area of the array.  Thus, the coverage area of the array is inversely correlated with the resolution of the array.  Alternatively, purchasing more receivers will achieve a higher resolution, but increases the cost of the array.
 
 
 \subsubsection{Meaningful Data}
 \label{meaningfulData}
 Obviously the number of sensors and the size of the research area determine Data Resolution.  However, high-resolution data, while desirable, is not always critical to the study.  First consider a number of receivers placed in a tight cluster.
 
-If the target species were highly sedentary, and the receiver cluster was placed around the area where a large number of individuals were captured and tagged, then the study would very likely yield a high Data Recovery Rate, but that dataset would be of little use in determining the spatial distribution of that species, as the data would be limited to the small area in which the receiver cluster was placed.  On the other hand, this dataset would be highly useful in confirming the sedentary nature of the species and defining a small home range.  Additionally, data from multiple receivers could be combined to provide high-resolution telemetry for the location of an animal over time (see section~\ref{dataResolution}).  This high-resolution telemetry could be used to infer co-location of two individuals giving insight into social movement behaviors such as schooling and mating.  
+If the target species were highly sedentary, and the receiver cluster was placed around the area where a large number of individuals were captured and tagged, then the study would very likely yield a high Data Recovery Rate, but that dataset would be of little use in determining the spatial distribution of that species, as the data would be limited to the small area in which the receiver cluster was placed.  On the other hand, this dataset would be highly useful in confirming the sedentary nature of the species and defining a small home range.  Additionally, data from multiple receivers could be combined to provide high-resolution telemetry for the location of an animal over time (see section~\ref{dataResolution}).  This high-resolution telemetry could be used to infer fine-scale co-location of two individuals, giving insight into social movement behaviors such as schooling and mating.  
 
 If the target species tended to roam over a large home range, then it is likely the cluster would receive only a few pings.  In this case, little data will be gathered in regards to the extent of the specie's home range, but high resolution telemetry can be gathered for a short time if the animal passes through the cluster.  This might be useful in identifying particular corridors that individuals prefer.
 
 Now consider a number of receivers placed in an array very far apart from each other over a very large spatial area.
-If the target species were highly sedentary, then individuals might show up on one or two receivers.  If many individuals were tagged, then the dataset could indicate the spatial distribution of the species over a large area.  The data on particular individuals would likely be very low resolution, as detection by a single receiver only tracks proximity.  
+If the target species were highly sedentary, then individuals might show up on one or two receivers.  If many individuals were tagged, then the dataset could describe the spatial distribution of the species over a large area.  The data on particular individuals would likely be very low resolution, as detection by a single receiver only tracks proximity.  
 
 If the target species tended to roam over a large home range, then it is likely the receiver array would pick up an individual animal over a number of distant sensors.  This data could be used to detect potential corridors for animal movement, establish individual home ranges, and to identify the spatial distribution of the species over a large area.  Again, the telemetry for individual animals would be very low, but the detection of many individuals by a single receiver could indicate areas of interest for future research.
-
-\subsection{Metrics}
-\subsubsection{Data Recovery Rate}
-\label{DataRecoveryRate}
-The most common metric used in analyzing the success of animal tracking studies is the Data Recovery Rate (DRR): ($\frac{total\_pings\_emitted}{total\_pings\_recovered}$).  While it may seem intuitive to understand data recovery rates as an indicator of the quality of the dataset, one must bear in mind the objective of the study.  As illustrated in section~\ref{dataQuality}, the objective of the study defines how useful a particular dataset is in addressing a research question.  Therefore, Data Recovery Rate should be treated simply as a measure of how complete a particular dataset is, and how strongly it can support a claim.  
-
-\subsubsection{Sample Size}
-\label{sampleSize}
-Another important factor to consider is the number of tagged individuals within a dataset.  A dataset for a single tagged individual, no matter how complete, will not offer very much support to any conclusions drawn.  At the same time, a dataset for a large number of individuals, with very low data recovery rates may not provide enough individual telemetry to draw a conclusion at all.
-
-\subsubsection{Network Sparsity}
-\label{delta}
-In their 2013 publication, Pedersen and Weng propose a new metric: Network Sparsity ($\delta$) as a means to measure the sparseness of an acoustic network.  This metric is useful in quickly expressing the density and intent of an acoustic network.  A $\delta$ of 0 describes an array of receivers that are virtually stacked on top each other.  A$delta$ between 0 and 1 indicates that receivers are placed such that their detection ranges overlap (a smaller $\delta$ indicates more overlap).  A $\delta$ of 1 signifies that receivers in the array are positioned such that their detection ranges are just touching but not overlapping.  A $\delta$ greater than 1 indicates that the receivers are farther apart, and that there are gaps between receiver coverage areas.  
-
-With this definition, it becomes obvious that 
-Potential for data fusion
-
-
 
 
 \subsection{Scale of Experiments}
@@ -148,39 +153,4 @@ Potential for data fusion
 
 \subsection{Oversights}
 
-
-\section{Requirements}
-\subsection{Scope of Tool}
-\subsection{Supported Workflows}
-\subsection{Bathymetric File Support}
-\subsection{Bathymetric Shadowing}
-\subsection{Modeling Animal Movement and Habitat}
-\subsection{Ornstein-Uhlenbeck}
-This is a paragraph about OU.
-\subsection{Random Walk}
-\subsection{Evaluation of Sensor Emplacements}
-\subsection{Selection of Optimal Emplacements}
-
-
-Here is a picture in figure \ref{fig:example-1}.
-
-\begin{figure}[htbp]
-  \centering
-  \caption{An example of included Encapsulated PostScript (EPS).}
-  \label{fig:example-1}
-\end{figure}
-
-Using the package we get the much nicer \url{<http://www.hotwired.com/
-webmonkey/98/16/index2a.html>} which LaTeX can handle just fine. Even better,
-the parameter to {\tt $\backslash$url} can have spaces inserted anywhere so you
-can make the LaTeX source lines in your text editor wrap nicely.
-
-A few notes. It is recommended that you enclose your URLs in ``$<>$'' to ensure
-that any punctuation around the URL won't be confused as part of the URL. You
-can use URLs in your bibliography too (see the {\tt uhtest.bib} file for an
-example). Finally, if you need to use a tilde in your URL then things are a
-little trickier. One way to do it is like this:
-\url{<http://www.dartmouth.edu/}$\sim$\url{jonh/ff-cache/1.html>}. The {\tt
-$\backslash$url} style uses math mode internally, so we break the URL into two
-pieces, and stick a tilde from math mode inbetween the two parts.
 
