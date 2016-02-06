@@ -44,36 +44,46 @@ Similar to the problem of optimal design, is the problem of optimal addition: th
 \label{timeSpaceModel}
 \subsubsection{Spatial Modeling}
 \label{spatialModeling}
-To model a 3-dimensional underwater environment, we start with a two-dimensional grid of cells (in the x and y dimensions) containing numerical values.  Numerical values in those cells can then be used in static shape functions to generate the third dimension (z) for that cell.  In this way, we save significant amounts of memory by compute values for a specific three-dimensional cell on the fly, instead of storing an additional dimension.  
+To model a 4-dimensional underwater environment (a 3-dimensional spatial grid of various attributes), we use a two-dimensional grid of cells (in the x and y dimensions) containing numerical values.  Numerical values in those cells, combined with other user-defined values, can then be used in various shape functions to generate a third dimension (z) of values for that cell.  In this way, we save significant amounts of memory by computing values for a specific three-dimensional cell on the fly, instead of storing an additional dimension of values.  
 
 \subsubsection{Temporal Modeling}
 \label{temporalModeling}
 With respect to the passage of time, our model assumes that receivers are stationary throughout the entire experiment.  Furthermore, the animal model does not represent animal movement over time, but the percentage of time an animal would spend in a particular cell over the entire study period.  The animal model therefore represents the tendency of an animal's movements over the expected study period rather than its particular movements in a small time period.  As a result, we need not consider temporally-related phenomena. 
 
-Bathymetry files are generally given as grids of depths, with varying cell sizes.  The resolution of a bathymetric file is given by the dimensions of its cells.  For example, a 50 meter Bathymetry file has cell sizes of approximately 50 meters square (although these cells are not necessarily perfectly square).  Bathymetric files list beginning and ending coordinates (North/South Latitudes and East/West Longitudes), as well as the grid size (in rows and columns) in cells.  With these two measurements, one can compute the degrees per cell of latitude and longitude.  Thus, particular latitudes and longitudes can be converted to rows/columns, and back.  
+
 
 
 \subsection{Bathymetric Modeling}
 \label{bathymetyricModeling}
 \subsubsection{Bathymetric Grid}
 \label{bathymetricGrid}
-Our program works on a grid-based system, taking advantage of the grid system given by the bathymetric file.  Thus, the resolution of our program's output is dictated by the resolution of the input bathymetric file.  While it may seem useful to have the ability to artificially increase the resolution of the simulation by sub-dividing the input cells into sub-cells of smaller resolution, doing so increases the computational size of the program without meaningfully increasing the resolution of the results.  The primary component of the program is the bathymetric file.  Both the animal model and the bathymetric shadowing model make decisions based upon the depth at a particular cell.  
-//TODO: discuss filetype support
+Bathymetry files are generally given as two-dimensional matrix of numerical values or a list of x,y,z values.  Bathymetric files describe a three-dimensional space as a regular grid of rectangular prisms (cells) with constant length (x-dimension) and width (y-dimension), but varying negative (depth is negative)  heights (z-dimension).  The resolution of a bathymetric file is given by the x and y (length and width) dimensions of its cells.  For example, a 50 meter Bathymetry file has cell sizes of approximately 50 meters square (although these cells are not necessarily perfectly square).  Bathymetric files list beginning and ending coordinates (North/South Latitudes and East/West Longitudes), as well as the grid size (in rows and columns) in cells.  With these two measurements, one can compute the degrees per cell of latitude and longitude.  Thus, particular latitudes and longitudes can be converted to rows/columns, and back.  
+
+Our program works on a two-dimensional, grid-based system, taking advantage of the grid given by the user-provided bathymetric file.  As stated in section~\ref{spatialModeling}, the bathymetric grid is a grid containing numerical values that describe a third dimension.  The spatial extent of the grid is given by the bathymetric file, Thus, the resolution of our program's output is dictated by the resolution of the input bathymetric file. 
+
+\subsubsection{Bathymetric Filetypes}
+Two highly popular file formats in Geographical Information Systems are provided by NetCDF and ArcGIS.  NetCDF provides an open source file format that lists a header of metadata and a white-space delimited matrix of numerical values.  ArcGIS is a private institution that supplies many different file types, formats, and encodings for a family of GIS-related software systems.  ArcGIS also supports the encoding and transcription of its proprietary formats to the NetCDF format.  Due to the large number of possible format and encoding combinations in ArcGIS file formats and the ability to translate file these various formats to NetCDF, we natively support the NetCDF standard, and assume that users are capable of converting their data into the NetCDF format.  
 
 
 \subsubsection{Bathymetric Resolution}
-\begin{figure}
+Two key components of our program are the animal model and the bathymetric shadowing model.  These models make decisions based upon the depth at a particular cell and the distance between cells, data which is determine by the input bathymetry file.  //TODO 
+
+High-resolution bathymetric files tend to be difficult to come by.  These files are often held by private agencies, or simply never released to the public.  It may then seem useful to artificially increase the resolution of the simulation by dividing the input file's bathymetric cells into sub-cells of finer resolution, but doing so increases the computational size of the program without meaningfully increasing the accuracy of the results.    
+ 
+ 
+When subdividing cells, either the sub-cells are given the same depth as their parent cell, or the depth of a sub-cell is interpolated from surrounding cells by some smoothing function.  Subdividing a cell into sub-cells with the same depth makes the assumption that all sub-cells are actually the same depth.  Furthermore, this results in the animal and bathymetric shadowing models making the same depth-based decision for all sub-cells that they would for the larger parent cell, increasing the computational load (see Figure~\ref{duplicate}).  Subdividing a cell into sub-cells with a depth governed by a smoothing function makes the assumption that there are no impeding obstacles between neighboring cells, and that there is a smooth transition between them (see figure~\ref{smooth}).  Subdividing the two cells in Figure~\ref{LoS} half (ignoring for now the y component of our grid) results in the four sub-cells with depths given by a smoothing function (Figure~\ref{smooth}) would result in the large depth change at the sheer cliff face in Figure~\ref{LoS} being smoothed into smaller changes in depth, which would allow the unobstructed transmission of acoustic signals.
+\begin{figure}[h!]
 	\label{resolutionScale}
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{LoS.png}
 		\caption{}\label{LoS}
 	\end{subfigure}
+	
 	\begin{subfigure}[t]{.4\textwidth}
 		\centering
 		\includegraphics[width=\linewidth]{duplicate.png}
 		\caption{}\label{duplicate}
-		
 	\end{subfigure}
 	
 	\begin{subfigure}[t]{.4\textwidth}
@@ -81,21 +91,19 @@ Our program works on a grid-based system, taking advantage of the grid system gi
 		\includegraphics[width=\linewidth]{smooth.png}
 		\caption{}\label{smooth}
 	\end{subfigure}
-	\caption{Figure~\ref{LoS} illustrates the bathymetric shadowing model on a bathymetric grid.  Figure~\ref{duplicate} shows how artifically increasing the resolution of the bathymetric grid form Figure~\ref{LoS} using the duplication method of cell sub-division does not affect the bathymetric shadowing model.  Figure~\ref{smooth} shows how artificially increasing the resolution using a smoothing function can lead to inflated signal reception.}
+	
+	\caption{Figure~\ref{LoS} illustrates the bathymetric shadowing model for two adjacent cells within a bathymetric grid.  Figure~\ref{duplicate} shows how artifically increasing the resolution of the bathymetric grid form Figure~\ref{LoS} using the duplication method of cell sub-division does not affect the bathymetric shadowing model.  Figure~\ref{smooth} shows how artificially increasing the resolution using a smoothing function can lead to inflated signal reception.}
 \end{figure}
-When subdividing cells, either the sub-cells are given the same depth as their parent cell, or the depth of a sub-cell is interpolated from surrounding cells by some smoothing function.  Subdividing a cell into sub-cells with the same depth makes the assumption that all sub-cells are actually the same depth.  Furthermore, this results in the animal and bathymetric shadowing models making the same depth-based decision for all sub-cells that they would for the larger parent cell, increasing the computational load (see Figure~\ref{duplicate}).  Subdividing a cell into sub-cells with a depth governed by a smoothing function makes the assumption that there are no impeding obstacles between neighboring cells, and that there is a smooth transition between them (see figure~\ref{smooth}).  Both strategies for artificially increasing the resolution of a bathymetric file disregard the manner in which the bathymetry was originally observed.  Bathymetry is almost always computed as an average depth for an area of a given size (resolution).  For example, imagine a cell with a steep cliff running across the middle.  This cell would have a depth equal to the average of the depth at the top of the cliff and the base of the cliff.  This average is the depth that would be recorded in the bathymetric file.  Subdividing this cell into four sub-cells of the same depth would indicate to the acoustic model that acoustic signals can pass freely across this cell.  In reality, acoustic signals would be severely hampered by the cliff face.  Subdividing this cell into four sub-cells with depths given by a smoothing function would result in the large depth change at the sheer cliff face being smoothed into smaller changes in depth, which would allow significantly better transmission of acoustic signals than a single large cliff face.
 
- 
+Both strategies (duplicating depth and applying a smoothing function) for artificially increasing the resolution of a bathymetric file disregard the manner in which the bathymetry was originally observed.  Bathymetry is almost always computed as the average observed depth for a geographic area of a given size (resolution).  For example, imagine a particular cell in a bathymetric grid has a steep cliff running across the middle.  Assuming that the sea floor at the top and base of the cliff were perfectly flat, this cell would have a depth equal to the average of the depths at the top and the base of the cliff.  This average depth would then represent the depth for that entire cell, modeling it as a perfectly flat surface.  Obviously this is problematic as the true nature of the sea floor is misrepresented.  This misrepresentation leads to two conflicting arguments, the first is that the application of smoothing functions or duplicating depths of already averaged data makes faulty assumptions about real-world bathymetry.  On the other hand, because source bathymetric files already represent aggregate data, one could argue that any conclusions drawn from the source bathymetry files are already faulty.  We argue that the conclusions one can make are only as good as the bathymetric information available.  As the resolution of measured bathymetry (bathymetric measurements taken from the real world) increases (becomes finer), so too does the accuracy of the simulation.  While artificially increasing the resolution of a source bathymetric file may skew results, it is sometimes useful for meshing two bathymetric source files of varying resolution into one larger bathymetric dataset.  Our program does not currently support modifying the resolution of source bathymetric files.
+
+
+
+
+
 \subsection{Bathymetric Shadowing}
 \label{bathymetricShadowing}
-In reality, the transmission of an acoustic ping originates from the tagged animal and propagates to the receiver.  This propagation is governed by complex interactions with the surrounding environment (including the bottom substrate, distance to the surface/sea-floor, thermoclines, the number of tagged animals in the vicinity, and ambient noise).  Because it is difficult to model these phenomena without significant data on a large number of variables over a large area, we utilize a simplified propagation model relying on direct line of sight between a tagged animal and a receiver.  Simply put, in order to receive a transmission, there must exist a topographically-unobstructed path between a tagged animal and a receiver.  A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver.
-
-\subsection{Evaluation of Sensor Emplacements}
-
-
-
-\subsection{Selection of Optimal Emplacements}
-
+In the real world, the transmission of an acoustic ping originates from the tagged animal and propagates to the receiver.  This propagation is governed by complex interactions with the surrounding environment (including the bottom substrate, water density, distance to the surface/sea-floor, thermoclines, the number of tagged animals in the vicinity, and ambient noise).  Because it is difficult to model these phenomena without significant data on a large number of variables over a large area, our simulation uses a simplified propagation model relying on direct line of sight between a tagged animal and a receiver.  Simply put, in order to receive a transmission, there must exist a physically-unobstructed path between a tagged animal and a receiver.  
 
 
 
@@ -103,20 +111,39 @@ In reality, the transmission of an acoustic ping originates from the tagged anim
 Animals exhibit many different movement models and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution and thus the network configuration that should be deployed to capture their movement.  Our program models account for both the habitat and movement preferences of the target species by allowing for various optional parameters and functions.
 
 \subsection{Animal Movement Models}
- To simulate tagged animal movement across a two dimensional x/y space (as one would expect to see on a map), we provide two basic probabilistic movement models: Random Walk, and Ornstein-Uhlenbeck(OU).  
+To simulate tagged animal movement across the two dimensional x/y space (as one would expect to see on a map from above), we provide two basic probabilistic movement models: Random Walk, and Ornstein-Uhlenbeck(OU).  
 
 \paragraph{Random Walk Model}
-The Random Walk model assumes that animals move randomly through the environment.  As a result, over the entire study period, each valid grid cell (as defined by vertical habitat range) will see an equal amount of animal traffic.  The result is that every valid cell  in the grid will have the same chance of capturing an animal's acoustic transmission.  We assume that tagged individuals will be willing and able to very briefly (in probabilistically negligible time frames) pass through inhospitable (over dry land, through impassible terrain) cells to get to other cells.  This means that disjoint sections of habitat are still equally likely to see animal movement/presence.
+The Random Walk model assumes that animals move randomly through the environment.  As a result, over the entire study period, each valid grid cell (as defined by vertical habitat range) will see an equal amount of animal traffic.  The result is that every valid cell  in the grid will have the same chance of capturing an animal's acoustic transmission.  We assume that tagged individuals will be willing and able to very briefly (in probabilistically negligible time frames) pass through inhospitable (over dry land, through impassible terrain) cells to get to other cells.  This means that disjoint sections of habitat are still equally likely to see animal presence.
 
 \paragraph{Ornstein-Uhlenbeck Model}
-The Ornstein-Uhlenbeck(OU) model\cite{OU} assumes that over time, animals will prefer to gather near certain points of interest.  This concept models an animal's desire to seek out and remain near a physically significant structure, a region of high food availability, breeding grounds, shelter, etc.  Users must provide the x and y coordinates for this point (as grid indicies), the strength of attraction in the separate x and y directions, and the correlation between the x and y attraction as parameters to the program.  
+The Ornstein-Uhlenbeck(OU) model\cite{OU} supports the idea that over time, animals will tend to congregate near certain points of interest.  This concept models an animal's desire to seek out and remain near a physically significant structure, a region of high food availability, breeding grounds, shelter, etc.  The OU algorithm allows for the modeling of the attraction towards a focal point in the x/y directions separately.  Assuming a center point at the origin of a Cartesian grid, increasing the attraction in the x-direction will bring the distribution closer to the x-axis, and decreasing it will spread the distribution away from the x-axis.  A correlation value ($-1\le x \le 1$) allows for tilting the angle of the distribution.  A positive correlation value tilts the distribution clockwise, and a negative correlation value tilts it counter clockwise.  Correlations of 0 (no tilt), 1 ($180^{\circ}$ tilt), and -1 (-$180^{\circ}$ tilt) will have no observable effect on the distribution.
+\begin{figure}[h]
+	\label{OUimg}
+	\centering
+	\includegraphics{OUpos7.png}
+	\caption{}\label{ouimg}
+	\caption{Figure~\ref{ouimg} illustrates the Ornstein-Uhlenbeck Model with a high attraction value in the x-direction, a low attraction value in the y-direction, and a correlation value of 0.7.}
+\end{figure}
 
 
 \subsection{Simulated Animal Depth Preference}
-Some animals exhibit the preference to reside within a specific section of the water column; for example, prey animals may prefer hiding in reef heads at the bottom of the water column, while predators will prefer to hover several meters off the bottom.  This preference can be incorporated into the behavioral model by specifying mean (Preferred Depth) and standard deviation(SD of Preferred Depth) values.  These values are given as a measure of the distance (in meters) from the bottom.  For example, specifying a depth of '0' for "Preferred Depth" indicates that the animal prefers to live on the sea floor, while a value of '5' indicates that the animal prefers to live 5m off the sea floor.  Allowing a standard deviation value allows for the modeling of animals that tend to be sedentary within the water column (a small deviation), and those that migrate through the water column (a large deviation).
+Some animals exhibit the preference to reside within a specific section of the water column; for example, prey animals may prefer hiding in reef heads at the bottom of the water column, while predators will prefer to hover several meters off the bottom.  This preference can be incorporated into the animal model by specifying mean ("Preferred Depth") and standard deviation("SD of Preferred Depth") values.  These values are given as a measure of the distance (in meters) from the bottom.  For example, specifying a depth of '0' for Preferred Depth indicates that the animal prefers to live on the sea floor, while a value of '5' indicates that the animal prefers to live 5m off the sea floor.  Allowing a standard deviation value allows for the modeling of animals that tend to be sedentary within the water column (a small deviation), and those that migrate through the water column (a large deviation).  Currently, the simulation does not support the modeling of sub-surface animals, and any part of the distribution curve falling below the sea floor will be redistributed along the rest of the curve. 
+
 
 \subsection{Restricted Vertical Habitat Range}
-Some animals will live only in a specific depth range.  For example, a deep sea fish may live only in depths of 300-400 meters.  To incorporate this into the behavioral model, users can specify a minimum and maximum vertical habitat range for their animal.  If this option is selected, the program will only simulate animals in cells whose depths are between the minimum and maximum depths.  As in the Random Walk Model, we assume that animals are willing and able to move between disjoint areas of habitat.
+Some animals will live only in a specific depth range.  For example, a deep sea fish may live only in depths of 300-400 meters.  To incorporate this into the behavioral model, users can specify a minimum and maximum vertical habitat range for their animal.  If this option is selected, the program will only simulate animals in cells whose maximum depths are between the given minimum and maximum depths.  As in the Random Walk Model, we assume that animals are willing and able to move between disjoint areas of habitat.
+
+
+\subsection{Evaluation of Sensor Emplacements}
+A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider O($n^{3}$) cells.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then performing integration to determine the 
+
+
+\subsection{Selection of Optimal Emplacements}
+The selection algorithm utilizes a greedy 
+
+\subsubsection{Suppression}
+
 
 
 \section{Sensor Projection}
