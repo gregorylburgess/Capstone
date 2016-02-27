@@ -98,18 +98,17 @@ When subdividing cells, either the sub-cells are given the same depth as their p
 Both strategies (duplicating depth and applying a smoothing function) for artificially increasing the resolution of a bathymetric file disregard the manner in which the bathymetry was originally observed.  Bathymetry is almost always computed as the average observed depth at several points within a geographic area of a given size (resolution).  For example, imagine a particular cell in a bathymetric grid has a steep cliff running across the middle.  Assuming that the sea floor at the top and base of the cliff were perfectly flat, and one measurement was taken at the top of the cliff and one at the bottom, the cell would have a depth equal to the average of the two observed depths.  This average depth would then represent the depth for that entire cell, modeling it as a perfectly flat surface.  Obviously this is problematic as the true nature of the sea floor is misrepresented.  This misrepresentation leads to two conflicting arguments, the first is that the application of smoothing functions or duplicating depths of already averaged data makes faulty assumptions about real-world bathymetry.  On the other hand, because source bathymetric files already represent aggregate data, one could argue that any conclusions drawn from the source bathymetry files are already faulty.  We argue that the conclusions one can make are only as good as the bathymetric information available.  As the resolution of measured bathymetry (bathymetric measurements taken from the real world) increases (becomes finer), so too does the accuracy of the simulation.  While artificially increasing the resolution of a source bathymetric file may skew results, it is sometimes useful for meshing two bathymetric source files of varying resolution into one larger bathymetric dataset.  Our program does not currently support modifying the resolution of source bathymetric files.
 
 
-\subsection{Bathymetric Shadowing}
+\subsubsection{Bathymetric Shadowing}
 \label{bathymetricShadowing}
 In the real world, the transmission of an acoustic ping originates from the tagged animal and propagates to the receiver.  This propagation is governed by complex interactions with the surrounding environment (including the bottom substrate, water density, distance to the surface/sea-floor, thermoclines, the number of tagged animals in the vicinity, and ambient noise).  Because it is difficult to model these phenomena without significant data on a large number of variables over a large area, our simulation uses a simplified propagation model relying on direct line of sight between a tagged animal and a receiver.  Simply put, in order to receive a transmission, there must exist a physically-unobstructed path between a tagged animal and a receiver.  
 
 
-
-\section{Animal Modeling}
+\subsection{Animal Modeling}
 \label{animalModeling}
 Animals exhibit many different movement patterns and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution within the study space, and thus the network configuration that should be deployed to capture their movement.  We provide two behavioral models to simulate the horizontal distribution of animals, and two optional models for the vertical distribution.  Note: we use the term "animal" and "transmission" interchangeably as we are interested in capturing acoustic transmissions, which are given off by the tags carried by the target species.
 
 
-\subsection{Animal Movement Modeling}
+\subsubsection{Animal Movement Modeling}
 \label{animalMovementModel}
 To simulate tagged animal movement across the two dimensional x/y space (as one would expect to see on a map from above), we provide two basic probabilistic movement models: Random Walk, and Ornstein-Uhlenbeck(OU).  
 
@@ -129,12 +128,12 @@ The Ornstein-Uhlenbeck(OU) model\cite{OU} supports the idea that over time, anim
 \end{figure}
 
 
-\subsection{Habitat Preference}
+\subsubsection{Habitat Preference}
 \label{habitatPref}
 Some animals exhibit the preference to reside within a specific section of the water column; for example, prey animals may prefer hiding in reef heads at the bottom of the water column, while predators will prefer to hover several meters off the bottom.  This preference can be incorporated into the animal model by specifying mean (preferred Depth") and standard deviation("SD of Preferred Depth") values.  These values are given as a measure of the distance (in meters) from the bottom.  For example, specifying a depth of '0' for Preferred Depth indicates that the animal prefers to live on the sea floor, while a value of '5' indicates that the animal prefers to live 5m off the sea floor.  Allowing a standard deviation value allows for the modeling of animals that tend to be sedentary within the water column (a small deviation), and those that migrate through the water column (a large deviation).  Currently, the simulation does not support the modeling of sub-surface animals, and any part of the distribution curve falling below the sea floor will be redistributed along the rest of the curve. 
 
 
-\subsection{Restricted Vertical Habitat Range}
+\subsubsection{Restricted Vertical Habitat Range}
 \label{restrictedVerticalHabitat}
 Some animals will live only in a specific depth range.  For example, a deep sea fish may live only in depths of 300-400 meters.  To incorporate this into the behavioral model, users can specify a minimum and maximum vertical habitat range for their animal.  If this option is selected, the program will only simulate animals in cells whose maximum depths are between the given minimum and maximum depths.  As in the Random Walk Model, we assume that animals are willing and able to move between disjoint areas of habitat.
 
@@ -142,7 +141,7 @@ Some animals will live only in a specific depth range.  For example, a deep sea 
 \subsection{Receiver Modeling}
 \label{receiverModel}
 
-\subsection{Acoustic Attenuation}
+\subsubsection{Acoustic Attenuation}
 \label{acousticAttenuation}
 As acoustic transmissions travel away from their point of origin, they experience significant attenuation.  We model this attenuation of acoustic signal as a deteriorating function following a Gaussian distribution.  Given a particular distance between a tag and receiver, this distribution describes the probability of capturing the transmission.  Depending upon the environment, the highest probability of detection generally occurs a few meters away from the receiver.
 
@@ -153,14 +152,17 @@ The distance at which a transmission from an acoustic tag can be captured is lar
 \subsubsection{Detection Area}
 We define the Detection Area of a receiver to be the square plane of grid cells around a receiver which will be considered when evaluating a potential receiver emplacement.  Theoretically, the Detection Area of a receiver is a circle with a radius equal to the receiver's detection range ($D_{range}$).  Within our program, we model the Detection Area as a square grid of cells with an edge length equal to 2*$D_{range}$ + 1, centered on the cell where a receiver will theoretically be placed.  The additional cell ensures odd dimensions for the square, so that there exists a central cell to model as the receiver.  We model a square instead of a circle for simplicity of book keeping (we simply keep track of the detection range, and starting row/column indexes).  The theoretical Detection Range can then be imagined as a circle circumscribed in the square of our model.  At first glance, it might seem that this simplification would alter the probabilistic distribution models as additional "gray" cells (those outside the circle but within the square) are being considered.  However, this is not the case as those models utilize exponential functions based on the absolute distance from the receiver.  Gray cells will therefore contribute exponentially less to the total probability than those cells within the detection range, and their effect on the final probability will be negligible.  
 
+\subsubsection{Network Specification}
+There are three distinct ways to place receivers into the model: user specification, optimal placement, and optimal projection.  User Specified Receivers (USR) represent receivers that are already deployed at the study site and are being integrated into a larger network.    Program Placed Receivers are receivers that will be  optimally placed by the program, taking into account existing (user specified) receivers placements using the suppression dynamic explained in section~\ref{suppression}.  Projected Sensors are PPSs that do not count towards the network statistic rates returned by the program.  Instead, their contributed recovery rates are given separately, and represent the marginal benefits of incrementally placing more receivers.  
+
+
+\section{Evaluation Algorithms}
+\label{evaluationAlgorithms}
 
 \subsection{Evaluation of Receiver Emplacements} TODO needs work
 \label{evaluationOfReceiver}
 Section~\ref{animalModeling} discusses the models used to simulate animal movement.  The animal movement models provide the "Behavior Grid", a 2D grid (of the same size as the specified bathymetry grid) which gives the distribution of animals across the study area, and a shape function which describes a normal distribution of animals within the water column at various depths.  Section~\ref{LoS} discusses the Line of Sight (LoS) model used to simulate the obstruction of acoustic transmission.  Section\ref{receiverModel} discusses how range affects the propagation of acoustic signals and thus the probability of detecting ($P_{range}$) acoustic transmissions.
 
-
-\section{Evaluation Algorithms}
-\label{evaluationAlgorithms}
 \subsection{Evaluation Algorithms (Bias)}
 The “Goodness” algorithm is the driving force behind the selection of sensor placements.  While users are able to write their own “Goodness” algorithms, three basic algorithms are provided.  All of these algorithms evaluate a potential receiver location ($L$) by summing the number of Estimated Receivable Transmissions (ERT) from all cells within detection range of the candidate cell $L$, but each computes ERT differently.
 
@@ -173,8 +175,8 @@ This option places sensors in areas that have the best visibility of the surroun
 \subsubsection{Visible Fish (Option “3”)}
 This option chooses sensor locations that have the best view of areas of high animal activity.  Both animal presence and visibility due to topography are considered.
 
-
-\label{evaluatingSensorEmplacements}
+\subsection{Computational Complexity}
+\label{computationalComplexity}
 A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider O($r^{3}$) cells.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We quickly compute this via incremental ray tracing which can be done in O(1) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within detection range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.  One notable difference between our method and the naive method is that the naive method computes the sum probability of detection for each cell in the 3D space, where our method simply integrates to find the probability of detection for the entire a column of water.  
 
 
@@ -194,23 +196,19 @@ A naive solution might be to determine whether or not each cell in the three-dim
 
 
 \subsection{Selection of Optimal Emplacements}
-Section~\ref{evaluatingSensorEmplacements} describes the evaluation of cells as potential receiver locations.  The Optimal Design and Optimal Addition work flows (section~\ref{workflows}) require the identification and selection of a user-specified number of receiver emplacements.  Once all cells within the area of interest have been evaluated, a greedy algorithm simply selects the highest rated cells.
-
-\subsubsection{Suppression}
+Section~\ref{evaluatingSensorEmplacements} describes the evaluation of cells as potential receiver locations.  The Optimal Design and Optimal Addition work flows (section~\ref{workflows}) require the identification and selection of a user-specified number of receiver emplacements.  Once all cells within the area of interest have been evaluated, the program simply selects the highest rated cells.
 
 
+\subsection{Optimal Sensor Projection}
+In normal research situations, users will have a set number of receivers to place within their study site.  The process of arriving at this number is likely unscientific, perhaps relying on user estimate (such as the user-perceived feasibility of receiving a given number of receivers).  Rather than guessing at the number of receivers to use, and hoping for an adequate data recovery rate, users should be able to calculate the marginal benefit (additional detections, increased Data Recovery Rates) of utilizing a variable number of receivers.   To this end, the program allows for the projected incremental benefit for a given number of additional receivers.  Our program facilitates this by allowing users to specify a number of receivers to project, returning graphs and metrics of the marginal increase in Data Recovery Rate.  Armed with this data, users can determine an appropriate number of receivers to purchase, or construct an argument for purchasing more receivers.
 
-\section{Optimal Sensor Projection}
-In normal research situations, users will have a set number of sensors to place within their study site.  The process of arriving at this number is likely unscientific, perhaps relying on user estimate (such as the user-perceived feasibility of receiving a given number of receivers).  Rather than guessing at the number of sensors to use, and hoping for an adequate data recovery rate, users should be able to calculate the marginal benefit (additional detections, increased Data Recovery Rates) of utilizing a variable number of receivers.   To this end, the program allows for the projected incremental benefit for a given number of additional receivers.  Our program facilitates this by allowing users to specify a number of sensors to project, returning graphs and metrics of the marginal increase in Data Recovery Rate.  Armed with this data, users can determine an appropriate number of receivers to purchase, or construct an argument for purchasing more receivers.
 
-\section{Network Model Ingestion}
-\subsection{Customizable Network Models}
-The program supports three distinct ways to define sensors in a network: 
-user specific ation, program-placed sensors, and projected sensors. 
-User placed sensors represent sensors that already exist, and are being integrated into a new network.
-Program placed sensors are sensors that are optimally placed by the program, and take into account any user placed sensors.
-Projected sensors are 
-Add new sensors (with optimal placement) to an already existing network
-Analyze the data recovery rate for a sensor network
-Create an optimal sensor network
+
+
+\section{Suppression}
+\label{suppression}
+
+Add new receivers (with optimal placement) to an already existing network
+Analyze the data recovery rate for a receiver network
+Create an optimal receiver network
 
