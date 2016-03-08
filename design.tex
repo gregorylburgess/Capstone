@@ -59,16 +59,14 @@ With respect to the passage of time, our model assumes that receivers are statio
 \label{bathymetricGrid}
 Bathymetry files are generally given as two-dimensional matrix of numerical values or a list of x,y,z values.  Bathymetric files describe a three-dimensional space as a regular grid of rectangular prisms (cells) with constant length (x-dimension) and width (y-dimension), but varying negative (depth is negative)  heights (z-dimension).  The resolution of a bathymetric file is given by the x and y (length and width) dimensions of its cells.  For example, a 50 meter Bathymetry file has cell sizes of approximately 50 meters square (although these cells are not necessarily perfectly square).  Bathymetric files list beginning and ending coordinates (North/South Latitudes and East/West Longitudes), as well as the grid size (in rows and columns) in cells.  With these two measurements, one can compute the degrees per cell of latitude and longitude.  Thus, particular latitudes and longitudes can be converted to rows/columns, and back.  
 
-Our program works on a two-dimensional, grid-based system, taking advantage of the grid given by the user-provided bathymetric file.  As stated in section~\ref{spatialModeling}, the bathymetric grid is a grid containing numerical values that describe a third dimension.  The spatial extent of the grid is given by the bathymetric file, Thus, the resolution of our program's output is dictated by the resolution of the input bathymetric file. 
+Our program works on a two-dimensional, grid-based system, taking advantage of the grid given by the user-provided bathymetric file.  As stated in section~\ref{spatialModeling}, the bathymetric grid is a grid containing numerical values that describe a third dimension (depth).  The exact spatial extent of this description is given by the bathymetric file.  Thus, the resolution of our program's output is dictated by the resolution of the input bathymetric file. 
 
 \subsubsection{Bathymetric Filetypes}
 Two highly popular file formats in Geographical Information Systems are provided by NetCDF and ArcGIS.  NetCDF provides an open source file format that lists a header of metadata and a white-space delimited matrix of numerical values.  ArcGIS is a private institution that supplies many different file types, formats, and encodings for a family of GIS-related software systems.  ArcGIS also supports the encoding and transcription of its proprietary formats to the NetCDF format.  Due to the large number of possible format and encoding combinations in ArcGIS file formats and the ability to translate file these various formats to NetCDF, we natively support the NetCDF standard, and assume that users are capable of converting their data into the NetCDF format.  
 
 
 \subsubsection{Bathymetric Resolution}
-Two key components of our program are the animal model and the bathymetric shadowing model.  These models make decisions based upon the depth at a particular cell and the distance between cells, data which is determine by the input bathymetry file.  //TODO 
-
-High-resolution bathymetric files tend to be difficult to come by.  These files are often held by private agencies, or simply never released to the public.  It may then seem useful to artificially increase the resolution of the simulation by dividing the input file's bathymetric cells into sub-cells of finer resolution, but doing so increases the computational size of the program without meaningfully increasing the accuracy of the results.    
+Two key components of our program are the animal model and the bathymetric shadowing model.  These models make decisions based upon the depth at a particular cell and the distance between cells, data which is governed by the input bathymetry file.  As stated in Section~\ref{bathymetricGrid}, the resolution of the program's output is dependant upon the resolution of the input bathymetry file.  Obviously, higher resolution grids will offer higher resolution results; but, high-resolution bathymetric files tend to be difficult to come by.  These files are often held by private agencies, or simply never released to the public.  It may then seem useful to artificially increase the resolution of the simulation by dividing the input file's bathymetric cells into sub-cells of finer resolution, but doing so increases the computational size of the program without meaningfully increasing the accuracy of the results.    
  
  
 When subdividing cells, either the sub-cells are given the same depth as their parent cell, or the depth of a sub-cell is interpolated from surrounding cells by some smoothing function.  Subdividing a cell into sub-cells with the same depth makes the assumption that all sub-cells are actually the same depth.  Furthermore, this results in the animal and bathymetric shadowing models making the same depth-based decision for all sub-cells that they would for the larger parent cell, increasing the computational load (see Figure~\ref{duplicate}).  Subdividing a cell into sub-cells with a depth governed by a smoothing function makes the assumption that there are no impeding obstacles between neighboring cells, and that there is a smooth transition between them (see figure~\ref{smooth}).  Subdividing the two cells in Figure~\ref{LoS} half (ignoring for now the y component of our grid) results in the four sub-cells with depths given by a smoothing function (Figure~\ref{smooth}) would result in the large depth change at the sheer cliff face in Figure~\ref{LoS} being smoothed into smaller changes in depth, which would allow the unobstructed transmission of acoustic signals.
@@ -105,7 +103,12 @@ In the real world, the transmission of an acoustic ping originates from the tagg
 
 \subsection{Animal Modeling}
 \label{animalModeling}
-Animals exhibit many different movement patterns and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution within the study space, and thus the network configuration that should be deployed to capture their movement.  We provide two behavioral models to simulate the horizontal distribution of animals, and two optional models for the vertical distribution.  Note: we use the term "animal" and "transmission" interchangeably as we are interested in capturing acoustic transmissions, which are given off by the tags carried by the target species.
+
+\subsubsection{Behavior Grid}
+\label{behaviorGrid}
+Animals exhibit many different movement patterns and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution within the study space, and thus the network configuration that should be deployed to capture their movement.  To describe the distribution of transmissions released from tagged animals, we utilize a two dimensional grid of the same dimensions and resolution as the Bathymetry Grid (Section~\ref{bathymetricGrid}).  Each cell in this "Behavior Grid" contains a positive real value indicating, out of all transmissions that will be released over the entire experiment period, the percentage of transmissions that are expected to be released from within that cell's water column.  This can loosely be though of as the animal-residency of a cell since we are effectively measuring the number of animal-hours spent in that cell.  
+
+To populate this 2D grid with values, we provide two behavioral models to simulate the horizontal distribution of animals, and two optional models for the vertical distribution.  Note: we use the terms "animal" and "transmission" interchangeably as we are interested in capturing acoustic transmissions, which are given off by the tags carried by the target species.  
 
 
 \subsubsection{Animal Movement Modeling}
@@ -114,7 +117,7 @@ To simulate tagged animal movement across the two dimensional x/y space (as one 
 
 \paragraph{Random Walk Model}
 \label{randomWalkModel}
-The Random Walk model assumes that animals move randomly through the environment.  As a result, over the entire study period, each valid grid cell (as defined by vertical habitat range) will see an equal amount of animal traffic.  The result is that every valid cell  in the grid will have the same chance of capturing an animal's acoustic transmission.  We assume that tagged individuals will be willing and able to very briefly (in probabilistically negligible time frames) pass through inhospitable (over dry land, through impassible terrain) cells to get to other cells.  This means that disjoint sections of habitat are still equally likely to see animal presence.
+The Random Walk model assumes that animals move randomly through the environment.  As a result, over the entire study period, each valid grid cell (as defined by the Restricted Vertical Habitat Range (Section~\ref{restrictedVerticalHabitat})) will see an equal amount of animal traffic.  The result is that every valid cell  in the grid will have the same chance of capturing an animal's acoustic transmission.  We assume that tagged individuals will be willing and able to very briefly (in probabilistically negligible time frames) pass through inhospitable (over dry land, through impassible terrain) cells to get to other cells.  This means that disjoint sections of habitat are still equally likely to see animal presence.
 
 \paragraph{Ornstein-Uhlenbeck Model}
 \label{ouModel}
@@ -161,16 +164,16 @@ There are three distinct ways to place receivers into the model: user specificat
 
 \subsection{Evaluation of Receiver Emplacements} TODO needs work
 \label{evaluationOfReceiver}
-Section~\ref{animalModeling} discusses the models used to simulate animal movement.  The animal movement models provide the "Behavior Grid", a 2D grid (of the same size as the specified bathymetry grid) which gives the distribution of animals across the study area, and a shape function which describes a normal distribution of animals within the water column at various depths.  Section~\ref{LoS} discusses the Line of Sight (LoS) model used to simulate the obstruction of acoustic transmission.  Section\ref{receiverModel} discusses how range affects the propagation of acoustic signals and thus the probability of detecting ($P_{range}$) acoustic transmissions.
+Section~\ref{animalModeling} discusses the models used to simulate animal movement.  The animal movement models provide the "Behavior Grid", a 2D grid (of the same size as the specified bathymetry grid) which gives the distribution of animals across the study area, and a shape function which describes a normal distribution of animals within the water column at various depths.  Section~\ref{LoS} discusses the Line of Sight (LoS) model used to simulate the obstruction of acoustic transmission.  Section\ref{receiverModel} discusses how attenuation affects the propagation of acoustic signals and thus the probability of detecting ($P_{range}$) acoustic transmissions from a distance.
 
 \subsection{Evaluation Algorithms (Bias)}
 The “Goodness” algorithm is the driving force behind the selection of sensor placements.  While users are able to write their own “Goodness” algorithms, three basic algorithms are provided.  All of these algorithms evaluate a potential receiver location ($L$) by summing the number of Estimated Receivable Transmissions (ERT) from all cells within detection range of the candidate cell $L$, but each computes ERT differently.
 
 \subsubsection{Animal Only (Option “1”)}
-This option prefers to place sensors in areas of high animal activity, completely oblivious to the surrounding bathymetry.  This is useful for when no bathymetric information is available or when animal activity occurs well above the sea floor.   The Animal Only option computes ERT for a number of animals within a cell according to the Behavior Grid, multiplied by the probability of detection for that cell's distance from the receiver.
+This option prefers to place sensors in areas of high animal activity, completely oblivious to the surrounding bathymetry.  This is useful for when no bathymetric information is available or when animal activity occurs well above the sea floor.   The "Animal Only" option computes ERT for a cell as the probability of an animal-borne tag transmitting from within that cell (according to the Behavior Grid), multiplied by the probability of detection due to attenuation for that cell's distance from the receiver.
 
 \subsubsection{Topography Only (Option “2”)}
-This option places sensors in areas that have the best visibility of the surrounding area.  This is useful for experiments where animal habitat is unknown or to be determined.
+This option places sensors in areas that have the best visibility of the surrounding area.  This is useful for experiments where animal habitat is unknown or to be determined.  Here, ERT is computed as the number of observable transmissions from a uniformly distributed animal model.  While this algorithm is referred to as "Topography only", we utilize the algorithm 3 with a simplified behavioral model: we assume that all fish will follow a random-walk model, and  TO DO
 
 \subsubsection{Visible Fish (Option “3”)}
 This option chooses sensor locations that have the best view of areas of high animal activity.  Both animal presence and visibility due to topography are considered.
@@ -196,19 +199,36 @@ A naive solution might be to determine whether or not each cell in the three-dim
 
 
 \subsection{Selection of Optimal Emplacements}
-Section~\ref{evaluatingSensorEmplacements} describes the evaluation of cells as potential receiver locations.  The Optimal Design and Optimal Addition work flows (section~\ref{workflows}) require the identification and selection of a user-specified number of receiver emplacements.  Once all cells within the area of interest have been evaluated, the program simply selects the highest rated cells.
-
-
-\subsection{Optimal Sensor Projection}
-In normal research situations, users will have a set number of receivers to place within their study site.  The process of arriving at this number is likely unscientific, perhaps relying on user estimate (such as the user-perceived feasibility of receiving a given number of receivers).  Rather than guessing at the number of receivers to use, and hoping for an adequate data recovery rate, users should be able to calculate the marginal benefit (additional detections, increased Data Recovery Rates) of utilizing a variable number of receivers.   To this end, the program allows for the projected incremental benefit for a given number of additional receivers.  Our program facilitates this by allowing users to specify a number of receivers to project, returning graphs and metrics of the marginal increase in Data Recovery Rate.  Armed with this data, users can determine an appropriate number of receivers to purchase, or construct an argument for purchasing more receivers.
-
-
+\label{selectionOfOptimalEmplacements}
+Section~\ref{evaluatingSensorEmplacements} describes the evaluation of cells as potential receiver locations.  The Optimal Design and Optimal Addition work flows (section~\ref{workflows}) require the identification and selection of a user-specified number of receiver emplacements.  Once all cells within the area of interest have been evaluated, the program simply selects the highest rated cells.  The program first selects the user-specified number of optimal receiver locations, and then the number of specified projected receivers.
 
 
 \section{Suppression}
 \label{suppression}
+As previously mentioned, the optimality of a network depends greatly upon the way in which data quality is defined.  Some users will want to design a network that covers as much of a study area as possible, while others might want to heavily saturate a small area with sensors to facilitate higher resolution data.  Others may wish to find the receiver locations that return the highest number of unique data points.  Also previously mentioned was the metric of Unique Data Recovery Rate (UDRR) and Absoloute Data Recovery Rate (ADRR) [Section~\ref{dataRecoveryRate}].  For studies which wish to maximize their UDRR, we provide an optional suppression mechanic, which promotes the selection of receiver placements that have a high number of unobserved transmissions.
+
+\subsection{Suppression Area}
+As an input to the program, users can specify a Suppression Range Factor as a positive real number.  This factor is used to scale the Detection Range (Section~\ref{detection Range}) and define a grid similar to the Detection Area (Section~\ref{detectionArea}).  The resulting grid is referred to as the Suppression Area.  The Suppression Area is centered over a receiver placement and cells within this area have their number of undetected transmissions reduced according to a Suppression Algorithm.  The suppression mechanic is used during the selection phase of the program.  After selecting each optimal receiver location (Section~\ref{selectionOfOptimalEmplacements}), the Suppression Area around that receiver location is suppressed.  This means that emplacement selection is a sequential process, where selecting each emplacement depends upon the previous selection.  
+
+\subsection{Suppression Algorithms}
+\label{suppressionAlgorithms}
+To promote the flexibility of our program, we provide users two algorithms for suppression.  The first offers a lower computation time at the cost of divergence from our theoretical model.  The second offers a higher fidelity model, but requires significantly more computation.
+
+\subsubsection{Static Suppression}
+\label{staticSuppression}
+The Static Suppression algorithm takes a "cookie-cutter" approach and reduces the number of undetected transmissions in the Suppression Area by a user specified factor.  All cells within the Suppression Area are multiplied by a user-specified value.  This computation is very simplistic, requiring only a scalar multiplication, and as such runs very quickly.  This is useful for simulations that intend to place a very large number of receivers.  The cost of this speed is that the algorithm ignores the attenuation and line of sight models completely.  For instance, a cell that is very far away from the receiver, and whose line of sight to the receiver is obstructed will be reduced by the same factor as a cell with unobstructed line of sight, near the receiver.  Obviously this is not a faithful representation of the conceptual models discussed earlier, but supplied for the sake of convenience.
+
+\subsubsection{Exact Suppression}
+\label{exactSuppression}
+The Exact Suppression algorithm follows the conceptual model very closely, utilizing the attenuation, and line of sight models via the "Visible Fish" evaluation algorithm (Section~\ref{evaluationAlgorithms}, Bias 3).  The primary focus of this algorithm was to discount exactly those transmissions which likely to be observed by a placed receiver.  
 
 Add new receivers (with optimal placement) to an already existing network
 Analyze the data recovery rate for a receiver network
 Create an optimal receiver network
+
+
+\section{Optimal Sensor Projection}
+In normal research situations, users will have a set number of receivers to place within their study site.  The process of arriving at this number is likely unscientific, perhaps relying on user estimate (such as the user-perceived feasibility of receiving a given number of receivers).  Rather than guessing at the number of receivers to use, and hoping for an adequate data recovery rate, users should be able to calculate the marginal benefit (additional detections, increased Data Recovery Rates) of utilizing a variable number of receivers.   To this end, the program allows for the projected incremental benefit for a given number of additional receivers.  Our program facilitates this by allowing users to specify a number of receivers to project, returning graphs and metrics of the marginal increase in Data Recovery Rate.  Armed with this data, users can determine an appropriate number of receivers to purchase, or construct an argument for purchasing more receivers.
+
+
 
