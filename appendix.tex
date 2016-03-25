@@ -10,10 +10,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
 
-\chapter{Some Ancillary Stuff}
-
-Ancillary material should be put in appendices, which appear before the
-bibliography. 
+\chapter{Table of Notations}
+$A$ - Bathymetry Grid - A 2D grid of real numbers that describe the depth of a section of the sea floor.  $A_{i,j}$ refers to a particular value in the cell at row i, column j.
+\newline
+\newline
+$B$ - Behavior Grid - A 2D grid of real numbers that indicate the percentage of all transmissions that are expected to be released from that cell over the entire experiment.  $B_{i,j}$ refers to a particular value in the cell at row i, column j.
+\newline
+\newline
+$G$ - Goodness Grid - A 2D grid with the same dimensions as the Bathymetry Grid.  Contains real numbers that indicate how good a particular cell will serve as a receiver placement.  $G_{i,j}$ refers to a particular value in the cell at row i, column j.
+\newline
+\newline
+$ERT_{x,A,i,j}$ - Estimated Receivable Transmissions - The number of transmissions that are expected to be received from a cell at row $i$, column $j$, relative to a receiver at cell $A$, according to Evaluation Algorithm $x$.
+\newline
+\newline
+$P_{Attenuation}(x)$ - Probability of Detection due to attenuation - Describes the probability of detecting an acoustic transmission originating at a range of x meters away from a receiver.
+\newline
+\newline
+$Range(i,j)$ - Distance from receiver to i,j - Distance from a particular receiver location to the cell at row i, column j.
 
 \chapter{Morenre Ancillary Stuff}
 

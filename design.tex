@@ -164,13 +164,19 @@ There are three distinct ways to place receivers into the model: user specificat
 
 \subsection{Evaluation of Receiver Emplacements} TODO needs work
 \label{evaluationOfReceiver}
-Section~\ref{animalModeling} discusses the models used to simulate animal movement.  The animal movement models provide the "Behavior Grid", a 2D grid (of the same size as the specified bathymetry grid) which gives the distribution of animals across the study area, and a shape function which describes a normal distribution of animals within the water column at various depths.  Section~\ref{LoS} discusses the Line of Sight (LoS) model used to simulate the obstruction of acoustic transmission.  Section\ref{receiverModel} discusses how attenuation affects the propagation of acoustic signals and thus the probability of detecting ($P_{range}$) acoustic transmissions from a distance.
+Section~\ref{animalModeling} discusses the models used to simulate animal movement.  These animal models populate the "Behavior Grid", a 2D grid (of the same size as the specified bathymetry grid) which gives the distribution of animals across the study area, and a shape function which describes a normal distribution of animals within the water column at various depths.  Section~\ref{LoS} discusses the Line of Sight (LoS) model used to simulate the obstruction of acoustic transmission.  Section\ref{receiverModel} discusses how attenuation affects the propagation of acoustic signals and thus the probability of detecting ($P_{range}$) acoustic transmissions from a distance.  Together, these models are used to evaluate receiver locations throughout the study site.  
+
+
+
+\subsection{Goodness Grid}
+\label{goodnessGrid}
+In modeling our 3D environment (the study site), we make extensive use of 2D grids with a third dimension.  However, we assume all receivers in the study will have the same elevation off the sea floor.  Recall that our program will evaluate every cell in the Bathymetry Grid as a potential receiver emplacement.  Together with the assumption of fixed receiver elevation, the search space considered by our program is a 2D surface parallel to the sea floor.  Thus, it makes sense to store the evaluation metric for this search space in a 2D grid with the same dimensions and resolution as the Bathymetry Grid.  This gird is referred to as the "Goodness Grid" ($G$).  
 
 \subsection{Evaluation Algorithms (Bias)}
-The Evaluation or “Goodness” algorithm is the driving force behind the evaluation of sensor placements.  Given a particular cell at row i and column j, an Evaluation Algorithm will compute a non-negative, rational value representing how well cell (i,j) conforms to that Algorithm's definition of "good".  These values are computed for all cells within the Bathymetry Grid, and stored in the Goodness Grid, a 2D grid of identical size and resolution as the Bathymetry and Behavior Grids.  Thus, $G_{i,j}$ refers to the goodness value of the cell at row i, column j on the bathymetry grid.  
+The Evaluation or “Goodness” algorithm is the driving force behind the evaluation of sensor placements.  Given a particular cell at row i and column j, an Evaluation Algorithm will compute a non-negative, rational value representing how much data a receiver placed d meters off the bottom of cell (i,j) would recover, according to the particular bias of a given evaluation algorithm.  These values are computed for all cells within the Bathymetry Grid, and stored in the Goodness Grid.  $G_{i,j}$ refers to the goodness value of the cell at row i, column j on the Goodness Grid($G$).  
 
-While users are able to write their own “Goodness” algorithms, three basic algorithms are provided.  All Evaluation Algorithms compute the goodness of a potential receiver location ($G_{i,j}$) by summing the number of Estimated Receivable Transmissions (ERT) from all cells within Detection Range of $G_{i,j}$ .  The algorithms vary in how they compute ERT.\newline\newline
-Explicitly, $G_{i,j} = \Sigma_{i=i_0}^{i_n} \Sigma_{j=j_0}^{j_n} ERT(x,i,j)$, where x is the chosen algorithm/option, $i_0$ and $j_0$ represent starting row/column indexes for the Detection Area, and $i_n$ and $j_n$ represent ending row/column indexes for the Detection Area.
+While users are able to write their own “Goodness” algorithms, three basic algorithms are provided.  All Evaluation Algorithms compute the goodness of a potential receiver location ($G_{i,j}$) by summing the number of Estimated Receivable Transmissions (ERT) from all cells within Detection Range of $G_{i,j}$ .  Each algorithm has a particular bias in its approach to computing ERT.  Note: we utilize the terms "bias" and "algorithm" interchangeably when referring to "Evaluation Algorithms".\newline\newline
+Explicitly, $G_{i,j} = \Sigma_{i=i_0}^{i_n} \Sigma_{j=j_0}^{j_n} ERT(x,i,j)$, where x is the chosen Evaluation Algorithm/Bias, $i_0$ and $j_0$ represent starting row/column indexes (respectively) for the Detection Area, and $i_n$ and $j_n$ represent ending row/column indexes (respectively) for the Detection Area.
 
 \subsubsection{Animal Only (Option “1”)}
 This option prefers to place sensors in areas of high animal activity, completely oblivious to the surrounding bathymetry.  This is useful for when no bathymetric information is available or when animal activity occurs well above the sea floor.   The "Animal Only" option computes ERT for a cell as the animal-residency of a cell (according to the Behavior Grid), multiplied by the probability of detection due to attenuation for that cell's distance from the receiver.\newline
@@ -187,27 +193,6 @@ This option places sensors in areas that have the best visibility of the surroun
 Explicitly,
 $ERT_{2,i,j} =  B_{i,j} * P_{observation} * P_{Attenuation}(Range(i,j))$\newline
 Note: With this option, B is initially described as a uniform distribution.
-
-
-
-\subsection{Computational Complexity}
-\label{computationalComplexity}
-A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider O($r^{3}$) cells.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We quickly compute this via incremental ray tracing which can be done in O(1) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within Detection Range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.  One notable difference between our method and the naive method is that the naive method computes the sum probability of detection for each cell in the 3D space, where our method simply integrates to find the probability of detection for the entire a column of water.  
-
-
-\begin{figure}[t]
-	\label{rayTracing}
-	\centering
-	\includegraphics[scale=0.3]{rayTracing.png}
-	\caption{An illustration of how ray tracing works within a 3D environment. \cite{Akbarzadeh2013}}
-\end{figure}
-
-\begin{figure}[t]
-	\label{observableAnimals}
-	\centering
-	\includegraphics[scale=0.3]{ObservableAnimals.png}
-	\caption{An illustration of how ray tracing and integration over a shape function can be used to compute the probability of detecting fish within a cell.  Dotted lines indicate the maximum and minimum depths visible to the receiver.  The normal distributions in green/red indicate the distribution of fish within a given cell as determined by a shape function.  The green portion of the distribution indicates the portion of the distribution that is observable by the receiver and the red indicates the portion that is unobservable by the receiver.  The observable distribution (green) is computed by integration over the shape function.}
-\end{figure}
 
 
 \subsection{Selection of Optimal Emplacements}
@@ -245,7 +230,56 @@ The primary purpose of this algorithm was to discount exactly those transmission
 In normal research situations, users will have a set number of receivers to place within their study site.  The process of arriving at this number is likely unscientific, perhaps relying on user estimate (such as the user-perceived feasibility of receiving a given number of receivers).  Rather than guessing at the number of receivers to use, and hoping for an adequate data recovery rate, users should be able to calculate the marginal benefit (additional detections, increased Data Recovery Rates) of utilizing a variable number of receivers.   To this end, the program allows for the projected incremental benefit for a given number of additional receivers.  Our program facilitates this by allowing users to specify a number of receivers to project, returning graphs and metrics of the marginal increase in Data Recovery Rate.  Armed with this data, users can determine an appropriate number of receivers to purchase, or construct an argument for purchasing more receivers.
 
 \section{Outputs}
-
+Our program outputs 5 files:
+1) The Bathymetry Grid as a heat map
+2) The Behavior Grid as a heat map
+3) The Goodness Grid as a heat map
+4) The Coverage Grid as a heat map
+5) The marginal gain in Unique Recovery Rate as a function of the number of sensors placed
+5) 
 TODO
 discuss output
 discuss ray tracing image
+
+
+\subsection{Time and Space Complexity}
+\label{computationalComplexity}
+To compare the temporal and spatial complexities of various elements of our program, we define the following variable inputs to the program:\newline
+$n$ - The square root of the number of cells in the Bathymetry Grid.\newline
+$r$ - The detection radius.  Also the square root of the number of cells in the Detection Grid.\newline
+$k$ - The number of optimal placements to find.\newline
+
+\subsubsection{Bathymetry Grid}
+The bathymetry data for the study site is provided as a grid of $n^2$ cells.  This data must be copied into local memory (RAM), which takes O(1) time to copy, and O(1) space to hold.  Thus, the creation of the Bathymetry Grid will take O(1) * $n^2$ = O($n^2$) time and space..
+
+\subsubsection{Behavior Grid}
+Animal residency is computed as a function of the depth of a particular cell (Restricted Vertical Habitat), and the cell's location (OU/RW modeling).  While these functions are non-linear, the computation time for each cell is constant [O(1)].  So is the space required to store a single residency value for each of $n^2$ cells.  Therefore, the initialization of the Behavior Grid is O(1) * $n^2$ = O($n^2$).
+
+
+\subsubsection{Line of Sight Computation}
+A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider O($r^{3}$) cells.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can  O($r$) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within Detection Range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.  One notable difference between our method and the naive method is that the naive method computes the sum probability of detection for each cell in the 3D space, where our method simply integrates to find the probability of detection for the entire a column of water.  
+
+\subsubsection{Goodness Grid}
+
+\paragraph{Evaluation Algorithm 1}
+
+\paragraph{Evaluation Algorithm 2 \& 3}
+
+\subsubsection{Receiver Location Selection}
+
+\subsubsection{Suppression}
+
+
+\begin{figure}[t]
+	\label{rayTracing}
+	\centering
+	\includegraphics[scale=0.3]{rayTracing.png}
+	\caption{An illustration of how ray tracing works within a 3D environment. \cite{Akbarzadeh2013}}
+\end{figure}
+
+\begin{figure}[t]
+	\label{observableAnimals}
+	\centering
+	\includegraphics[scale=0.3]{ObservableAnimals.png}
+	\caption{An illustration of how ray tracing and integration over a shape function can be used to compute the probability of detecting fish within a cell.  Dotted lines indicate the maximum and minimum depths visible to the receiver.  The normal distributions in green/red indicate the distribution of fish within a given cell as determined by a shape function.  The green portion of the distribution indicates the portion of the distribution that is observable by the receiver and the red indicates the portion that is unobservable by the receiver.  The observable distribution (green) is computed by integration over the shape function.}
+\end{figure}
