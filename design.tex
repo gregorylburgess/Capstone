@@ -230,44 +230,78 @@ The primary purpose of this algorithm was to discount exactly those transmission
 In normal research situations, users will have a set number of receivers to place within their study site.  The process of arriving at this number is likely unscientific, perhaps relying on user estimate (such as the user-perceived feasibility of receiving a given number of receivers).  Rather than guessing at the number of receivers to use, and hoping for an adequate data recovery rate, users should be able to calculate the marginal benefit (additional detections, increased Data Recovery Rates) of utilizing a variable number of receivers.   To this end, the program allows for the projected incremental benefit for a given number of additional receivers.  Our program facilitates this by allowing users to specify a number of receivers to project, returning graphs and metrics of the marginal increase in Data Recovery Rate.  Armed with this data, users can determine an appropriate number of receivers to purchase, or construct an argument for purchasing more receivers.
 
 \section{Outputs}
-Our program outputs 5 files:
-1) The Bathymetry Grid as a heat map
-2) The Behavior Grid as a heat map
-3) The Goodness Grid as a heat map
-4) The Coverage Grid as a heat map
-5) The marginal gain in Unique Recovery Rate as a function of the number of sensors placed
-5) 
+Our program outputs 6 files:\newline
+1) The Bathymetry Grid as a heat map\newline
+2) The Behavior Grid as a heat map\newline
+3) The Goodness Grid as a heat map\newline
+4) The Coverage Grid as a heat map\newline
+5) The marginal gain in Unique Recovery Rate as a function of the number of sensors placed\newline
+6) Text representations of the 5 Grid files, tabular receiver data, and the specified input parameters.\newline
+\begin{figure}[h!]
+	\label{outputGraphs}
+		\includegraphics[width=\linewidth]{TopographyGrid.png}
+		\caption{}\label{bathyGraph}
+	\end{figure}
+	
+	\begin{figure}[t]
+		\includegraphics[width=\linewidth]{BehaviorGrid.png}
+		\caption{}\label{animalGraph}
+	\end{figure}
+	
+	\begin{figure}[t]
+		\includegraphics[width=\linewidth]{GoodnessGrid.png}
+		\caption{}\label{goodnessGraph}
+	\end{figure}
+
+	\begin{figure}[t]
+		\includegraphics[width=\linewidth]{CoverageGrid.png}
+		\caption{}\label{coverageGraph}
+	\end{figure}
+
+	\begin{figure}[t]
+		\includegraphics[width=\linewidth]{RecoveryRates.png}
+		\caption{}\label{recoveryGraph}
+	\end{figure}
+\subsection{Grid Graphs}
+The four Grid files (Bathymetry, Behavior, Coverage, and Goodness) are visualized as a heat maps.  All of these are overlaid with the resulting receiver locations as numbered circles.  Receiver locations show their detection range as dotted outlines centered over the receiver locations.  User placed receivers are colored white, while receivers placed optimally by the system are colored blue.  The numbering on user and system-placed receivers denotes the rank of each receiver's Unique Data Recovery Rate.  User and system-placed receivers are ranked separately.  Optimal receivers consist both the optimally placed and projected receivers.  The highest ranked receiver locations are returned as the optimal receiver locations, with the lower ranked locations as the projected receiver locations.
+
+
+\subsection{Data Recovery Graphs}
+The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed sensors used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (perhaps UDRR contribution) against that cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a particular UDRR.  
+
+\subsection{Text Files}
+The program returns a comprehensive text representation of the program output (text dump of gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates \& data recovery rates).  Coordinates are returned in both a Global (with respect to the original Topography file) and local (the user specified area of interest) frame.  This provides better accuracy (and some redundancy) in situations where bathymetry grids are expansive enough to be affected by the curvature of the earth.  It should be noted that the program does not account for these variances (as such fluctuations are generally accounted for by authors of bathymetric grids), and so small rounding errors may occur.  By locating a cell in both local and global frames, these inaccuracies are more easily pinned down.
+
 TODO
-discuss output
 discuss ray tracing image
 
 
-\subsection{Time and Space Complexity}
+\section{Time and Space Complexity}
 \label{computationalComplexity}
 To compare the temporal and spatial complexities of various elements of our program, we define the following variable inputs to the program:\newline
 $n$ - The square root of the number of cells in the Bathymetry Grid.\newline
 $r$ - The detection radius.  Also the square root of the number of cells in the Detection Grid.\newline
 $k$ - The number of optimal placements to find.\newline
 
-\subsubsection{Bathymetry Grid}
+\subsection{Bathymetry Grid}
 The bathymetry data for the study site is provided as a grid of $n^2$ cells.  This data must be copied into local memory (RAM), which takes O(1) time to copy, and O(1) space to hold.  Thus, the creation of the Bathymetry Grid will take O(1) * $n^2$ = O($n^2$) time and space..
 
-\subsubsection{Behavior Grid}
-Animal residency is computed as a function of the depth of a particular cell (Restricted Vertical Habitat), and the cell's location (OU/RW modeling).  While these functions are non-linear, the computation time for each cell is constant [O(1)].  So is the space required to store a single residency value for each of $n^2$ cells.  Therefore, the initialization of the Behavior Grid is O(1) * $n^2$ = O($n^2$).
+\subsection{Behavior Grid}
+Animal residency is computed as a function of the depth of a particular cell (Restricted Vertical Habitat), and the cell's location (OU/RW modeling).  While these functions are non-linear, the computation time for each cell is constant [O(1)].  So is the space required to store a single residency value for each of $n^2$ cells.  Therefore, the population of the Behavior Grid is O(1) * $n^2$ = O($n^2$).
 
 
-\subsubsection{Line of Sight Computation}
+\subsection{Line of Sight Computation}
 A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider O($r^{3}$) cells.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can  O($r$) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within Detection Range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.  One notable difference between our method and the naive method is that the naive method computes the sum probability of detection for each cell in the 3D space, where our method simply integrates to find the probability of detection for the entire a column of water.  
 
-\subsubsection{Goodness Grid}
+\subsection{Goodness Grid}
 
-\paragraph{Evaluation Algorithm 1}
+\subsubsection{Evaluation Algorithm 1}
 
-\paragraph{Evaluation Algorithm 2 \& 3}
+\subsubsection{Evaluation Algorithm 2 \& 3}
 
-\subsubsection{Receiver Location Selection}
+\subsection{Receiver Location Selection}
 
-\subsubsection{Suppression}
+\subsection{Suppression}
 
 
 \begin{figure}[t]
