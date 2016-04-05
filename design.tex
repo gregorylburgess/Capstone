@@ -305,7 +305,7 @@ As discussed in Section~\ref{LoSAlgorithm}, the LoS algorithm is given as:\newli
 3) Choose the Critical Slope\newline
 4) Project a line from $p$ to $q$ along the Critical Slope to find $D_{max}$.\newline
 
-\textbf{Step 1} finds intervening cells by ray tracing, which can be done in linear ($O(n)$) time.  The number of cells considered ($n$), depends upon the distance between the receiver and the target cell\cite{rayTracing}.  Given that the Detection Grid has a diameter of $2r$, and that receivers are located in the center of the Detection Grid, the greatest distance between a receiver and a target cell in the Detection Grid occurs between a receiver and the corner cells of the Detection Grid (a distance of $\sqrt2*r$).  Thus, the number of cells considered when creating a list of intervening cells is $O(\sqrt2*r)$ = $O(r)$.
+\textbf{Step 1} finds intervening cells by ray tracing, which can be done in linear ($O(n)$) time.  The number of cells considered ($n$), depends upon the distance between the receiver and the target cell\cite{rayTracing}.  Given that the Detection Grid has a radius of $r$, and that receivers are located in the center of the Detection Grid, the greatest distance between a receiver and a target cell in the Detection Grid occurs between a receiver and the corner cells of the Detection Grid (a distance of $\sqrt2*\frac{r}{2}$).  Thus, the number of cells considered when creating a list of intervening cells is $O(\sqrt2*\frac{r}{2})$ = $O(r)$.
 
 \textbf{Step 2} computes the slopes for each of the $m$ cells in $C$.  Computing the slope between two points takes $O(1)$ time to compute and space to store.  Therefore computing $m$ slopes takes $O(1)*O(m)=O(m)$ time and space.  As stated above, $m$ is at worst $O(r)$ on the Detection Grid.  Thus, the slope computation is at worst $O(r)$, requiring $O(r)$ extra storage.
 
@@ -326,9 +326,26 @@ A naive solution to this question is to determine whether or not each cell in th
 
 \subsection{implementatino}
 Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can be done in  O($r$) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within Detection Range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.
-\subsection{Receiver Location Selection}
+
+\subsection{Optimal Receiver Placement}
+The selection of the top $R$ receivers requires the Goodness Grid to have been populated.  As previously stated, the selection process is iterative (requiring that suppression (if selected) be applied after each sensor selection), as suppression causes goodness values to be altered.  The process of selecting a single receiver location is $O(n^2)$ since the algorithm must consider approximately $n^2$ possible receiver locations at each iteration.  After each location selection, suppression must be applied to the chosen location.  Due to the variability of the suppression algorithm, we use a variable  ($O_{suppression}$) to represent the big-o runtime of the suppression algorithm.  Thus the computation time required for each selection-suppression step is $O(n^2 + O_{suppression})$.  The number of iterations required to run is given by the number of optimal ($R_{opt}$) and projected ($R_{proj}$) receiver placements requested.  In total, the runtime of the Optimal Receiver Placement step is $[R_{opt} + R_{proj}] * [O(n^2 + O_{suppression})] = O([R_{opt} + R_{proj}]* [n^2 + O_{suppression}])$.
+
 
 \subsection{Suppression}
+As discussed in Section~\ref{suppression}, the suppression mechanic is applied after the placement of a receiver.  The suppression mechanic has several options, each affecting the time and space complexity of the mechanism.  To better capture the complexity of the algorithms involved, we denote the following variables:
+$r_{supp}$ - The Suppression Range. 
+$f_{supp}$ - The Suppression Range Factor.  Generally a value between 0 and 1.
+$d_supp$ - The square root of the number of cells in the Suppression Area.  The edge dimension of the Suppression Area.  Equal to $2*f_{supp}*r_{supp} + 1$
+
+
+
+
+
+\subsubsection{Static Suppression Algorithm}
+As previously stated, the Static Suppression Algorithm multiplies cells within the suppression area by a scalar constant.  This means that 
+
+\subsubsection{Exact Suppression}
+
 
 
 \begin{figure}[t]
