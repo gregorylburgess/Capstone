@@ -14,7 +14,7 @@ In section~\ref{CostAltTech}, we discuss the costs of marine telemetry systems, 
 
 \subsubsection{Metrics}
 \label{motivationMetrics}
-The computation of network metrics (Absoloute Recovery Rate, Unique Recovery Rate, Network Sparsity) is very labor intensive at large scale.  Additionally, the process of computation may vary from experiment to experiment.  An automated tool would solve both issues by providing a fast, simple, repeatable, and well-documented method for computation.  Metrics from such a tool would be useful in directly comparing different network deigns.
+The computation of network metrics (Absolutes Recovery Rate, Unique Recovery Rate, Network Sparsity) is very labor intensive at large scale.  Additionally, the process of computation may vary from experiment to experiment.  An automated tool would solve both issues by providing a fast, simple, repeatable, and well-documented method for computation.  Metrics from such a tool would be useful in directly comparing different network deigns.
 
 
 \subsubsection{Transparency}
@@ -101,6 +101,8 @@ Both strategies (duplicating depth and applying a smoothing function) for artifi
 In the real world, the transmission of an acoustic ping originates from the tagged animal and propagates to the receiver.  This propagation is governed by complex interactions with the surrounding environment (including the bottom substrate, water density, distance to the surface/sea-floor, thermoclines, the number of tagged animals in the vicinity, and ambient noise).  Because it is difficult to model these phenomena without significant data on a large number of variables over a large area, our simulation uses a simplified propagation model relying on direct line of sight between a tagged animal and a receiver.  Simply put, in order to receive a transmission, there must exist a physically-unobstructed path between a tagged animal and a receiver.  
 
 
+
+
 \subsection{Animal Modeling}
 \label{animalModeling}
 
@@ -159,10 +161,7 @@ We define the Detection Area of a receiver to be the square plane of grid cells 
 There are three distinct ways to place receivers into the model: user specification, optimal placement, and optimal projection.  User Specified Receivers (USR) represent receivers that are already deployed at the study site and are being integrated into a larger network.    Program Placed Receivers are receivers that will be  optimally placed by the program, taking into account existing (user specified) receivers placements using the suppression dynamic explained in section~\ref{suppression}.  Projected Sensors are PPSs that do not count towards the network statistic rates returned by the program.  Instead, their contributed recovery rates are given separately, and represent the marginal benefits of incrementally placing more receivers.  
 
 
-\section{Evaluation Algorithms}
-\label{evaluationAlgorithms}
-
-\subsection{Evaluation of Receiver Emplacements} TODO needs work
+\section{Evaluation of Receiver Emplacements} TODO needs work
 \label{evaluationOfReceiver}
 Section~\ref{animalModeling} discusses the models used to simulate animal movement.  These animal models populate the "Behavior Grid", a 2D grid (of the same size as the specified bathymetry grid) which gives the distribution of animals across the study area, and a shape function which describes a normal distribution of animals within the water column at various depths.  Section~\ref{LoS} discusses the Line of Sight (LoS) model used to simulate the obstruction of acoustic transmission.  Section\ref{receiverModel} discusses how attenuation affects the propagation of acoustic signals and thus the probability of detecting ($P_{range}$) acoustic transmissions from a distance.  Together, these models are used to evaluate receiver locations throughout the study site.  
 
@@ -173,26 +172,36 @@ Section~\ref{animalModeling} discusses the models used to simulate animal moveme
 In modeling our 3D environment (the study site), we make extensive use of 2D grids with a third dimension.  However, we assume all receivers in the study will have the same elevation off the sea floor.  Recall that our program will evaluate every cell in the Bathymetry Grid as a potential receiver emplacement.  Together with the assumption of fixed receiver elevation, the search space considered by our program is a 2D surface parallel to the sea floor.  Thus, it makes sense to store the evaluation metric for this search space in a 2D grid with the same dimensions and resolution as the Bathymetry Grid.  This gird is referred to as the "Goodness Grid" ($G$).  
 
 \subsection{Evaluation Algorithms (Bias)}
-The Evaluation or “Goodness” algorithm is the driving force behind the evaluation of sensor placements.  Given a particular cell at row i and column j, an Evaluation Algorithm will compute a non-negative, rational value representing how much data a receiver placed d meters off the bottom of cell (i,j) would recover, according to the particular bias of a given evaluation algorithm.  These values are computed for all cells within the Bathymetry Grid, and stored in the Goodness Grid.  $G_{i,j}$ refers to the goodness value of the cell at row i, column j on the Goodness Grid($G$).  
+The Evaluation or “Goodness” algorithm is the driving force behind the evaluation of receiver placements.  Given a particular cell at row i and column j, an Evaluation Algorithm will compute a non-negative, rational value representing how much data a receiver placed d meters off the bottom of cell (i,j) would recover, according to the particular bias of a given evaluation algorithm.  These values are computed for all cells within the Bathymetry Grid, and stored in the Goodness Grid.  $G_{i,j}$ refers to the goodness value of the cell at row i, column j on the Goodness Grid($G$).  
 
 While users are able to write their own “Goodness” algorithms, three basic algorithms are provided.  All Evaluation Algorithms compute the goodness of a potential receiver location ($G_{i,j}$) by summing the number of Estimated Receivable Transmissions (ERT) from all cells within Detection Range of $G_{i,j}$ .  Each algorithm has a particular bias in its approach to computing ERT.  Note: we utilize the terms "bias" and "algorithm" interchangeably when referring to "Evaluation Algorithms".\newline\newline
 Explicitly, $G_{i,j} = \Sigma_{i=i_0}^{i_n} \Sigma_{j=j_0}^{j_n} ERT(x,i,j)$, where x is the chosen Evaluation Algorithm/Bias, $i_0$ and $j_0$ represent starting row/column indexes (respectively) for the Detection Area, and $i_n$ and $j_n$ represent ending row/column indexes (respectively) for the Detection Area.
 
 \subsubsection{Animal Only (Option “1”)}
-This option prefers to place sensors in areas of high animal activity, completely oblivious to the surrounding bathymetry.  This is useful for when no bathymetric information is available or when animal activity occurs well above the sea floor.   The "Animal Only" option computes ERT for a cell as the animal-residency of a cell (according to the Behavior Grid), multiplied by the probability of detection due to attenuation for that cell's distance from the receiver.\newline
+\label{bias1}
+This option prefers to place receivers in areas of high animal activity, completely oblivious to the surrounding bathymetry.  This is useful for when no bathymetric information is available or when animal activity occurs well above the sea floor.   The "Animal Only" option computes ERT for a cell as the animal-residency of a cell (according to the Behavior Grid), multiplied by the probability of detection due to attenuation for that cell's distance from the receiver.\newline
 Explicitly,
 $ERT_{1,i,j} = B_{i,j} * P_{Attenuation}(Range(i,j))$
 
 \subsubsection{Visible Fish (Option “3”)}
-This option chooses sensor locations that have the best view of areas of high animal residency.  Both animal presence and visibility due to topography are considered. This option is most useful when both well-documented animal behavior and high resolution bathymetry are available.  ERT is computed as animal-residency (according to the Behavior Grid), multiplied by the percentage of visible fish (given either as a simple percentage of the visible water column, or by integration over the shape function described in by Habitat Preference), multiplied by the probability of detection due to attenuation.  Figure~\ref{observableAnimals} depicts this operation.\newline
+\label{bias3}
+This option chooses receiver locations that have the best view of areas of high animal residency.  Both animal presence and visibility due to topography are considered. This option is most useful when both well-documented animal behavior and high resolution bathymetry are available.  ERT is computed as animal-residency (according to the Behavior Grid), multiplied by the percentage of visible fish (given either as a simple percentage of the visible water column, or by integration over the shape function described in by Habitat Preference), multiplied by the probability of detection due to attenuation.  Figure~\ref{observableAnimals} depicts this operation.\newline
 Explicitly,
 $ERT_{3,i,j} =  B_{i,j} * P_{observation} * P_{Attenuation}(Range(i,j))$
 
 \subsubsection{Topography Only (Option “2”)}
-This option places sensors in areas that have the best visibility of the surrounding area, regardless of the expected animal-residency.  This is useful for experiments where animal habitat is unknown or to be determined.  Here, ERT is computed as the number of observable transmissions from a uniformly distributed animal model.  While this algorithm is referred to as "Topography Only", we implement this by using the "Visible Fish" algorithm with a simplified animal model.  Specifically, we assume that animals are uniformly distributed throughout the environment.  Because animals are uniformly distributed, the more volume a receiver can see, the more transmissions it will receive.  Thus, the algorithm will value cells with the best possible view of the surrounding water columns.\newline
+\label{bias2}
+This option places receivers in areas that have the best visibility of the surrounding area, regardless of the expected animal-residency.  This is useful for experiments where animal habitat is unknown or to be determined.  Here, ERT is computed as the number of observable transmissions from a uniformly distributed animal model.  While this algorithm is referred to as "Topography Only", we implement this by using the "Visible Fish" algorithm with a simplified animal model.  Specifically, we assume that animals are uniformly distributed throughout the environment.  Because animals are uniformly distributed, the more volume a receiver can see, the more transmissions it will receive.  Thus, the algorithm will value cells with the best possible view of the surrounding water columns.\newline
 Explicitly,
 $ERT_{2,i,j} =  B_{i,j} * P_{observation} * P_{Attenuation}(Range(i,j))$\newline
 Note: With this option, B is initially described as a uniform distribution.
+
+
+\subsection {Line of Sight Evaluation}
+\label{LoSAlgorithm}
+Section~\ref{bathymetricShadowing} explains the concept of Bathymetric Shadowing, which requires a bathymetrically un-obstructed Line of Sight (LoS) to exist between an acoustic tag and a receiver in order for transmissions from that tag to be received.  Section~\ref{bias3} discusses how the evaluation algorithms utilize this concept to compute the quantity of transmissions that are receivable.  Specifically, the evaluation algorithm needs to know the deepest depth ($D_{max}$) in a cell that is visible to a receiver.  To determine the $D_{max}$ for a cell $q$, relative to a receiver in cell $p$, we must first determine which cells could potentially obscure LoS between $p$ and $q$.  We refer to a list of n such potentially obscuring cells as $C_{0...n}$.   Figure~\ref{LoS} illustrates this process.  The shaded cells in the left image potentially obstruct the vision from cell $p$ to cell $q$.  Herein, we use $D_x$ to refer to the depth of cell $x$, as given in the bathymetry file.  Additionally, we declare that $x_r$ and $x_c$ refer to the row and column indexes (respectively) of the cell x on the Bathymetry Grid.
+
+Next, we determine the slope between the receiver at $p$ and each cell in $C$.  The slope between a receiver elevated $k$ meters off the sea floor of cell $p$, and $v$  ($m_{p,v}$), is defined as: the difference in elevation between $D_p + k$ and $D_v$ divided by the Euclidian distance $Edist_{p,v}$ between cell $p$ and cell $v$.  Explicitly, $m_{p,v} = \frac{(D_v - D_p + k)}{Edist_{p,v}} = \frac{(D_v - D_p + k)}{\sqrt{(p_r - v_r )^2 + (p_c - v_c)^2}}$.  The greatest (largest signed value) slope $m_{p,v}$ for all cells $v$ in $C$ is the Critical Slope ($m_{crit}$).  The greatest obstruction to the LoS between $p$ and $q$ will occur along this critical slope.  If we project a line with this slope from the receiver at $p$ to our target cell $q$, the line would be tangent to the tallest obstruction along our LoS.  Thus, the critical slope determines $D_{max}$ for cell $q$.  Explicitly, $D_{max} = m_{crit} * Edist_{p,v} + D_p + k$.
 
 
 \subsection{Selection of Optimal Emplacements}
@@ -202,13 +211,13 @@ Section~\ref{evaluatingSensorEmplacements} describes the evaluation of cells as 
 
 \section{Suppression}
 \label{suppression}
-As previously mentioned, the optimality of a network depends greatly upon the way in which data quality is defined.  Some users will want to design a network that covers as much of a study area as possible, while others might want to heavily saturate a small area with sensors to facilitate higher resolution data.  Others may wish to find the receiver locations that return the highest number of unique data points.  Also previously mentioned was the metric of Unique Data Recovery Rate (UDRR) and Absoloute Data Recovery Rate (ADRR) [Section~\ref{dataRecoveryRate}].  This model reflects the idea that the UDRR is more important than the ADRR, as transmissions received by one sensor are no longer desirable to any other sensor.
+As previously mentioned, the optimality of a network depends greatly upon the way in which data quality is defined.  Some users will want to design a network that covers as much of a study area as possible, while others might want to heavily saturate a small area with receivers to facilitate higher resolution data.  Others may wish to find the receiver locations that return the highest number of unique data points.  Also previously mentioned was the metric of Unique Data Recovery Rate (UDRR) and Absoloute Data Recovery Rate (ADRR) [Section~\ref{dataRecoveryRate}].  This model reflects the idea that the UDRR is more important than the ADRR, as transmissions received by one receiver are no longer desirable to any other receiver.
 
 \begin{figure}[t]
 	\label{suppressionImage}
 	\centering
 	\includegraphics[scale=0.45]{suppression.png}
-	\caption{An illustration of the Exact Suppression Algorithm.  In (a), we see a bathymetry grid with infinitely high walls (the white 'h' shape) on an otherwise flat plane (blue region).  In (b), we see Behavior Grid with a distribution (given by the OU movement model) of animals around the walls.  (c) shows the computed goodness of Sensor (receiver) locations within the study site.  The program first identifies location 1 (the blue circle) as having the highest unique data recovery rate, and places a sensor there.  The dotted lines represent the receiver's Detection Range.  In (d), the program suppresses the Behavior Grid by subtracting the ERT of each cell within Suppression Range.  Here the Suppression Range Factor is 1.0, so the Suppression Area is the same as the Detection Area).  In (e), the goodness grid is recalculated, taking into account the suppressed Behavior Grid.  Additionally, the program identifies location 2 as having the highest Unique Data Recovery Rate.  In (f), the Behavior Grid is again suppressed to account for the placement of sensor (2).}
+	\caption{An illustration of the Exact Suppression Algorithm.  In (a), we see a bathymetry grid with infinitely high walls (the white 'h' shape) on an otherwise flat plane (blue region).  In (b), we see Behavior Grid with a distribution (given by the OU movement model) of animals around the walls.  (c) shows the computed goodness of Sensor (receiver) locations within the study site.  The program first identifies location 1 (the blue circle) as having the highest unique data recovery rate, and places a receiver there.  The dotted lines represent the receiver's Detection Range.  In (d), the program suppresses the Behavior Grid by subtracting the ERT of each cell within Suppression Range.  Here the Suppression Range Factor is 1.0, so the Suppression Area is the same as the Detection Area).  In (e), the goodness grid is recalculated, taking into account the suppressed Behavior Grid.  Additionally, the program identifies location 2 as having the highest Unique Data Recovery Rate.  In (f), the Behavior Grid is again suppressed to account for the placement of receiver (2).}
 \end{figure}
 
 \subsection{Suppression Area}
@@ -220,7 +229,7 @@ To promote the flexibility of our program, we provide users two algorithms for s
 
 \subsubsection{Static Suppression}
 \label{staticSuppression}
-The Static Suppression algorithm takes a "cookie-cutter" approach and reduces the number of undetected transmissions in the Suppression Area by a user-specified factor.  All cells within the Suppression Area are multiplied by a user-specified non-zero real number.  This computation is very simplistic, requiring only a scalar multiplication, and as such runs very quickly.  This is useful for simulations that intend to place a very large number of receivers.  The cost of this speed is that the algorithm ignores the attenuation and line of sight models completely.  For instance, a cell that is very far away from the receiver, and whose line of sight to the receiver is obstructed will be reduced by the same factor as a cell with unobstructed line of sight, near the receiver.  Obviously this is not a faithful representation of the conceptual models discussed earlier, but supplied as a computationally-simple alternative.
+The Static Suppression algorithm takes a "cookie-cutter" approach and reduces the number of undetected transmissions in the Suppression Area by a user-specified factor (all cells within the Suppression Area are multiplied by a user-specified non-zero real number).  This computation is very simplistic, requiring only a scalar multiplication, and as such runs very quickly.  This is useful for simulations that intend to place a very large number of receivers.  The cost of this speed is that the algorithm ignores the attenuation and line of sight models completely.  For instance, a cell that is very far away from the receiver, and whose line of sight to the receiver is obstructed will be reduced by the same factor as a cell near the receiver with an unobstructed line of sight.  Obviously this is not a faithful representation of the conceptual models discussed earlier, but supplied as a computationally-simple alternative.
 
 \subsubsection{Exact Suppression}
 \label{exactSuppression}
@@ -235,7 +244,7 @@ Our program outputs 6 files:\newline
 2) The Behavior Grid as a heat map\newline
 3) The Goodness Grid as a heat map\newline
 4) The Coverage Grid as a heat map\newline
-5) The marginal gain in Unique Recovery Rate as a function of the number of sensors placed\newline
+5) The marginal gain in Unique Recovery Rate as a function of the number of receivers placed\newline
 6) Text representations of the 5 Grid files, tabular receiver data, and the specified input parameters.\newline
 \begin{figure}[h!]
 	\label{outputGraphs}
@@ -267,31 +276,44 @@ The four Grid files (Bathymetry, Behavior, Coverage, and Goodness) are visualize
 
 
 \subsection{Data Recovery Graphs}
-The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed sensors used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (perhaps UDRR contribution) against that cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a particular UDRR.  
+The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed receivers used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (perhaps UDRR contribution) against that cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a particular UDRR.  
 
 \subsection{Text Files}
-The program returns a comprehensive text representation of the program output (text dump of gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates \& data recovery rates).  Coordinates are returned in both a Global (with respect to the original Topography file) and local (the user specified area of interest) frame.  This provides better accuracy (and some redundancy) in situations where bathymetry grids are expansive enough to be affected by the curvature of the earth.  It should be noted that the program does not account for these variances (as such fluctuations are generally accounted for by authors of bathymetric grids), and so small rounding errors may occur.  By locating a cell in both local and global frames, these inaccuracies are more easily pinned down.
+The program returns a comprehensive text representation of the program output (text dump of gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates), data recovery rates for each receiver, and the sparsity of the network.  Projected receivers are excluded from the total UDRR, ADRR, and sparsity values.
 
-TODO
-discuss ray tracing image
+Coordinates are returned in both a Global (with respect to the original Topography file) and local (the user specified area of interest) frame.  While the curvature of the earth is well documented, different bathymetric maps may handle the mapping of a 3D curved plane to a 2D grid differently.  For example, one grid may implement some scaling on grid cells a function of the cell's latitude or distance from a certain point.  Other grid files may simply provide non-square grid files.  By proving a small-scale (local) and large-scale (global) frame of reference for our receiver locations, irregularities of this nature are more easily detected.
 
 
 \section{Time and Space Complexity}
 \label{computationalComplexity}
-To compare the temporal and spatial complexities of various elements of our program, we define the following variable inputs to the program:\newline
-$n$ - The square root of the number of cells in the Bathymetry Grid.\newline
-$r$ - The detection radius.  Also the square root of the number of cells in the Detection Grid.\newline
+To evaluate the temporal and spatial complexities of various elements of our program, we define the following variable inputs to the program:\newline
+$n$ - The square root of the number of cells in the Bathymetry Grid, (the edge length of a square grid).\newline
+$r$ - The Detection Range.  The square root of the number of cells in the Detection Grid (which is guaranteed to be a square).\newline
 $k$ - The number of optimal placements to find.\newline
 
 \subsection{Bathymetry Grid}
-The bathymetry data for the study site is provided as a grid of $n^2$ cells.  This data must be copied into local memory (RAM), which takes O(1) time to copy, and O(1) space to hold.  Thus, the creation of the Bathymetry Grid will take O(1) * $n^2$ = O($n^2$) time and space..
+The bathymetry data for the study site is provided as a grid of $n^2$ cells.  This data must be copied into local memory (RAM), each cell in the grid takes O(1) time to copy, and O(1) space to hold.  Thus, the creation of the Bathymetry Grid will take O(1) * $n^2$ = O($n^2$) time and space..
 
 \subsection{Behavior Grid}
-Animal residency is computed as a function of the depth of a particular cell (Restricted Vertical Habitat), and the cell's location (OU/RW modeling).  While these functions are non-linear, the computation time for each cell is constant [O(1)].  So is the space required to store a single residency value for each of $n^2$ cells.  Therefore, the population of the Behavior Grid is O(1) * $n^2$ = O($n^2$).
+Animal residency is computed as a function of the depth of a particular cell (Restricted Vertical Habitat), and the cell's location (OU/RW modeling).  This computation takes a constant [O(1)] amount of time.  The space required to store a single residency value for each of $n^2$ cells is also O(1).  Therefore, the population of the Behavior Grid takes O(1) * $n^2$ = O($n^2$) time and space.
 
 
 \subsection{Line of Sight Computation}
-A naive solution might be to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider O($r^{3}$) cells.  Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can  O($r$) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within Detection Range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.  One notable difference between our method and the naive method is that the naive method computes the sum probability of detection for each cell in the 3D space, where our method simply integrates to find the probability of detection for the entire a column of water.  
+As discussed in Section~\ref{LoSAlgorithm}, the LoS algorithm is given as:\newline
+1) Determine the intervening cells $C_{0...m}$ between $p$ and $q$\newline
+2) Compute the slopes between $p$ and $C_i$ for all $i$ in $[0 ... m]$\newline
+3) Choose the Critical Slope\newline
+4) Project a line from $p$ to $q$ along the Critical Slope to find $D_{max}$.\newline
+
+\textbf{Step 1} finds intervening cells by ray tracing, which can be done in linear ($O(n)$) time.  The number of cells considered ($n$), depends upon the distance between the receiver and the target cell\cite{rayTracing}.  Given that the Detection Grid has a diameter of $2r$, and that receivers are located in the center of the Detection Grid, the greatest distance between a receiver and a target cell in the Detection Grid occurs between a receiver and the corner cells of the Detection Grid (a distance of $\sqrt2*r$).  Thus, the number of cells considered when creating a list of intervening cells is $O(\sqrt2*r)$ = $O(r)$.
+
+\textbf{Step 2} computes the slopes for each of the $m$ cells in $C$.  Computing the slope between two points takes $O(1)$ time to compute and space to store.  Therefore computing $m$ slopes takes $O(1)*O(m)=O(m)$ time and space.  As stated above, $m$ is at worst $O(r)$ on the Detection Grid.  Thus, the slope computation is at worst $O(r)$, requiring $O(r)$ extra storage.
+
+\textbf{Step 3} chooses the largest slope amongst all $m$ slopes.  Therefore, we must consider $m$ items, each requiring $O(1)$ time to consider as the largest.  Since, $m$ is $O(r)$ on the Detection Grid, this step takes ($O(r)$) time to compute, and $O(1)$ space to store.  
+
+\textbf{Step 4} is a direct computation, requiring $O(1)$ time to compute and $O(1)$ space to store the result.
+
+In total, the LoS computation time is $O(r) + O(1) + O(r) + O(1) = O(r)$, requiring $O(r) + O(r) + O(1) + O(1) = O(r)$ temporary storage space.
 
 \subsection{Goodness Grid}
 
@@ -299,6 +321,11 @@ A naive solution might be to determine whether or not each cell in the three-dim
 
 \subsubsection{Evaluation Algorithm 2 \& 3}
 
+\subsubsection{Naive Method}
+A naive solution to this question is to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would need to consider at least O($r^{3}$) cells.  
+
+\subsection{implementatino}
+Recall however, that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, it is much more computationally efficient to determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the probability of detecting transmissions within the water column above that cell ($P_{d}$) .  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can be done in  O($r$) time for O($r^{2}$) cells \cite{Akbarzadeh2013}.   Then, using integration over the shape function, and known min/max depths, the total ($P_{d}$) can be computed in O($r^{2}$) time.  Finally, we determine an average($P_{d}$)  over all O($r^{2}$) cells within Detection Range.  This metric is used to evaluate each cell within the study area as a candidate for receiver placement.  Thus, our method for evaluating a 3D space can be done in  O($r^{2}$ + $r^{2}$ + $r^{2}$) = O($r^{2}$) time.
 \subsection{Receiver Location Selection}
 
 \subsection{Suppression}
