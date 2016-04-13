@@ -175,7 +175,7 @@ The Evaluation or “Goodness” algorithm is the driving force behind the evalu
 
 While users are able to write their own “Goodness” algorithms, three basic algorithms are provided.  All Evaluation Algorithms compute the goodness of a potential receiver location ($G_{i,j}$) by summing the number of Estimated Receivable Transmissions (ERT) from all cells within Detection Range of $G_{i,j}$ .  Each algorithm has a particular bias in its approach to computing ERT.  Note: we utilize the terms "bias" and "algorithm" interchangeably when referring to "Evaluation Algorithms".\newline
 \newline
-Explicitly, $G_{i,j} = \Sigma_{i=i_0}^{i_n} \Sigma_{j=j_0}^{j_n} ERT(x,i,j)$, where x is the chosen Evaluation Algorithm/Bias, $i_0$ and $j_0$ represent starting row/column indexes (respectively) for the Detection Area, and $i_n$ and $j_n$ represent ending row/column indexes (respectively) for the Detection Area.
+Explicitly, $G_{i,j} = \Sigma_{i=i_0}^{i_n} \Sigma_{j=j_0}^{j_n} ERT(x,i,j)$, where x is the chosen Evaluation Algorithm/Bias, $i_0$ and $j_0$ represent starting row/column indexes (respectively) for the Detection Area, and $i_n$ and $j_n$ represent ending row/column indexes (respectively) for the Detection Area.  Given that the Detection Area is of size $(2*D_{range}+1)^2$, the expected computation time of evaluating
 
 \subsubsection{Animal Only (Option “1”)}
 \label{bias1}
@@ -248,35 +248,35 @@ Our program outputs 6 files:\newline
 6) Text representations of the 5 Grid files, tabular receiver data, and the specified input parameters.\newline
 \begin{figure}[h!]
 	\label{outputGraphs}
-		\includegraphics[width=\linewidth]{TopographyGrid.png}
-		\caption{}\label{bathyGraph}
+		\includegraphics[scale=.5]{TopographyGrid.png}
+		\caption{A graphical representation of an artificial Bathymetry file at a 1m resolution (each cell has an edge length of 1m).  Darker cells represent greater depths, while white cells represent inaccessibel terrain (dry land).  The optimal receiver locations are shown on the grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.}\label{bathyGraph}
 	\end{figure}
 	
 	\begin{figure}[t]
-		\includegraphics[width=\linewidth]{BehaviorGrid.png}
-		\caption{}\label{animalGraph}
+		\includegraphics[scale=.5]{BehaviorGrid.png}
+		\caption{The Behavior Grid represented as a heatmap.  Higher levels of animal residency correspond with pink cells, moderate levels as light blue, and white for non-residency (ihospitible habitat such as  dry land).  The optimal receiver locations are shown on the grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.}\label{animalGraph}
 	\end{figure}
 	
 	\begin{figure}[t]
-		\includegraphics[width=\linewidth]{GoodnessGrid.png}
-		\caption{}\label{goodnessGraph}
+		\includegraphics[scale=.5]{GoodnessGrid.png}
+		\caption{The Goodness Grid represented as a heatmap showing the quantity of Estimated Receivable Transmissions (ERT) if a receiver were placed in a particular cell.  The legend in the top right assigns color coding to various ERT values. The optimal receiver locations are shown on the grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.} \label{goodnessGraph}
 	\end{figure}
 
 	\begin{figure}[t]
-		\includegraphics[width=\linewidth]{CoverageGrid.png}
-		\caption{}\label{coverageGraph}
+		\includegraphics[scale=.5]{CoverageGrid.png}
+		\caption{The Coverage Grid represetned as a heatmap showing the quantity of Estimated Receivable Transmissions from each cell in the study site, for the designated reciver array configuration.  The legend in the top right assigns color coding to various ERT values.  The optimal receiver locations are shown on the grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.  The missing corner of of Receiver 4's Detection Area is due to the presence of an obscuring section of Bathymetry (dry land).}\label{coverageGraph}
 	\end{figure}
 
 	\begin{figure}[t]
-		\includegraphics[width=\linewidth]{RecoveryRates.png}
-		\caption{}\label{recoveryGraph}
+		\includegraphics[scale=.8]{RecoveryRates.png}
+		\caption{} \label{recoveryGraph}
 	\end{figure}
 \subsection{Grid Graphs}
 The four Grid files (Bathymetry, Behavior, Coverage, and Goodness) are visualized as a heat maps.  All of these are overlaid with the resulting receiver locations as numbered circles.  Receiver locations show their detection range as dotted outlines centered over the receiver locations.  User placed receivers are colored white, while receivers placed optimally by the system are colored blue.  The numbering on user and system-placed receivers denotes the rank of each receiver's Unique Data Recovery Rate.  User and system-placed receivers are ranked separately.  Optimal receivers consist both the optimally placed and projected receivers.  The highest ranked receiver locations are returned as the optimal receiver locations, with the lower ranked locations as the projected receiver locations.
 
 
 \subsection{Data Recovery Graphs}
-The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed receivers used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (perhaps UDRR contribution) against that cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a particular UDRR.  
+The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed receivers used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (perhaps UDRR contribution) against that cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a particular UDRR.
 
 \subsection{Text Files}
 The program returns a comprehensive text representation of the program output (text dump of gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates), data recovery rates for each receiver, and the sparsity of the network.  Projected receivers are excluded from the total UDRR, ADRR, and sparsity values.
@@ -288,7 +288,7 @@ Coordinates are returned in both a Global (with respect to the original Topograp
 \label{computationalComplexity}
 To evaluate the temporal and spatial complexities of various elements of our program, we define the following variable inputs to the program:\newline
 $n$ - The square root of the number of cells in the Bathymetry Grid, (the edge length of a square grid).  Also recall that the Bathymetry, Behavior, Goodness, and Coverage grids are all of identical dimension, so $n$ roughly gives the edge dimensions of any of the afore mentioned Grids.\newline
-$r$ - The Detection Range.  The square root of the number of cells in the Detection Grid (which is guaranteed to be a square).\newline
+$D_{range}$ - The Detection Range.  The square root of the number of cells in the Detection Grid (which is guaranteed to be a square).\newline
 $k$ - The number of optimal placements to find.\newline
 
 \subsection{Bathymetry Grid}
@@ -306,18 +306,18 @@ As discussed in Section~\ref{LoSAlgorithm}, the LoS algorithm is given as:\newli
 3) Choose the Critical Slope\newline
 4) Project a line from $p$ to $q$ along the Critical Slope to find $D_{max}$.\newline
 
-\textbf{Step 1} finds intervening cells by ray tracing, which can be done in linear ($O(n)$) time.  The number of cells considered ($n$), depends upon the distance between the receiver and the target cell\cite{rayTracing}.  Given that the Detection Grid has a radius of $r$, and that receivers are located in the center of the Detection Grid, the greatest distance between a receiver and a target cell in the Detection Grid occurs between a receiver and the corner cells of the Detection Grid (a distance of $\sqrt2*\frac{r}{2}$).  Thus, the number of cells considered when creating a list of intervening cells is $O(\sqrt2*\frac{r}{2})$ = $O(r)$.
+\textbf{Step 1} finds intervening cells by ray tracing, which can be done in linear ($O(n)$) time.  The number of cells considered ($n$), depends upon the distance between the receiver and the target cell\cite{rayTracing}.  Given that the Detection Grid has a radius of $D_{range}$, and that receivers are located in the center of the Detection Grid, the greatest distance between a receiver and a target cell in the Detection Grid occurs between a receiver and the corner cells of the Detection Grid (a distance of $\sqrt2*\frac{D_{range}}{2}$).  Thus, the number of cells considered when creating a list of intervening cells is $O(\sqrt2*\frac{D_{range}}{2})$ = $O(D_{range})$.
 
-\textbf{Step 2} computes the slopes for each of the $m$ cells in $C$.  Computing the slope between two points takes $O(1)$ time to compute and space to store.  Therefore computing $m$ slopes takes $O(1)*O(m)=O(m)$ time and space.  As stated above, $m$ is at worst $O(r)$ on the Detection Grid.  Thus, the slope computation is at worst $O(r)$, requiring $O(r)$ extra storage.
+\textbf{Step 2} computes the slopes for each of the $m$ cells in $C$.  Computing the slope between two points takes $O(1)$ time to compute and space to store.  Therefore computing $m$ slopes takes $O(1)*O(m)=O(m)$ time and space.  As stated above, $m$ is at worst $O(D_{range})$ on the Detection Grid.  Thus, the slope computation is at worst $O(D_{range})$, requiring $O(D_{range})$ extra storage.
 
-\textbf{Step 3} chooses the largest slope amongst all $m$ slopes.  Therefore, we must consider $m$ items, each requiring $O(1)$ time to consider as the largest.  Since, $m$ is $O(r)$ on the Detection Grid, this step takes ($O(r)$) time to compute, and $O(1)$ space to store.  
+\textbf{Step 3} chooses the largest slope amongst all $m$ slopes.  Therefore, we must consider $m$ items, each requiring $O(1)$ time to consider as the largest.  Since, $m$ is $O(D_{range})$ on the Detection Grid, this step takes ($O(D_{range})$) time to compute, and $O(1)$ space to store.  
 
 \textbf{Step 4} is a direct computation, requiring $O(1)$ time to compute and $O(1)$ space to store the result.
 
-In total, the LoS computation time is $O(r) + O(1) + O(r) + O(1) = O(r)$, requiring $O(r) + O(r) + O(1) + O(1) = O(r)$ temporary storage space.
+In total, the LoS computation time is $O(D_{range}) + O(1) + O(D_{range}) + O(1) = O(D_{range})$, requiring $O(D_{range}) + O(D_{range}) + O(1) + O(1) = O(D_{range})$ temporary storage space.
 
 \subsection{Goodness Grid}
-Recall that the population of the Goodness Grid is performed by Evaluation Algorithms (Section~\ref{goodnessGrid}), each of which computes $ERT$ values for each of the $r^2$ cells in the Detection Grid.  These ERT values are then summed (requiring $O(r^2)$  time) to provide the Goodness value for a single cell of the $n^2$ cells in the Goodness Grid.  Thus, if we define the computational complexity of the ERT computation for Evaluation Algorithm $x$ to be $E_x$, the computational complexity for populating the entire Goodness Grid is given as $O(n^2 * r^2* E_x + r^2)$. 
+Recall that the population of the Goodness Grid is performed by Evaluation Algorithms (Section~\ref{goodnessGrid}), each of which computes $ERT$ values for each of the $D_{range}^2$ cells in the Detection Grid.  These ERT values are then summed (requiring $O(D_{range}^2)$  time) to provide the Goodness value for a single cell of the $n^2$ cells in the Goodness Grid.  Thus, if we define the computational complexity of the ERT computation for Evaluation Algorithm $x$ to be $E_x$, the computational complexity for populating the entire Goodness Grid is is the time for ERT computation plus the time for  $O(n^2 * [D_{range}^2* E_x + D_{range}^2]) = O(n^2 * D_{range}^2 * [E_x + 1]) = O(n^2 * D_{range}^2 * E_x)$. 
 
 
 \subsubsection{Evaluation Algorithm 1}
@@ -333,43 +333,50 @@ Accessing the value $ B_{i,j}$, finding the Range from i to j, and computing the
 As discussed in Section~\ref{bias3}, the ERT computation for Evaluation Algorithms 2 and 3 is given as:\newline
 $ERT_{2,i,j} =  B_{i,j} * P_{observation} * P_{Attenuation}(Range(i,j))$\newline
 
-As mentioned in Section~\ref{bigObias1}, the product of $B_{i,j}$ and $P_{Attenuation}(Range(i,j))$ can be computed in $O(1)$ time with $O(1)$ temporary storage.  Computing the observable number of transmissions ($P_{observation}$) requires substantially more work.  Recall that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, we first determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the number of detectable transmissions ($P_{observation}$) within the visible part of the water column above that cell.  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can be done in  O($r$) time.\cite{rayTracing}.  Then, using integration over the shape function, and known min/max visible depths, the total ($P_{observation}$) can be computed in $O(1)$ time.  Thus, the ERT computation for this algorithm is $O(1) + O(1) + O(r) + O(1) = O(r)$
+As mentioned in Section~\ref{bigObias1}, the product of $B_{i,j}$ and $P_{Attenuation}(Range(i,j))$ can be computed in $O(1)$ time with $O(1)$ temporary storage.  Computing the observable number of transmissions ($P_{observation}$) requires substantially more work.  Recall that we are using a 2-dimensional grid as the basis of our simulation and computing the third dimension as necessary by using a shape function.  Therefore, we first determine the deepest depth in each cell that can be seen by the receiver, and then use integration to compute the number of detectable transmissions ($P_{observation}$) within the visible part of the water column above that cell.  This leads us to the problem of finding the greatest depth (in each 2D cell) which is visible from the receiver.  We compute this via incremental ray tracing which can be done in  $O(D_{range})$ time.\cite{rayTracing}.  Then, using integration over the shape function, and known min/max visible depths, the total ($P_{observation}$) can be computed in $O(1)$ time.  Thus, the ERT computational complexity for this algorithm is $O(1) + O(1) + O(D_{range}) + O(1) = O(D_{range})$.  The algorithm will need to use $O(D_{range})$ temporary storage to compute Line of Sight, and $O(1)$ temporary space to store the resulting value.  Thus the total temporary storage required is given by $O(D_{range}+1)=O(D_{range})$.
 
 %%\paragraph{Naive Method}
 %%A naive solution to this question is to determine whether or not each cell in the three-dimensional grid can see the receiver.  Given that the volume of a sphere is $\frac{4/3}\pi r^{3}$, this solution would %%need to consider at least O($r^{3}$) cells, checking each for line of sight to the receiver.  As stated in Section~\ref{bigOLoS}, the time and space complexities of the LoS algorithm are both linear $O(r)$.  Thus, the time and space complexities for naively determining the line of sight to each cell in the Detection Grid are $O(r^3) * O(r) = O(r^4)$.  
 
 \subsection{Optimal Receiver Placement}
-The selection of the top $R$ receivers requires the Goodness Grid to have been populated.  As previously stated, the selection process is iterative (requiring that suppression (if selected) be applied after each sensor selection), as suppression causes goodness values to be altered.  The process of selecting a single receiver location is $O(n^2)$ since the algorithm must consider approximately $n^2$ possible receiver locations at each iteration.  After each location selection, suppression must be applied to the chosen location.  Due to the variability of the suppression algorithm, we use a variable  ($E_{suppression}$) to represent the expected runtime of the suppression algorithm.  Thus the computation time required for each selection-suppression step is $O(n^2 + E_{suppression})$.  The number of iterations required to run is given by the number of optimal ($R_{opt}$) and projected ($R_{proj}$) receiver placements requested.  In total, the runtime of the Optimal Receiver Placement step is $[R_{opt} + R_{proj}] * [O(n^2 + E_{suppression})] = O([R_{opt} + R_{proj}]* [n^2 + E_{suppression}])$.
+The selection of the top $R_{opt}$ receivers requires the Goodness Grid to have been populated.  As previously stated, the selection process is iterative (requiring that suppression (if selected) be applied after each sensor selection), as suppression causes goodness values to be altered.  The process of selecting a single receiver location is $O(n^2)$ since the algorithm must consider approximately $n^2$ possible receiver locations at each iteration.  After each location selection, suppression must be applied to the chosen location.  Due to the variability of the suppression algorithm, we use a variable  ($E_{suppression}$) to represent the expected runtime of the suppression algorithm.  Thus the computation time required for each selection-suppression step is $O(n^2 + E_{suppression})$.  The number of iterations required to run is given by the number of optimal ($R_{opt}$) and projected ($R_{proj}$) receiver placements requested.  In total, the runtime of the Optimal Receiver Placement step is $[R_{opt} + R_{proj}] * [O(n^2 + E_{suppression})] = O([R_{opt} + R_{proj}]* [n^2 + E_{suppression}])$.
 
 
 \subsection{Suppression}
 As discussed in Section~\ref{suppression}, the suppression mechanic is applied after the placement of a receiver.  The suppression mechanic has several options, each affecting the time and space complexity of the mechanism.  To better capture the complexity of the algorithms involved, we denote the following variables: \newline
-$r_{supp}$ - The Suppression Range. \newline
+$D_{range}$ - The Detection Range of a receiver.\newline
+$d_{detection}$ - The edge size of the Detection Grid, equal to $2r+1$ cells.\newline
 $f_{supp}$ - The Suppression Range Factor.  A positive real number. \newline
-$d_{supp}$ - The square root of the number of cells in the Suppression Area.  The edge dimension of the Suppression Area.  Equal to $2*f_{supp}*r_{supp} + 1$
+$r_{supp}$ - The Suppression Range. Equal to $f_{supp}*D_{range}$\newline
+$d_{supp}$ - The square root of the number of cells in the Suppression Area.  The edge dimension of the Suppression Area.  Equal to $2*r_{supp} + 1$ cells.\newline
 
 \subsubsection{Static Suppression Algorithm}
-As stated in Section~\ref{staticSuppression}, the Static Suppression Algorithm multiplies all cells within the Suppression Area by a scalar constant.  This is a scalar multiplication that can be done in place, requiring $O(1)$ extra space, but requires a multiplication operation for each cell in the Suppression Area, which is $O(d_{supp} ^2) = O([2*f_{supp}*r_{supp} + 1]^2) = O([4*f_{supp}^2*r_{supp}^2 + 4*f_{supp}*r_{supp} + 1]) = O(f_{supp}^2*r_{supp}^2)$.  In most cases (excluding those where very sparse sensor networks are desired), the Suppression Range Factor, $f_{supp}$, will be rather small (less than 2.0), which reduces the runtime complexity to $O(r_{supp}^2)$.
+As stated in Section~\ref{staticSuppression}, the Static Suppression Algorithm multiplies all cells within the Suppression Area by a scalar constant.  This is a scalar multiplication that can be done in place, requiring $O(1)$ extra space, but requires a multiplication operation for each cell in the Suppression Area, which is $O(d_{supp} ^2) = O([2*f_{supp}*D_{range} + 1]^2) = O([4*f_{supp}^2*D_{range}^2 + 4*f_{supp}*D_{range} + 1]) = O(f_{supp}^2*D_{range}^2)$.  In most cases (excluding those where very sparse sensor networks are desired), the Suppression Range Factor, $f_{supp}$, will be rather small (less than 2.0), which reduces the runtime complexity to $O(D_{range}^2)$.
 
 \subsubsection{Exact Suppression}
-As stated in Section~\ref{exactSuppression}, the Exact Suppression Algorithm uses the user-specified Evaluation Algorithm to calculate the number of transmissions that have already been observed and should be discounted from future consideration.  We define $E_{x}$ to denote the expected runtime for Evaluation Algorithm x's computation of a single cell's ERT.  
+As stated in Section~\ref{exactSuppression}, the Exact Suppression Algorithm uses the user-specified Evaluation Algorithm to calculate the number of transmissions that have already been observed and should be discounted from future consideration.  We define $E_{x}$ to denote the expected runtime for Evaluation Algorithm x's computation of a single cell's ERT.  We also define $T_{x}$ to denote the expected temporary storage requirement for Evaluation Algorithm x single-cell ERT computation.  The Exact Suppression Algorithm is broken into three distinct steps: Suppression Area ERT computation, Behavior Grid Updtate, and Goodness Grid Recalculation.
+\newline
 
-//compute the suppression grid's ERTs
-//subtract the suppression grid from the behavior grid
-//recompute Gi,j for all cells i,j within suppression grid +/- detection range   
+\textbf{Suppression Area ERT Computation}\newline
+The suppression algorithm first determines the ERT for each cell within the Suppression Area, and stores them in the ERT Area, a temporary Grid with the same dimension as the Suppression Area.  This step is similar to the Evaluation process, with the exception that the Suppression Area's dimensions differ from those of the Detection Grid by a factor of $f_{supp}$ (the Suppression Area is usually larger than the Detection Grid).  The computation of the ERT Area requires $E_{x}$ time and  $T_x$ temporary space for each of the $d_{supp}^2$ cells in the Suppression Area.  An additional  $O(1)$ temporary space will also be needed to store the resulting ERT values.  Therefore, the ERT computation will require $O(E_{x} * d_{supp}^2)$ time and $O((1 + T_x)* d_{supp}^2) = O(d_{supp}^2 * T_x)$ temporary storage.
 
-The suppression algorithm first determines the ERT for each cell within the Suppression Area, and stores them in the ERT Area, a temporary Grid with the same dimension as the Suppression Area.  This step is similar to the Evaluation process, with the exception that the Suppression Area's dimensions differ from those of the Detection Grid by a factor of $f_{supp}$ (the Suppression Area is usually larger than the Detection Grid).  The computation of the ERT Area requires $E_{x}$ time for each of the $d_{supp}$ cells in the Suppression Area, requiring $O(1)$ temporary space to store the resulting ERT values.  Therefore, the ERT computation will require $O(E_{x} * d_{supp}^2)$ time and $O(1 * d_{supp}^2) = O(d_{supp}^2)$ temporary storage.
-
+\textbf{Behavior Grid Update}\newline
 Next, the suppression algorithm subtracts the ERT Area from the corresponding area in the Behavior Grid.  This is a simple subtraction operation over each corresponding cell in the grids.  Because each subtraction takes $O(1)$ time and temporary storage, the time and space complexities are both given by $O(1) * O(d_{supp}^2) = O(d_{supp}^2)$.
 
-Finally, the goodness values of all cells 
+\textbf{Goodness Grid Recalculation}\newline
+Finally, the goodness values of all cells within Detection Range of the Suppression Area must have their Goodness value updated (as we have just reduced the ERT of one or more cells within their Detection Grid).  The area affected by suppression, and therefore requiring recalculation, is a square with edge diameter $2 * (d_{supp} + D_{range}) + 1$.  Each cell in this area will require  $O(D_{range}^2 * E_x)$ time to compute.  The total time for updating the Goodness Grid is then: $O([2 * (d_{supp} + D_{range}) + 1]^2 * O(D_{range}^2 * E_x)) = O((d_{supp} + D_{range})^2 + D_{range}^2 * E_x)$.  The Goodness Grid update will require $D_{range}^2 * (T_x + 1) = O(D_{range}^2 * T_x)$ temporary storage to compute and store intermediate ERT values.  This temporary storage can be recycled for each sequential Goodness Cell computation.
 
 
-\begin{figure}[t]
+The total computation time for the Exact Suppression Algorithm is then given by O(ERT Computation) + O(Behavior Grid Update) + O(Goodness Grid Recalculation). This is a total of $O(E_{x} * d_{supp}^2) + O(d_{supp}^2) + O((d_{supp} + D_{range})^2 + D_{range}^2 * E_x)$ time.  The algorithm will also require $O(MAX(d_{supp}^2 , D_{range}^2) * T_x)$ temporary storage, which can be recycled between each of the above stages.
+
+
+
+
+\begin{figure}[t] //TODO
 	\label{rayTracing}
 	\centering
 	\includegraphics[scale=0.3]{rayTracing.png}
-	\caption{An illustration of how ray tracing works within a 3D environment. \cite{Akbarzadeh2013}}
+	\caption{An illustration of how ray tracing works within a 3D environment.  Ray tracing is used to determine which cells potentially block the line of sight between the receiver-contating cell $p$, and the target cell $q$.   \cite{Akbarzadeh2013}}
 \end{figure}
 
 \begin{figure}[t]
