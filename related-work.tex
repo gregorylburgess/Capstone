@@ -1,15 +1,71 @@
 \chapter{Related Work}
 
-\section{Yuan et al - Fast Sensor Placement Algorithms for Fusion-based Target Detection}
-Using data fusion for enhanced range and accuracy
-Constrained Simulated Annealing and Optimal Placement
+\section{Acoustic Array Design}
 
-\section{Poduri et al – Constrained Coverage for Mobile Sensor Networks Constrained Coverage (K-Neighbor Networks vs Maximum Coverage)}
-Density of Deployment
-Influencing global network properties via local restrictions
-Force dispersion algorithm 
+\subsection{Heupel et al - Automated acoustic tracking of aquatic animals: scales, design and deployment of listening station arrays}
+In their highly cited 2006 publication, Heupel et al discuss issues and methods related to the implementation of acoustic tracking network.  They list the small size, low cost, and low maintenance requirements as primary drivers of the technology's popularity within the biological community.  The authors point out that lower cost of acoustic instruments facilitates larger sample sizes and datasets.  Additionally, because acoustic tracking is a passive process (researchers need not actively follow tagged animals to collect telemetry), data can be collected around the clock, while active tracking expeditions would be limited by inclement weather.  Furthermore, because animals are not being shadowed by a noisy vessel, they are more likely to exhibit natural behavioral patterns.\newline
+\newline
+The authors discuss the importance of identifying study goals, and using those goals to drive array design.  If high-resolution, positional accuracy is important, an array with high levels of overlapping receivers will allow for triangulation of a tag within 3D space.  Animal residency within a specific area can be assessed with a "curtain" or "gate" (parallel lines of receivers around the area of interest) of receivers that will track animal ingress and egress.  Presence/absence tracking and long-term survivorship can be can both be accomplished established by a sparse (dispersed) array of receivers, as only occasional transmissions are necessary to address questions of this nature.\newline
+\newline
+Heupel et al offer a plethora of practical advice for implementing acoustic arrays, such as how to assemble acoustic rigs and environmental phenomena that affect the propagation of acoustic signals.  Environmental impedances to acoustic signal propagation include: background noise, composition of the sea floor, thermoclines and pycnoclines , salinity, and tidal flows.  Other factors are less obvious, such as the positioning of the receiver in regards to the rigging (is any part of the rigging creating an acoustic shadow?), signal collision due to echoes and presence of multiple tags, and the development of fouling organisms on the receiver.  The authors suggest that extensive field testing should be done prior to the commencement of any acoustic study.
 
-\section{Pedersen and Weng - Estimating Individual Animal Movement from Observation Networks}
+
+
+
+\subsection {Steel et al - Performance of an ultrasonic telemetry positioning system under varied environmental conditions}
+
+In 2014, Steel et al investigated the accuracy of the VEMCO Positioning System (VPS), comparing its accuracy to GPS, and investigating possible sources of inaccuracy.  VPS is a VEMCO proprietary service that uses data gathered from multiple VEMCO acoustic receivers and uses triangulation to "fix" (determine) the position of a tag.  To generate data, acoustic tags were deployed as permanent emplacements (with known GPS coordinates) throughout the study site, and VPS fixes were compared against known GPS coordinates using Euclidian distance to find the "Horiziontal Positional Error in meters" (HPEm).  The study also tracked "Positional Efficiency", as the percentage of pings a receiver captured.  The study was performed in river, estuary, and coastal locations.  Environmental variables were measured throughout the study, and included wind, wave period, wave height, water temperature, flow, turbidity, electrical conductivity, macrophyte growth rate, and discharge.  The only user-controlled variable was the array geometry.  Generalized Linear Mixed Modeling showed that both Positional Efficiency and HPEm were most strongly correlated with position within the network.  Specifically, tags in the center of the network had the smallest HPEm values, and the lowest positional efficiency.  This makes sense as tags placed in the middle of the network were observed by many more receivers than those on the outskirts of the array.  At the same time, tags in the middle of the array were probably receiving acoustic interference form neighboring tags, which likely caused destructive transmission interference.  Tags on the outskirts of the array had fewer neighbors, and so likely less interference.  The authors concluded that array geometry was the most important predictor of positioning performance. They suggest that field testing both array geometries and environmental conditions is an important step in acoustic tracking studies.
+
+
+
+\subsection{Kessel et al - Close proximity detection interference with acoustic telemetry: the importance of considering tag power output in low ambient noise environments}
+* Bigger tags can be more powerful.  
+* Tags size limited by animal size.  
+* Misconception: Stronger signal = better.
+* High tag power = stronger CPDI
+* Losses caused by spreading, reflection, scattering, absorption, refraction.
+* "Donut effect": Short range signals don't get registered.
+* Close Proximity Detection Interference (CPDI)
+* Most people concerned with max distance, not min dist.
+* Investigate CPDI in 3 environments to assess CPDI effect
+* Wind decreases CPDI as it makes noise + the surface irregular and so less reflection
+* Cumberland sound, Baffin Island, Nunavut, Canada: 
+* CPDI observed for two high powered tags: 
+V16-6H tag
+8.3% @ 55m, 
+88.8% @ 370m
+
+V13-2H tag
+17.9% @ 55m
+88.4@ 221m
+
+* 30 m depth, hard seafloor
+* sensors 5m off seafloor
+* 8 VR2W 69 kHz acoustic receivers at varying distances form sensor
+
+
+* Lake Charlotte, Nova Scotia, Canada:
+* More pings than expected
+* due to signal reflection off surface + hard bottom
+* periods of high wind distrupt reflections
+* 40m depth, soft mud bottom
+* 3m off seafloor
+
+* Jupiter, Florida, USA
+* reef, lots of human activity, consistent currents	
+* 20m depth, 1.5m of sand over hard reef
+* 2m off seafloor
+* Lower CPDI 
+* site is windy + exposed = irregular surface and so no reflection
+* Boat noise drowns out echos
+* Reef animals (fauna) make noise
+* Sand absorbed reflections
+* Background noise lowered CPDI, but decreased detection range
+
+
+\begin{comment}
+\section{Simulation Models}
+\subsection{Pedersen and Weng - Estimating Individual Animal Movement from Observation Networks}
 Movement models
 Observation models
 Network Sparsity
@@ -19,12 +75,109 @@ Fish speed and sensor area
 Observable space and total study area
 ?Environmental factors affecting fish behavior?
 
-\section{Howard et al - Mobile Sensor Network Deployment using Potential Fields Potential Field Algorithm}
-Static Equilibrium: Optimal placement vs Run time
-Runtime and Results
+\section{Placement Algorithms}
+\subsection{Poduri et al – Constrained Coverage for Mobile Sensor Networks Constrained Coverage (K-Neighbor Networks vs Maximum Coverage)}
+Density of Deployment
+Influencing global network properties via local restrictions
+Force dispersion algorithm 
+* Discover network configuration to maximize network coverage, while maintaining k neighbors
+* Used point force simulation:
+* each node exerts a pushing force on other nodes to maximize coverage
+* each node is attracted strongly attracted to othernodes if it has less than K neighbors.
+* balancing these forces results in optimal k-neighbor coverage
+* sensors capable of omnidirectional movement
+* sensors had knowledge of neighbors
 
-\section{Akbarzadeh et al - Probabilistic Sensing Model for Sensor Placement Optimization Based Signal Simulation and Attenuation (Omni Directional Sensors)}
+\subsection{Akbarzadeh et al - Probabilistic Sensing Model for Sensor Placement Optimization Based Signal Simulation and Attenuation (Omni Directional Sensors)}
 Line of Sight modeling
 Weighted Coverage
 L-BFGS, Simulated Annealing, and Covariance Matrix algorithms
-Here is where you discuss the related work. Use BibTex to reference related work.
+
+* Context: Wireless sensor networks - small inexpensive sensor devices, with limited sensing, storage, processing, communication.
+
+* 4 main considerations: Performance, reliability, engergy saving, cost minimization.
+
+* Requirement: Cover all areas of interest, sometimes sensor overlap is required, sometimes one sensor is ok.
+
+* Deterministic methods assume omnidirectional disk sensing models, which ignore terrain allow for deterministic solutions. As a result, theoretical coverage is overestimated in practice.
+
+* Antennas and microphones have non uniform 3-D reception fields that depend on factors like orientation, dist, and env factors.
+
+* Coverage is not binary, but probabilistic.
+
+* Sensor height is important -> 3d space
+
+* Fig 2 & 3 show LOS
+
+** In 3d space, a lattice might not be a flat layer.  Optimal layout probably won't be flat
+
+* Example of video surveilence coverage of urban environment
+
+
+\subsection{Yuan et al - Fast Sensor Placement Algorithms for Fusion-based Target Detection}
+Using data fusion for enhanced range and accuracy
+Constrained Simulated Annealing and Optimal Placement
+* Goal was to "Cover" target "surveilance spots"
+
+* Define "coverage" as function of probability of detection (Pd) and probablilty of false positive (Pf).
+
+* Constraint: Use the fewest possible # of sensors to achieve coverage.
+
+* Exponential big O
+
+* Suggest using divide and conquer, fiding local solution for each surveilance spot, then combining for a global solution.  Polynoimal time, but inefficcient global solution.
+
+* Suggest alternate divide and conquer, where sensor count is minimized by choosing spots that cover multiple spots until those spots are covered, then add sensors until other spots are covered.
+* Enables "reuse" of previous solutions.  Building solution
+* Individual sensors become less useful as tehy are streched to cover more points.
+* Can result in multiple sensors overlaped to achieve coverage.
+
+* Clustering algorithm improved runtime and reduced num sensors reqd by clustering geographically close surveilence spots and solving for indivudal clusters.
+
+** Possible to implement this algorithim within our framework by utilizing behavior location to define "surveilence locations".  Use high projected sensor count to see how sensor count/coverage are correlated.
+
+\subsection{Howard et al - Mobile Sensor Network Deployment using Potential Fields Potential Field Algorithm}
+Static Equilibrium: Optimal placement vs Run time
+Runtime and Results
+
+* Mobile Sensor Network
+* Potential Forces
+* Convergence is a property of the algorithm
+* Model says
+* Each node has an electrostatic chagre, so do walls
+* Theres a viscous friction on the floor
+* Guarantees that nodes will evenutally settle
+* Nodes start clustered together
+
+\section{Economic Impact} value of info
+\subsection{Hansen \& Jones - The value of Information in Fishery Management}
+	* Researchers advocate for more money to spend on information gathering
+	* Those resources could be spent on actual management
+	* Information gathering reduces uncertainty
+	* resonable to assume diminishing returns on goodness of decision
+	* Collect the optimal ammount of information
+	* Finite research budgets mean money spent on one thing is less spent on another
+	* opportunity cost
+	* Sea lampreys
+	* $15m annual budget
+	* assessing which streams should be treated accounts for 30% of $ alloted for treatment
+	* used cheaper "adaptive management approach
+	* more killed since more spent on treatment
+	* less accurate assessment of how many are killed
+	* Estimated cost of global network of MPAs sufficcient for biodiversity protection and fisheries sustainability estimated at $5-19B USD.  
+	* Gathering information is expensive
+	* It is belieived that MPAs will be more effective if places are carefully chosen.
+	* No consensus on "optimal" configuration
+	* Beleived that many alternative configurations will emerge as "optimal"
+	* indicates that configurations may be only slightly impacted by sub-optimal
+	* obviously there are still "bad" designs
+	* Exists resarch on performance of less costly methods for defining MPAs
+	* mixed results
+	* Litte research into quantification of cost for defining MPAs to effectiveness of resulting MPA netowrks
+	* all else being equal, more reserves = less chance of failing to protect a critical location
+	* Faster, less accurate assessments result in faster results
+	* The longer you take to assess, the longer the species suffer
+	* investment in information gathering should be carefully weighed against other areas of management
+
+\end{comment}
+
