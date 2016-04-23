@@ -70,30 +70,34 @@ Two key components of our program are the animal model and the bathymetric shado
  
  
 When subdividing cells, either the sub-cells are given the same depth as their parent cell, or the depth of a sub-cell is interpolated from surrounding cells by some smoothing function.  Subdividing a cell into sub-cells with the same depth makes the assumption that all sub-cells are actually the same depth.  Furthermore, this results in the animal and bathymetric shadowing models making the same depth-based decision for all sub-cells that they would for the larger parent cell, increasing the computational load (see Figure~\ref{duplicate}).  Subdividing a cell into sub-cells with a depth governed by a smoothing function makes the assumption that there are no impeding obstacles between neighboring cells, and that there is a smooth transition between them (see figure~\ref{smooth}).  Subdividing the two cells in Figure~\ref{LoS} half (ignoring for now the y component of our grid) results in the four sub-cells with depths given by a smoothing function (Figure~\ref{smooth}) would result in the large depth change at the sheer cliff face in Figure~\ref{LoS} being smoothed into smaller changes in depth, which would allow the unobstructed transmission of acoustic signals.
-\begin{figure}[h!]
-	\label{resolutionScale}
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{LoS.png}
-		\caption{}\label{LoS}
-	\end{subfigure}
-	
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{duplicate.png}
-		\caption{}\label{duplicate}
-	\end{subfigure}
-	
-	\begin{subfigure}[t]{.4\textwidth}
-		\centering
-		\includegraphics[width=\linewidth]{smooth.png}
-		\caption{}\label{smooth}
-	\end{subfigure}
-	
-	\caption{Figure~\ref{LoS} illustrates the bathymetric shadowing model for two adjacent cells within a bathymetric grid.  Figure~\ref{duplicate} shows how artifically increasing the resolution of the bathymetric grid form Figure~\ref{LoS} using the duplication method of cell sub-division does not affect the bathymetric shadowing model.  Figure~\ref{smooth} shows how artificially increasing the resolution using a smoothing function can lead to inflated signal reception.}
-\end{figure}
+
 
 Both strategies (duplicating depth and applying a smoothing function) for artificially increasing the resolution of a bathymetric file disregard the manner in which the bathymetry was originally observed.  Bathymetry is almost always computed as the average observed depth at several points within a geographic area of a given size (resolution).  For example, imagine a particular cell in a bathymetric grid has a steep cliff running across the middle.  Assuming that the sea floor at the top and base of the cliff were perfectly flat, and one measurement was taken at the top of the cliff and one at the bottom, the cell would have a depth equal to the average of the two observed depths.  This average depth would then represent the depth for that entire cell, modeling it as a perfectly flat surface.  Obviously this is problematic as the true nature of the sea floor is misrepresented.  This misrepresentation leads to two conflicting arguments, the first is that the application of smoothing functions or duplicating depths of already averaged data makes faulty assumptions about real-world bathymetry.  On the other hand, because source bathymetric files already represent aggregate data, one could argue that any conclusions drawn from the source bathymetry files are already faulty.  We argue that the conclusions one can make are only as good as the bathymetric information available.  As the resolution of measured bathymetry (bathymetric measurements taken from the real world) increases (becomes finer), so too does the accuracy of the simulation.  While artificially increasing the resolution of a source bathymetric file may skew results, it is sometimes useful for meshing two bathymetric source files of varying resolution into one larger bathymetric dataset.  Our program does not currently support modifying the resolution of source bathymetric files.
+
+
+\begin{figure}[h]
+	\label{resolutionScale}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\linewidth]{LoS.png}
+		\caption{}
+		\label{LoS}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\linewidth]{duplicate.png}
+		\caption{}
+		\label{duplicate}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\linewidth]{smooth.png}
+		\caption{}
+		\label{smooth}
+	\end{subfigure}
+	
+	\caption{(a) illustrates the bathymetric shadowing model for two adjacent cells within a bathymetric grid.  (b) shows how artifically increasing the resolution of the bathymetric grid form (a) using the duplication method of cell sub-division does not affect the bathymetric shadowing model, but increases the number of cells to consider.  (c) shows how artificially increasing the resolution using a smoothing function increased the number of cells to consider and can lead to inflated signal reception.}
+\end{figure}
 
 
 \subsubsection{Bathymetric Shadowing}
@@ -124,11 +128,12 @@ The Random Walk model assumes that animals move randomly through the environment
 \paragraph{Ornstein-Uhlenbeck Model}
 \label{ouModel}
 The Ornstein-Uhlenbeck(OU) model\cite{OU} supports the idea that over time, animals will tend to congregate near certain points of interest.  This concept models an animal's desire to seek out and remain near a physically significant structure, a region of high food availability, breeding grounds, shelter, etc.  The OU algorithm allows for the modeling of the attraction towards a focal point in the x/y directions separately.  Assuming a center point at the origin of a Cartesian grid, increasing the attraction in the x-direction will bring the distribution closer to the x-axis, and decreasing it will spread the distribution away from the x-axis.  A correlation value ($-1\le x \le 1$) allows for tilting the angle of the distribution.  A positive correlation value tilts the distribution clockwise, and a negative correlation value tilts it counter clockwise.  Correlations of 0 (no tilt), 1 ($180^{\circ}$ tilt), and -1 (-$180^{\circ}$ tilt) will have no observable effect on the distribution.
-\begin{figure}[b]
+
+
+\begin{figure}[h]
 	\label{OUimg}
 	\centering
 	\includegraphics[scale=0.5]{OUpos7.png}
-	\caption{}\label{ouimg}
 	\caption{An example of a distribution given by the Ornstein-Uhlenbeck Model with a high attraction value in the x-direction, a low attraction value in the y-direction, and a correlation value of 0.7.}
 \end{figure}
 
@@ -155,6 +160,7 @@ As acoustic transmissions travel away from their point of origin, they experienc
 The distance at which a transmission from an acoustic tag can be captured is largely determined by the transmission power of the acoustic tag.  In our model, we assume that all animals have the same model of acoustic tag, and that "transmission range" is instead a property of the receiver referred to as "Detection Range" ($D_{range}$).  We define the Detection Range of a receiver to be the average distance (specific to the given study site) at which the probability of detection drops to 5\%.
 
 \subsubsection{Detection Area}
+\label{detectionArea}
 We define the Detection Area of a receiver to be the square plane of grid cells around a receiver which will be considered when evaluating a potential receiver emplacement.  Theoretically, the Detection Area of a receiver is a circle with a radius equal to the receiver's Detection Range ($D_{range}$).  Within our program, we model the Detection Area as a square grid of cells with an edge length equal to 2*$D_{range}$ + 1, centered on the cell where a receiver will theoretically be placed.  The additional cell ensures odd dimensions for the square, so that there exists a central cell to model as the receiver.  We model a square instead of a circle for simplicity of book keeping (we simply keep track of the Detection Range, and starting row/column indexes).  The theoretical Detection Range can then be imagined as a circle circumscribed in the square of our model.  At first glance, it might seem that this simplification would alter the probabilistic distribution models as additional "gray" cells (those outside the circle but within the square) are being considered.  However, this is not the case as those models utilize exponential functions based on the absolute distance from the receiver.  Gray cells will therefore contribute exponentially less to the total probability than those cells within the Detection Range, and their effect on the final probability will be negligible.  
 
 \subsubsection{Network Specification}
@@ -189,6 +195,13 @@ This option chooses receiver locations that have the best view of areas of high 
 Explicitly,
 $ERT_{3,i,j} =  B_{i,j} * P_{observation} * P_{Attenuation}(Range(i,j))$
 
+\begin{figure}[h]
+	\label{observableAnimals}
+	\centering
+	\includegraphics[scale=0.3]{ObservableAnimals.png}
+	\caption{An illustration of how ray tracing and integration over a shape function can be used in Option 2 \& Option 3 to compute the probability of detecting fish within a cell.  Dotted lines indicate the maximum and minimum depths visible to the receiver.  The normal distributions in green/red indicate the distribution of fish within a given cell as determined by a shape function.  The green portion of the distribution indicates the portion of the distribution that is observable by the receiver and the red indicates the portion that is unobservable by the receiver.  The observable distribution (green) is computed by integration over the shape function.}
+\end{figure}
+
 \subsubsection{Topography Only (Option “2”)}
 \label{bias2}
 This option places receivers in areas that have the best visibility of the surrounding area, regardless of the expected animal-residency.  This is useful for experiments where animal habitat is unknown or to be determined.  Here, ERT is computed as the number of observable transmissions from a uniformly distributed animal model.  While this algorithm is referred to as "Topography Only", we implement this by using the "Visible Fish" algorithm with a simplified animal model.  Specifically, we assume that animals are uniformly distributed throughout the environment.  Because animals are uniformly distributed, the more volume a receiver can see, the more transmissions it will receive.  Thus, the algorithm will value cells with the best possible view of the surrounding water columns.\newline
@@ -213,7 +226,7 @@ Section~\ref{evaluatingSensorEmplacements} describes the evaluation of cells as 
 \label{suppression}
 As previously mentioned, the optimality of a network depends greatly upon the way in which data quality is defined.  Some users will want to design a network that covers as much of a study area as possible, while others might want to heavily saturate a small area with receivers to facilitate higher resolution data.  Others may wish to find the receiver locations that return the highest number of unique data points.  Also previously mentioned was the metric of Unique Data Recovery Rate (UDRR) and Absoloute Data Recovery Rate (ADRR) [Section~\ref{dataRecoveryRate}].  This model reflects the idea that the UDRR is more important than the ADRR, as transmissions received by one receiver are no longer desirable to any other receiver.
 
-\begin{figure}[t]
+\begin{figure}[h]
 	\label{suppressionImage}
 	\centering
 	\includegraphics[scale=0.45]{suppression.png}
@@ -221,7 +234,7 @@ As previously mentioned, the optimality of a network depends greatly upon the wa
 \end{figure}
 
 \subsection{Suppression Area}
-As an input to the program, users can specify a Suppression Range Factor as a positive real number.  This factor is used to scale the Detection Range (Section~\ref{detection Range}) and define a grid similar to the Detection Area (Section~\ref{detectionArea}).  The resulting grid is referred to as the Suppression Area.  The Suppression Area is centered over a receiver placement and cells within this area have their number of undetected transmissions reduced according to a Suppression Algorithm.  The suppression mechanic is used during the selection phase of the program.  After selecting each optimal receiver location (Section~\ref{selectionOfOptimalEmplacements}), the Suppression Area around that receiver location is suppressed.  The result of this mechanic is that emplacement selection is a sequential process, where selecting each emplacement depends upon the previous selection.  
+As an input to the program, users can specify a Suppression Range Factor as a positive real number.  This factor is used to scale the Detection Range (Section~\ref{detectionRange}) and define a grid similar to the Detection Area (Section~\ref{detectionArea}).  The resulting grid is referred to as the Suppression Area.  The Suppression Area is centered over a receiver placement and cells within this area have their number of undetected transmissions reduced according to a Suppression Algorithm.  The suppression mechanic is used during the selection phase of the program.  After selecting each optimal receiver location (Section~\ref{selectionOfOptimalEmplacements}), the Suppression Area around that receiver location is suppressed.  The result of this mechanic is that emplacement selection is a sequential process, where selecting each emplacement depends upon the previous selection.  
 
 \subsection{Suppression Algorithms}
 \label{suppressionAlgorithms}
@@ -270,6 +283,12 @@ As discussed in Section~\ref{LoSAlgorithm}, the LoS algorithm is given as:\newli
 \textbf{Step 4} is a direct computation, requiring $O(1)$ time to compute and $O(1)$ space to store the result.
 
 In total, the LoS computation time is $O(D_{range}) + O(1) + O(D_{range}) + O(1) = O(D_{range})$, requiring $O(D_{range}) + O(D_{range}) + O(1) + O(1) = O(D_{range})$ temporary storage space.
+\begin{figure}[h]
+	\label{rayTracingImg}
+	\centering
+	\includegraphics[scale=0.3]{rayTracing.png}
+	\caption{An illustration of how ray tracing is used within a 3D environment to identify potential visual obstructions.  Ray tracing is used to determine which cells potentially block the line of sight between the receiver-contating cell $p$, and the target cell $q$.  Shaded cells must be evaluated by the Line of Sight algorithm to determine the portion of the water column in $q$ that is visible from $p$. \cite{Akbarzadeh2013}}
+\end{figure}
 
 \subsection{Goodness Grid}
 Recall that the population of the Goodness Grid is performed by Evaluation Algorithms (Section~\ref{goodnessGrid}), each of which computes $ERT$ values for each of the $D_{range}^2$ cells in the Detection Grid.  These ERT values are then summed (requiring $O(D_{range}^2)$  time) to provide the Goodness value for a single cell of the $n^2$ cells in the Goodness Grid.  Thus, if we define the computational complexity of the ERT computation for Evaluation Algorithm $x$ to be $E_x$, the computational complexity for populating the entire Goodness Grid is is the time for ERT computation plus the time for  $O(n^2 * [D_{range}^2* E_x + D_{range}^2]) = O(n^2 * D_{range}^2 * [E_x + 1]) = O(n^2 * D_{range}^2 * E_x)$. 
@@ -324,19 +343,4 @@ Finally, the goodness values of all cells within Detection Range of the Suppress
 
 The total computation time for the Exact Suppression Algorithm is then given by O(ERT Computation) + O(Behavior Grid Update) + O(Goodness Grid Recalculation). This is a total of $O(E_{x} * d_{supp}^2) + O(d_{supp}^2) + O((d_{supp} + D_{range})^2 + D_{range}^2 * E_x)$ time.  The algorithm will also require $O(MAX(d_{supp}^2 , D_{range}^2) * T_x)$ temporary storage, which can be recycled between each of the above stages.
 
-
-
-
-\begin{figure}[t]
-	\label{rayTracing}
-	\centering
-	\includegraphics[scale=0.3]{rayTracing.png}
-	\caption{An illustration of how ray tracing is used within a 3D environment to identify potential visual obstructions.  Ray tracing is used to determine which cells potentially block the line of sight between the receiver-contating cell $p$, and the target cell $q$.  Shaded cells must be evaluated by the Line of Sight algorithm to determine the portion of the water column in $q$ that is visible from $p$. \cite{Akbarzadeh2013}}
-\end{figure}
-
-\begin{figure}[t]
-	\label{observableAnimals}
-	\centering
-	\includegraphics[scale=0.3]{ObservableAnimals.png}
-	\caption{An illustration of how ray tracing and integration over a shape function can be used to compute the probability of detecting fish within a cell.  Dotted lines indicate the maximum and minimum depths visible to the receiver.  The normal distributions in green/red indicate the distribution of fish within a given cell as determined by a shape function.  The green portion of the distribution indicates the portion of the distribution that is observable by the receiver and the red indicates the portion that is unobservable by the receiver.  The observable distribution (green) is computed by integration over the shape function.}
-\end{figure}
+%%TODO rayTracing multiply defined (webpage and document) check refs
