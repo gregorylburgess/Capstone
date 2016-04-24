@@ -1,44 +1,40 @@
 \chapter{Introduction}
-Static Acoustic Observation Networks (SAONs) are often used in the biological sciences to study aquatic animal migration and habitat.  These networks are comprised of self-contained, stationary receivers (hydrophones) that continuously listen for acoustic transmissions released by sonic tags carried by individual animals.  The transmissions released by these tags carry serial identification numbers that can be used to verify that a particular individual was within detection range of a specific receiver at a given time.  Acoustic networks are relatively inexpensive (compared to GPS/VHF Radio/Satellite tags).  The primary goal of any tracking study is to obtain a high number of high quality data points (relating individual animals to space and time) in order to gain some insight into animal behavior.  SAONs provide a way to generate a large volume of data points at low cost, resulting in cost-efficient data points.  However, unless these data points are captured, the cost efficiency of SAONs is lost.  Within SAONs, data capture rates are highly dependent upon the chosen locations for receivers within the study area.  The malplacement of receivers (in locations that interfere with the reception of data or where no tagged individuals are present) leads to low data returns, wasted resources, and diminished cost-efficiency.  We present an application \cite{acousitcdeploy} that takes advantage of high resolution bathymetry, flexible behavioral modeling, and simplified acoustic propagation models to maximize the data recovery of a SAON.  Our application provides a reproducible, customizable, and distributable method for generating optimal receiver placements and analytical network metrics.
+Static Acoustic Observation Networks (SAONs) are often used in the biological sciences to study aquatic animal migration and habitat.  These networks are comprised of self-contained, stationary receivers (hydrophones) that continuously listen for sonic transmissions released by acoustic tags carried by individual animals.  The transmissions released by these tags carry serial identification numbers that can be used to verify that a particular individual was within detection range of a specific receiver at a given time.  Acoustic networks are relatively inexpensive (compared to GPS/VHF Radio/Satellite tags).  The primary goal of any tracking study is to obtain a high number of high quality data points (relating individual animals to space and time) to gain insight into animal behavior.  Acoustic tags provide a way to generate a large volume of data points at low cost.  However, unless these data points are captured by acoustic receivers, the cost efficiency of the SAON is lost.  Within SAONs, data capture rates are highly dependent upon the chosen locations for receivers within the study area.  The malplacement of receivers (in locations that interfere with the reception of data or where no tagged individuals are present) leads to low data returns, wasted resources, and diminished cost-efficiency.  We present an application \cite{acousitcdeploy} that takes advantage of high resolution bathymetry, flexible behavioral modeling, and simplified acoustic propagation models to maximize the data recovery of a SAON.  Our application provides a reproducible, customizable, and distributable method for generating optimal receiver placements and analytical network metrics.
 
 \subsection{Sensor Assembly}
 \section{Static Acoustic Observation Networks}
 
-SAONs are composed of stationary rigs that are responsible for maintaining the chosen location for a receiver.  Because positional data is interpolated from the position of nearby receivers, it is important that receivers are deployed accurately and maintain their position throughout the entire experiment\cite{Heupel2006}.  This is best accomplished by attaching receivers to permanent emplacements  (such as a rigid metal frame driven into a rocky substrate) that will resist substantial amounts of force (such as strong currents and curious animals).  However, when it is not always possible to create such permanent emplacements (perhaps due to regulation or extreme depth), more creative approaches are called for.  A popular rigging consists of an acoustic receiver attached to a length of wire/rope with a strong float on one end, and a substantial ballast with an acoustic quick release (a device that disconnects a shackle when sent an acoustic signal) on the other\cite{Heupel2006}.  Such a rig can be dropped in the ocean and allowed to sink to its desired location.  Obviously, various situations will require different rig designs and may contribute significantly to network costs (acoustic releases cost ~\$2700 per piece).
+SAONs are composed of stationary rigs that are responsible for maintaining the chosen physical location for a receiver.  Because positional data is interpolated from the position of nearby receivers, it is important that receivers are deployed accurately and maintain their position throughout the entire experiment\cite{Heupel2006}.  This is best accomplished by attaching receivers to permanent emplacements  (such as a rigid metal frame driven into a rocky substrate) that will resist substantial amounts of force (such as strong currents and curious animals).  However, when it is not possible to create such permanent emplacements (perhaps due to regulation or extreme depth), more creative approaches are called for.  A popular rigging consists of an acoustic receiver attached to a length of wire/rope with a strong float on one end connected to a strong ballast by an acoustic quick release (a device that disconnects a shackle when sent an acoustic signal) \cite{Heupel2006}.  Such a rig can be dropped in the ocean and allowed to sink to its desired location.  Obviously, various situations will require different rig designs and may contribute significantly to network costs (acoustic releases cost ~\$2700 per piece).
 
 
-\begin{figure}[h]
+\begin{figure}[ht]
 	\label{rigging}
 	\centering
 	\includegraphics[scale=0.4]{rigging.png}
-	\caption{An illustration of two acoustic emplacements.  The left rig consists of a float (orange cirlce) capable of lifing the rig without the ballast, a long rope, an acoustic receiver (green cylinder) and an acoustic quick-relese (red) attached to a ballast (purple).  The ballast is sufficiently heavy to keep the entire rig from drifting with the current.  Upon signaling the quick release, the ballast is released, and the float carries the rig to the surface.   This kind of rig is suitible for deeper deployments, or areas where no solid structure exists (coral, rock formation).   The right rig consists of an emplacemnt for shallow water, generally near solid structures (coral, rock formation).  Here, a steel rod is driven into the structure, cemented into place, and an acoustic receiver is attached. }
+	\caption{An illustration of two acoustic emplacements.  The left rig consists of a float (orange circle) capable of lifting the rig without the ballast, a long rope, an acoustic receiver (green cylinder) and an acoustic quick release (red) attached to a strong ballast (purple).  The ballast is sufficiently heavy to keep the entire rig from drifting with the current.  Upon signaling the quick release, the ballast is released, and the float carries the rig (receiver, line,  and quick release) to the surface.  This type of rig is suitable for deeper deployments, or areas where no solid structure exists (coral, rock formation).   The right rig consists of an emplacement for shallower waters or near solid structures (coral, rock formation).  Here, a steel rod is driven into a solid structure, cemented into place, and an acoustic receiver is attached. }
 \end{figure}
 
 \subsection{Sensor Deployment \& Recovery}
 The labor required for receiver deployment and recovery depends on the design of the receiver assembly.  Creating a permanent, rigid emplacement for a receiver can require multiple divers, special equipment,  and hours of underwater elbow grease.  The subsequent recovery of a permanent, rigid emplacement will most likely require a diver to physically remove the receiver from its emplacement. Deployment of ballast/float assemblies can be as simple as dropping the assembly overboard.  Recovering a ballast/float assembly simply requires signaling the acoustic release with a hydrophone and allowing the buoy to carry the receiver assembly to the surface.
 
 \subsection{Tag Deployment}
-The most challenging and time consuming task in animal tracking is the physical deposition/implantation of tags on/into the individuals to be tracked.  In the case of marine tracking, this can be particularly challenging as animals must be located, captured, tagged, and released relatively quickly to avoid over-stressing the animals.  Improper handling/release of an animal can result in its death and the loss of a tag.  All telemetry technologies will eventually require interaction with the individual to be tracked, and acoustic tracking is no different.
+All telemetry technologies eventually require interaction with the individual to be tracked.  This interaction consists of the physical deposition/implantation of tags on/into the individuals to be tracked; a challenging and time consuming task.  In aquatic tracking, this process is complicated by the potential sensitivity of a species to temperature, pressure, light, and sound.  Aquatic animals must be captured, tagged, and released very quickly to avoid over-stressing/suffocating an animal.  The improper handling, over handling, or improper release of an animal can result in its death and the loss of substantial time and resources.  
 
 \subsection{Comparison of Technologies}
 \subsubsection{Very High Frequency Radio}
-Very High Frequency radio (VHF) tracking involves attaching a VHF transmitter to an animal, and then using a VHF antenna and receiver to receive transmissions.  VHF transmissions have effective ranges on the order of tens of kilometers.  Transmissions from VHS devices do not generally contain positional data, but instead serve as a means to estimate the distance and direction of a VHS device.  Positional data is derived by noting the direction and strength of a signal from several different observational positions, and estimating the transmitter's position by triangulation\cite{USDA}.  In a marine setting, VHF observation is generally performed from a plane or boat\cite{Wikipedia_RadioTracking}.
+Very High Frequency radio (VHF) tracking involves attaching a VHF transmitter to an animal, and then using a VHF antenna and receiver to acquire transmissions.  VHF transmissions have effective ranges on the order of tens of kilometers.  Transmissions from VHS devices do not generally contain positional data, but instead serve as a means to estimate the distance and direction of a VHS device.  Positional data is derived by noting the direction and strength of a signal from several different observational positions and estimating the transmitter's position by triangulation\cite{USDA}.  In an aquatic setting, VHF observation is generally performed from a plane or boat\cite{Wikipedia_RadioTracking}.
 
-\subparagraph{Sateallite/GPS}
-Satellite and GPS tracking are distinct but related technologies that rely on a network of satellites (either ARGOS or GPS, respectively) to compute the positional data of a tag. GPS tags rely on the GPS network of satellites to triangulate a tag's three dimensional position. GPS telemetry may be stored on-board a tag (requiring later retrieval), or transmitted via satellite to a remote server\cite{USDA}. Satellite tags operate by transmitting messages to the ARGOS satellite system, which computes a tag's position by observing the Doppler effect on a tag's transmission\cite{ARGOS}.  Because the telemetry from satellite tags is transmitted back to remote servers, data recovery is automatic.  Both technologies have fairly poor penetration into the ocean, and so GPS/Satellite transmissions generally occur only when an animal is near the surface of the ocean.  This can lead to data sets with large spatial/temporal gaps between detections.  Additionally, neither technology is desirable for observing animals that reside at significant depths.  Due to the high cost of Satellite/GPS technology, studies using this technology generally have very small sample sizes.  
+\subparagraph{Satellite/GPS}
+Satellite and GPS tracking are distinct but related technologies that rely on a network of satellites (either ARGOS or GPS, respectively) to compute the positional data of a tag. GPS tags rely on the GPS network of satellites to triangulate a tag's three dimensional position. GPS telemetry may be stored on-board a tag (requiring later retrieval) or transmitted via satellite to a remote server\cite{USDA}. Satellite tags operate by transmitting messages to the ARGOS satellite system, which computes a tag's position by observing the Doppler effect on a tag's transmission\cite{ARGOS}.  Because the telemetry from satellite tags is transmitted back to remote servers, data recovery is automatic.  Both technologies have fairly poor penetration into the ocean; therefore, Satellite/GPS transmissions generally occur only when an animal is near the surface of the ocean.  This can lead to data sets with large spatial/temporal gaps between detections.  Additionally, neither technology is desirable for observing animals that reside at significant depths.  Due to the high cost of Satellite/GPS technology, studies using this technology generally have very small sample sizes.  
 
 \subsection{Advantages of Acoustic Networks}
-After initial deployment, SAONs require no maintenance and incur no operating costs (unlike satellite and VHF radio technologies).  This means that SAONs can operate around the clock, and in conditions that would otherwise make it unsafe/impossible for field researchers to track animals (e.g. in a storm)\cite{Heupel2006}.  However, it is necessary to retrieve the acoustic receivers at the end of the study in order to recover data\cite{Heupel2006}.  Finally, SAONs allow for passive animal monitoring, removing the potential disruption of natural behavior caused by active tracking (e.g. aircraft/boat noise/shadow scaring animals)\cite{Heupel2006}.  SAONs also function at greater depths than satellite/VHF-based systems.  Because the reception of acoustic transmissions (by acoustic receivers) occurs at the resident depth of the target species, an acoustic tag's transmission need not penetrate to the surface to be detected (unlike Satellite and GPS based systems).
-
-
-
+After initial deployment, SAONs require no maintenance and incur no operating costs (unlike satellite and VHF radio technologies).  This means that SAONs can operate around the clock and in conditions that would otherwise make it unsafe/impossible for field researchers to track animals (e.g. in a storm)\cite{Heupel2006}.  However, it is necessary to retrieve the acoustic receivers at the end of the study in order to recover data\cite{Heupel2006}.  Finally, SAONs allow for passive animal monitoring, removing the potential disruption of natural behavior caused by active tracking (e.g. aircraft/boat noise/shadow scaring animals)\cite{Heupel2006}.  SAONs also function at greater depths than satellite/VHF-based systems.  Because the reception of acoustic transmissions (by acoustic receivers) occurs at the resident depth of the target species, an acoustic tag's transmission need not reach the surface to be detected (unlike Satellite and GPS based systems).
 
 \section{The Cost of Data}
 \subsection{Cost of Alternative Technologies}
-SAONs are relatively cheap, with acoustic receivers costing ~\$1300, and acoustic tags costing ~\$330 each.  Moorings for acoustic receivers can be significantly more expensive, with acoustic releases costing slightly more than twice the cost of a receiver.  However, these costs are still significantly more affordable than satellite-based tags and collars, which cost upwards of \$5000 each\cite{wildlifetracking}.  Additionally, recurring service fees and per-transmission charges may apply to data transferred over the satellite network.  VHS radio tags are a seemingly cheaper alternative at \$223 per unit, but require active monitoring to obtain each data point.  The cost of paying for vehicles(boats/planes) and crews to periodically collect telemetry from these tags will significantly outweigh any initial cost savings.
+SAONs are relatively cheap, with acoustic receivers costing ~\$1300, and acoustic tags costing ~\$330 each.  Moorings for acoustic receivers can be significantly more expensive, with acoustic releases costing ~\$2700.  However, these costs are still significantly more affordable than satellite-based tags and collars, which cost upwards of \$5000 each \cite{wildlifetracking}.  Additionally, recurring service fees and per-transmission charges may apply to data transferred over the satellite network.  VHS radio tags are a seemingly cheaper alternative at \$223 per unit, but require active monitoring to obtain each data point.  The cost of paying for vehicles(boats/planes) and crews to periodically collect telemetry from these tags will significantly outweigh any initial cost savings.
 
 \begin{table}[h!]
-		\label{CostAltTech}
 		\begin{tabular}{l l l l}
 Technology&Tag Cost&Receiver Cost&Operating Cost\\
 \hline
@@ -46,11 +42,12 @@ Technology&Tag Cost&Receiver Cost&Operating Cost\\
 			Satellite Tag 	     & \$3000-\$5000\cite{wildlifetracking}  & \$0    					  & Service fees\\
 			Acoustic Network 	 & \$330         						 & \$1300 					  & \$0\\
 		\end{tabular}
-		\caption{Cost Summary of Alternative Technologies}
+		\caption{Cost Summary of Alternative Technologies
+			\label{CostAltTech}}
 \end{table}
 
 \subsection{Operating Costs}
-While SAONs require no maintenance to operate, both Satellite and VHF based systems can incur operating costs while deployed.  Satellite tags will require very little maintenance (precluding animal mortality), but satellite network operators may charge for access to and transmission over their network\cite{wildlifetracking}.  VHF systems require little maintenance, but do require active field work in order to obtain positional information.  Because a tag's location is interpolated from observations of its VHS signal from multiple locations, it is necessary for a field agent to routinely collect these observations to obtain telemetry data.  VHF networks have perhaps the highest operating cost, requiring a salary for one or more field agent(s) and transportation costs (renting a boat/plane).  The operating costs for each technology should be included in the total cost of data collection, and subsequently the cost effectiveness of each solution.
+While SAONs require no maintenance to operate, both Satellite and VHF based systems can incur operating costs while deployed.  Satellite tags will require very little maintenance (precluding animal mortality), but satellite network operators may charge for access to, and transmission over their network\cite{wildlifetracking}.  VHF systems require little maintenance, but do require active field work in order to obtain positional information.  Because a tag's location is interpolated from observations of its VHS signal from multiple locations, it is necessary for a field agent to routinely collect these observations to obtain telemetry data points.  VHF networks have perhaps the highest operating cost, requiring a salary for one or more field agent(s) and transportation costs (renting a boat/plane).  The operating costs for each technology should be included in the total cost of data collection, and subsequently the cost effectiveness of each solution.
   
   
 %[http://www.wildlifetracking.org/faq.shtml]
@@ -59,34 +56,36 @@ While SAONs require no maintenance to operate, both Satellite and VHF based syst
 
 %VR2's cost ~\$1.5k each, tags cost ~\$350 each.  http://www.gulfcounty-fl.gov/pdf/882532513025603.pdf 
 
-\subsection{Cost Efficciency}
-\begin{table}[h!]
-	\label{ExpectedLife&Tx}
+\subsection{Cost Efficiency}
+\begin{table}[ht]
 	\begin{tabular}{l l l l l}
-		Technology&Tag Model&Transmit Period&Expected Lifespan&Expected Transmissions\\
+		Technology&Tag Model&Transmit&Expected&Expected \\
+		&& Period&Lifespan&Transmissions\\
 		\hline
 		VHF Radio Tag		& Telonics FIS-040	& 1s	& 0.7 days	    & 60,480\\
 		Satellite Tag		& Telonics ST-18	& 60s	& 117 days		& 168,480\\
 		Acoustic Tag		& Vemco VR-13		& 90s	& 1,135 days	& 1,089,600\\
 	\end{tabular}
-\caption{Lifespan \& Total Expected Transmissions}
+\caption{Lifespan \& Total Expected Transmissions
+	\label{ExpectedLife&Tx}}
 \end{table}
 
 
 
-\begin{table}[h!]
+\begin{table}[ht]
 	\begin{tabular}{l l l l l}
-		Technology&Tag Model&Tag Price&Expected Transmissions&Price Per Transmission\\
+		Technology&Tag Model&Tag Price&Expected&Price Per\\
+		&&&Transmissions&Transmission\\
 		\hline
 		VHF Radio Tag		& Telonics FIS-040	& \$199		& 60,480	& \$$3.29e^{-3}$\\
 		Satellite Tag		& Telonics ST-18	& \$3000	& 168,480	& \$$1.78e^{-2}$\\
 		Acoustic Tag		& Vemco VR-13		& \$330		& 1,089,600	& \$$3.03e^{-4}$\\
 	\end{tabular}
-	\caption{Price per Transmissions}
-	\label{PricePerTx}
+	\caption{Price per Transmissions
+		\label{PricePerTx}}
 \end{table}
 
-Tablef~\ref{PricePerTx} shows that the acoustic tags can generate data at significantly lower cost (Price Per Transmission) than alternative technologies.  However, maintaining this price advantage requires the careful placement of the significantly more expensive acoustic receivers/emplacements.  
+Table~\ref{PricePerTx} shows that the acoustic tags can generate data at significantly lower cost (Price Per Transmission) than alternative technologies.  However, maintaining this price advantage requires the careful placement of the significantly more expensive acoustic receivers/emplacements.  
 
 
 %http://vemco.com/products/v7-to-v16-69khz/
@@ -101,9 +100,7 @@ Tablef~\ref{PricePerTx} shows that the acoustic tags can generate data at signif
 
 \subsection{Rules of Thumb for Sensor Placement}
 \label{RulesOfThumb}
-While animal tracking studies draw upon hard data to draw conclusions, the methodology for collecting this data is based upon loose rules of thumb driven by anecdotal evidence.  Heupel et al's highly cited 2006 paper distills their prior experience with animal tracking into "rules of thumb" for designing a SAON.  These rules focus on generalized considerations such as avoiding areas of high noise, bathymetric obstruction, and acoustic echoing\cite{Heupel2006}.  
-
-While Heupel et al's publication gives sound advice on design issues that warrant warrant consideration, the discussion of analytical methods for measuring these issues falls out of the publication's scope.
+While animal tracking studies draw upon hard data to draw conclusions, the methodology for collecting this data is based upon loose rules of thumb driven by anecdotal evidence.  Heupel et al's highly cited 2006 paper distills their prior experience with animal tracking into "rules of thumb" for designing a SAON.  These rules point out issues such as avoiding areas of high noise, bathymetric obstruction, and acoustic echoing \cite{Heupel2006}.  While Heupel et al's publication gives sound advice on design issues that warrant consideration, the discussion of analytical methods for measuring these issues falls out of the publication's scope.
 
 
 \subsection{Metrics}
@@ -111,29 +108,27 @@ While Heupel et al's publication gives sound advice on design issues that warran
 \label{dataRecoveryRate}
 The most common metric used in analyzing the success of animal tracking studies is the Data Recovery Rate (DRR): ($\frac{pings\_emitted}{pings\_recovered}$).  While it may seem intuitive to understand data recovery rates as an indicator of the quality of the dataset, one must bear in mind the objective of the study.  As illustrated in section~\ref{dataQuality}, the objective of the study defines how useful a particular dataset is in addressing a research question.  Therefore, Data Recovery Rate should be treated simply as a measure of how complete a particular dataset is, and how strongly it can support a claim.  
 
-\paragraph{Unique \& Absoloute Data Recovery Rates}
-When discussing recovery rates, the Absoloute Data Recovery Rate (ADRR) and Unique Data Recovery Rate (UDRR) can give insight into the qualities of a particular network design.  ADRR is computed as the total number of pings that were received by all receivers in the network, divided by the total number of emitted pings.  This means, that data recovery rates of more than 100$\%$ are possible.  
+\paragraph{Unique \& Absolute Data Recovery Rates}
+When discussing recovery rates, the Absolute Data Recovery Rate (ADRR) and Unique Data Recovery Rate (UDRR) can give insight into the qualities of a particular network design.  ADRR is computed as the total number of pings that were received by all receivers in the network, divided by the total number of emitted pings.  This means, that data recovery rates greater than 100$\%$ are possible.  
 
 \subsubsection{Network Sparsity}
 \label{delta}
-Network Sparsity ($\delta$) is a unit-less measure of the observational qualities of an acoustic network.  This metric is useful in quickly expressing the density and intent of an acoustic network.  For a list of n receivers within a SAON $r_1$, $r_2$, $r_3$, ... $r_n$, let $a_i$ ($1\le i \le n$) be the distance to receiver $r_i$'s nearest neighbor.  Then, a is the median over all $a_i$.  $d_r$ is given as the detection range of a receiver.  Network sparsity is defined as $\frac{a}{2d_r}$.  
+Network Sparsity ($\delta$) is a unit-less measure of the observational qualities of an acoustic network.  This metric is useful in quickly expressing the density and intent of an acoustic network.  For a list of n receivers within a SAON $r_1$, $r_2$, $r_3$, ... $r_n$, let $a_i$ ($1\le i \le n$) be the distance to receiver $r_i$'s nearest neighbor.  Then, $a$ is the median over all $a_i$.  $d_r$ is given as the detection range of a receiver (Section~\ref{detectionRange}).  Network sparsity is defined as $\frac{a}{2d_r}$. \cite{EstimatingIndividual}
 
-A $\delta$ of 0 describes an array of receivers that are virtually stacked on top each other.  A $delta$ between 0 and 1 indicates that receivers are placed such that their detection ranges overlap (a smaller $\delta$ indicates more overlap).  A $\delta$ of 1 signifies that receivers in the array are positioned such that their detection ranges are just touching but not overlapping.  A $\delta$ greater than 1 indicates that the receivers are farther apart, and that there are gaps between receiver coverage areas.  
-With this definition, it becomes obvious that Network Sparsity is a positive indicator for data
-fusion (section~\ref{dataFusion}), and data resolution(section~\ref{dataFusion}).
+A $\delta$ of 0 describes an array of receivers that are virtually stacked on top each other.  A $delta$ between 0 and 1 indicates that receivers are placed such that their detection ranges overlap (a smaller $\delta$ indicates more overlap).  A $\delta$ of 1 signifies that receivers in the array are positioned such that their detection ranges are just touching but not overlapping.  A $\delta$ greater than 1 indicates that the receivers are farther apart, and that there are gaps between receiver coverage areas. \cite{EstimatingIndividual}  With this definition, it becomes obvious that Network Sparsity is a positive indicator for data fusion (section~\ref{dataFusion}), and data resolution(section~\ref{dataFusion}).
 
 
 \subsubsection{Sample Size}
 \label{sampleSize}
-Another important factor to consider is the number of tagged individuals within a dataset.  A dataset for a single tagged individual, no matter how complete, will not offer very much support to any conclusions drawn.  At the same time, a dataset for a large number of individuals, with very low data recovery rates may not provide enough individual telemetry to draw a conclusion at all.
+Another important factor to consider is the number of tagged individuals within a dataset.  A dataset for a single tagged individual, no matter how complete, will not offer very much support to any species-wide conclusions.  At the same time, a dataset with a large number of individuals and very low data recovery rates may not provide enough individual telemetry to provide definitive evidence.
 
 \subsection{Data Quality}
 \label{dataQuality}
-
+//TODO left off editing here
 \subsubsection{Data Resolution}
 \label{dataResolution}
 \label{dataFusion}
-Acoustic receivers like the Vemco VR2 log detections of acoustic transmissions as a tuple of time, tag number, and transmission strength.  The strength of the received transmission can be used to approximate the distance between the tag and receiver.  Data from a single receiver has a fairly low certainty of the exact position (low resolution) of the transmitting tag because only a single distance can be observed.  If multiple receivers are in close enough proximity to receive the same transmission, the strength of the transmission observed from several different known, fixed positions can be used to triangulate a more precise position (higher resolution).  This process of combining multiple observations into a more accurate observation, known as \textbf{Data Fusion}, is useful for increasing the resolution of tagged individuals and allows for the tracking of fine movements within a three-dimensional space.  This increase in resolution does however have a price.  Detection of a tag by more than one receiver requires that those receivers have overlapping detection ranges.  Assuming a fixed number of receivers, placing receivers closer together reduces the actual coverage area of the array.  Thus, the coverage area of the array is inversely correlated with the resolution of the array.  Alternatively, purchasing more receivers will achieve a higher resolution, but increases the cost of the array.
+Acoustic receivers like the VEMCO VR2 log detections of acoustic transmissions as a tuple of time, tag number, and transmission strength.  The strength of the received transmission can be used to approximate the distance between the tag and receiver.  Data from a single receiver has a fairly low certainty of the exact position (low resolution) of the transmitting tag because only a single distance can be observed.  If multiple receivers are in close enough proximity to receive the same transmission, the strength of the transmission observed from several different known, fixed positions can be used to triangulate a more precise position (higher resolution).  This process of combining multiple observations into a more accurate observation, known as \textbf{Data Fusion}, is useful for increasing the resolution of tagged individuals and allows for the tracking of fine movements within a three-dimensional space.  This increase in resolution does however have a price.  Detection of a tag by more than one receiver requires that those receivers have overlapping detection ranges.  Assuming a fixed number of receivers, placing receivers closer together reduces the actual coverage area of the array.  Thus, the coverage area of the array is inversely correlated with the resolution of the array.  Alternatively, purchasing more receivers will achieve a higher resolution, but increases the cost of the array.
 
 
 \subsubsection{Meaningful Data}

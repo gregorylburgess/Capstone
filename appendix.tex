@@ -11,36 +11,34 @@
 %% 
 
 \chapter{Table of Notations}
-$A$ - Bathymetry Grid - A 2D grid of real numbers that describe the depth of a section of the sea floor.  $A_{i,j}$ refers to a particular value in the cell at row i, column j.
-\newline
-\newline
-$B$ - Behavior Grid - A 2D grid of real numbers that indicate the percentage of all transmissions that are expected to be released from that cell over the entire experiment.  $B_{i,j}$ refers to a particular value in the cell at row i, column j.
-\newline
-\newline
-$G$ - Goodness Grid - A 2D grid with the same dimensions as the Bathymetry Grid.  Contains real numbers that indicate how good a particular cell will serve as a receiver placement.  $G_{i,j}$ refers to a particular value in the cell at row i, column j.
-\newline
-\newline
-$ERT_{x,A,i,j}$ - Estimated Receivable Transmissions - The number of transmissions that are expected to be received from a cell at row $i$, column $j$, relative to a receiver at cell $A$, according to Evaluation Algorithm $x$.
-\newline
-\newline
-$P_{Attenuation}(x)$ - Probability of Detection due to attenuation - Describes the probability of detecting an acoustic transmission originating at a range of x meters away from a receiver.
-\newline
-\newline
-$Range(i,j)$ - Distance from receiver to cell at (i,j) - Distance from a particular receiver location to the cell at row i, column j.  Computed as the Euclidian distance between the center of a receiver-containing cell and the center of the cell at row i, column j on a 2D grid.
+\noindent\begin{tabularx}{\linewidth}{@{}>{\hsize=.3\hsize}X>{\hsize=1.5\hsize}X@{}}
+	
+	$A$ & Bathymetry Grid - A 2D Grid of real numbers that describe the depth of a section of the sea floor.  $A_{i,j}$ refers to a particular value in the cell at row i, column j.\\
 
-$R_{opt}$ - The number of optimal receivers to be placed by the system. (Excluding projected receivers)
+	$B$ & Behavior Grid - A 2D Grid of real numbers that indicate the percentage of all transmissions that are expected to be released from that cell over the entire experiment.  $B_{i,j}$ refers to a particular value in the cell at row i, column j.\\
+	
+	$G$ & Goodness Grid - A 2D Grid with the same dimensions as the Bathymetry Grid.  Contains real numbers that indicate how good a particular cell will serve as a receiver placement.  $G_{i,j}$ refers to a particular value in the cell at row i, column j.\\
 
-$R_{proj}$ - The number of projected receivers to be placed by the system.
+	$ERT_{x,A,i,j}$ & Estimated Receivable Transmissions - The number of transmissions that are expected to be received from a cell at row $i$, column $j$, relative to a receiver at cell $A$, according to Evaluation Algorithm $x$.\\
 
-$D_max$
+	$P_{Attenuation}(x)$ & Probability of Detection due to attenuation - Describes the probability of detecting an acoustic transmission originating at a range of x meters away from a receiver.\\
+	
+	$Range(i,j)$ & Distance from receiver to cell at (i,j) - Distance from a particular receiver location to the cell at row i, column j.  Computed as the Euclidian distance between the center of a receiver-containing cell and the center of the cell at row i, column j on a 2D Grid.\\
+	
+	$R_{opt}$ & The number of optimal receivers to be placed by the system. (Excluding projected receivers)\\
+	
+	$R_{proj}$ & The number of projected receivers to be placed by the system.\\
+	
+	$D_max$& The deepest observable depth within a target cell, relative to the current cell.\\
+	
+	$m_{p,q}$&The slope between cells $p$ and $q$, expressed as the change in bathymetric elevation (of the sea floor) between cells $p$ and $q$, divided by the Euclidean Distance between cells $p$ and $q$.\\
+	
+	$D_{range}$ & The detection range of the receiver.  Assumed to be the same for all receivers in the network.  Given as the distance between a receiver and tag at which there is a 5\% chance of detecting an acoustic transmission.\\
 
-$m_{p,q}$
+	$s$ & The square root of the total number of cells in the Bathymetry Grid (A).  Approximates the edge dimension of a square Bathymetry Grid.\\
+	$d_{detection}$& The edge size of the Detection Grid, equal to $2r+1$ cells.\\
+	$f_{supp}$ & The Suppression Range Factor.  A positive real number.\\
+	$r_{supp}$ & The Suppression Range. Equal to $f_{supp}*D_{range}$\\
+	$d_{supp}$ & The square root of the number of cells in the Suppression Area.  The edge dimension of the Suppression Area.  Equal to $2*r_{supp} + 1$ cells.\\
 
-$$D_{range}$$ - The detection range of the receiver.  Assumed to be the same for all receivers in the network.  Given as the distance between a receiver and tag at which there is a 5\% chance of detecting an acoustic transmission.
-
-$s$ - The square root of the total number of cells in the Bathymetry Grid (A).  Approximates the edge dimension of a square Bathymetry Grid.
-
-
-\chapter{More Ancillary Stuff}
-
-Subsequent chapters are labeled with letters of the alphabet.
+\end{tabularx}
