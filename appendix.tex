@@ -11,7 +11,7 @@
 %% 
 
 \chapter{Table of Notations}
-\noindent\begin{tabularx}{\linewidth}{@{}>{\hsize=.3\hsize}X>{\hsize=1.5\hsize}X@{}}
+\noindent\begin{tabularx}{\linewidth}{@{}>{\hsize=.4\hsize}X>{\hsize=1.5\hsize}X@{}}
 	
 	$A$ & Bathymetry Grid - A 2D Grid of real numbers that describe the depth of a section of the sea floor.  $A_{i,j}$ refers to a particular value in the cell at row i, column j.\\
 
@@ -21,11 +21,15 @@
 
 	$n$ & The square root of the total number of cells in the Bathymetry Grid (A).  Approximates the edge dimension of a square Bathymetry Grid.\\
 
+	$k$ & The fixed elevation of receivers off of the sea floor in meters.  Assumed to be constant for all receiver emplacements in the simulation.\\
+	
 	$ERT_{x,A,i,j}$ & Estimated Receivable Transmissions - The number of transmissions that are expected to be received from a cell at row $i$, column $j$, relative to a receiver at cell $A$, according to Evaluation Algorithm $x$.\\
 
 	$P_{Attenuation}(x)$ & Probability of Detection due to attenuation - Describes the probability of detecting an acoustic transmission originating at a range of x meters away from a receiver.\\
+
+	$P_{observation}(A,a,b)$ & Percentage of transmission in cell ($a,b$) which are observable (due to bathymetric obstruction) from cell $A$ .  Given a receiver in cell $A$, and some distribution of animals in the water column of cell ($a,b$), this value represents the percentage of observable animals in ($a,b$) from A.  Animal distribution is handled by the Vertical Movement Model (Section~\ref{verticalMovement}).  Section~\ref{LoSAlgorithm} gives the algorithm for determining bathymetric obstruction and Line of Sight.\\
 	
-	$Range(i,j)$ & Distance from receiver to cell at (i,j) - Distance from a particular receiver location to the cell at row i, column j.  Computed as the Euclidean distance between the center of a receiver-containing cell and the center of the cell at row i, column j on a 2D Grid.\\
+	$Range(A,i,j)$ & Distance from cell $A$ to the cell at (i,j) - Distance from a particular receiver location $A$ to the cell at row i, column j.  Computed as the Euclidean distance between the center of a receiver-containing cell $A$ and the center of the cell at row i, column j on a 2D Grid.\\
 	
 	$R_{opt}$ & The number of optimal receivers to be placed by the system. (Excluding projected receivers)\\
 	
