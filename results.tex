@@ -9,19 +9,23 @@ Our program outputs 6 files:\newline
 6) Text representations of the 5 Grid files, tabular receiver data, and the specified input parameters.\newline
 
 \subsection{Grid Graphs}
-The four Grid files (Bathymetry, Behavior, Coverage, and Goodness) are visualized as a heat maps.  All of these are overlaid with the resulting receiver locations as numbered circles.  Receiver locations show their detection range as dotted outlines centered over the receiver locations.  User placed receivers are colored white, while receivers placed optimally by the system are colored blue.  The numbering on user and system-placed receivers denotes the rank of each receiver's Unique Data Recovery Rate.  User and system-placed receivers are ranked separately.  Optimal receivers consist both the optimally placed and projected receivers.  The highest ranked receiver locations are returned as the optimal receiver locations, with the lower ranked locations as the projected receiver locations.
+The four Grid files (Bathymetry, Behavior, Coverage, and Goodness) are visualized as a heat maps.  All of these are overlaid with the resulting receiver locations as numbered circles.  Receiver locations show their detection range as dotted circles centered over the receiver locations.  User placed receivers are colored gray, receivers placed optimally by the system are colored blue, and projected receivers (also placed by the system) are colored green.  The numbering on receivers denotes the rank of each receiver's Unique Data Recovery Rate.  User and system-placed receivers are ranked separately.  The highest ranked system-placed receiver locations are returned as the optimal receiver locations, with the lower ranked locations as the projected receiver locations.
 
 
 \subsection{Data Recovery Graphs}
-The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed receivers used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (perhaps UDRR contribution) against that cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a particular UDRR.
+The program also produces a graph of the marginal increase in and cumulative sum of the Unique Data Recovery Rate as a function of the number of optimally placed receivers used (Figure~\ref{recoveryGraph}).  The graph of the marginal increase in UDRR (the lower graph) is especially useful.  Given that Receivers have a fixed per-unit cost, it makes sense to weigh a receiver's effectiveness (in this case, UDRR contribution) against its cost to determine the utility of purchasing an additional receiver.  The graph of cumulative UDRR is useful to quickly identify the number of receivers necessary to reach a goal UDRR.
+
+\begin{figure}[ht]
+	\includegraphics[scale=.8]{RecoveryRates.png}
+	\caption{\label{recoveryGraph} A graphical representation of the cumulative and per-receiver UDRR.  User-placed receivers are representd by a grey line, system-placed receivers are represented by the black line, and projected receivers are represented by the green line.} 
+\end{figure}
 
 \subsection{Text Files}
-The program returns a comprehensive text representation of the program output (text dump of Gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates), data recovery rates for each receiver, and the sparsity of the network.  Projected receivers are excluded from the total UDRR, ADRR, and sparsity values.
+The program returns a comprehensive text representation of the program output (text dump of gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates), data recovery rates for each receiver, and network sparsity.  Projected receivers are excluded from the total UDRR, ADRR, and sparsity values.
 
 Coordinates are returned in both a Global (with respect to the original Topography file) and local (the user specified area of interest) frame.  While the curvature of the earth is well documented, different bathymetric maps may handle the mapping of a 3D curved plane to a 2D Grid differently.  For example, one Grid may implement some scaling on Grid cells a function of the cell's latitude or distance from a certain point.  Other Grid files may simply provide non-square Grid files.  By proving a small-scale (local) and large-scale (global) frame of reference for our receiver locations, irregularities of this nature are more easily detected.
 
 \begin{figure}[ht]
-	\label{outputGraphs}
 	\includegraphics[scale=.5]{TopographyGrid.png}
 	\caption{A graphical representation of an artificial Bathymetry file at a 1m resolution (each cell has an edge length of 1m).  Darker cells represent greater depths, while white cells represent inaccessible terrain (dry land).  The optimal receiver locations are shown on the Grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.\label{bathyGraph}}
 \end{figure}
@@ -33,7 +37,7 @@ Coordinates are returned in both a Global (with respect to the original Topograp
 
 \begin{figure}[ht]
 	\includegraphics[scale=.5]{GoodnessGrid.png}
-	\caption{The Goodness Grid represented as a heat map showing the quantity of Estimated Receivable Transmissions (ERT) if a receiver were placed in a particular cell.  The legend in the top right assigns color coding to various ERT values. The optimal receiver locations are shown on the Grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.\label{GoodnessGraph}} 
+	\caption{The Goodness Grid represented as a heat map showing the sum total of Estimated Receivable Transmissions (ERT) for a receiver placed in a particular cell.  The legend in the top right assigns color coding to various ERT values. The optimal receiver locations are shown on the Grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.\label{GoodnessGraph}} 
 \end{figure}
 
 \begin{figure}[ht]
@@ -41,7 +45,3 @@ Coordinates are returned in both a Global (with respect to the original Topograp
 	\caption{The Coverage Grid represented as a heatmap showing the quantity of Estimated Receivable Transmissions from each cell in the study site, for the designated receiver array configuration.  The legend in the top right assigns color coding to various ERT values.  The optimal receiver locations are shown on the Grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.  The missing corner of of Receiver 4's Detection Area is due to the presence of an obscuring section of Bathymetry (dry land).\label{coverageGraph}}
 \end{figure}
 
-\begin{figure}[ht]
-	\includegraphics[scale=.8]{RecoveryRates.png}
-	\caption{\label{recoveryGraph}} 
-\end{figure}
