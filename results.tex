@@ -45,3 +45,18 @@ Coordinates are returned in both a Global (with respect to the original Topograp
 	\caption{The Coverage Grid represented as a heatmap showing the quantity of Estimated Receivable Transmissions from each cell in the study site, for the designated receiver array configuration.  The legend in the top right assigns color coding to various ERT values.  The optimal receiver locations are shown on the Grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.  The missing corner of of Receiver 4's Detection Area is due to the presence of an obscuring section of Bathymetry (dry land).\label{coverageGraph}}
 \end{figure}
 
+\section{Nature of Results}
+* Other methods and applications focus on:
+	* fixing the location of a target in space.  (already deployed network)  
+	* fixed-objective deployment (k-neighbor, coverage, fixed detection probability)
+* This framework allows for flexible objective/goal definition.  (can potentially do it all)
+
+\subsection{Advantages}
+* Framework = flexible, extensible
+* more of a "library" than an application.
+* input your own grids
+
+\subsection{Disadvantages}
+* using it as a library requires substantial programming ability.
+* the default application is quite slow (exhaustive search)
+* written in R (slow, brittle)

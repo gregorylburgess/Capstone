@@ -1,0 +1,63 @@
+\chapter{Implementation}
+The framework presented is intended to serve as a loose, extensible skeleton.  While a functional application is provided, its intent is to serve as a sample template.  It is expected that researchers will want to define and use customized versions of the provided functions (herein referred to as ''subfunctions'').  To support this, the framework utilizes generic dispatcher functions and a dictionary for parameter passing.  
+
+\subsection{Parameter Dictionary}
+The framework takes as an input to the main program a dictionary of named values, and passes this dictionary throughout the program.  This allows for dispatcher functions with concrete function signatures (simply the parameter dictionary), and sub-functions with widely varied signatures.  The cost of this approach is of course that substantial data validation must be preformed by the program before the execution of sub-functions in order to avoid run-time failures.  
+
+\subsection{Dispatcher Functions}
+
+
+\subsection{Major Modules}
+checkParams
+validates parameters
+
+bathymetry dispatcher
+getBathy <- function(inputFile, inputFileType, startX=0, startY=0, XDist, YDist, seriesName, timestamp, debug=FALSE) {
+	ncdf/ncdf4
+	
+animal model dispatcher
+fish <- function(params, topographyGrid) {
+
+Goodness dispatcher
+goodnessGridFun = function (grids, range, bias, params, debug=FALSE, silent=FALSE, multi=FALSE) 
+
+Sensor selection function
+sensorFun = function(numSensors, topographyGrid, behaviorGrid, range, bias, params, debug=FALSE, silent = FALSE, save.inter=FALSE, multi=FALSE) {
+
+suppression dispatcher
+sensorFun.suppressHelper = function(loc, grids, range, bias, params, debug=FALSE, multi=FALSE) {
+
+custom main
+acousticRun <- function(params, showPlots=FALSE, debug=FALSE, save.inter=FALSE, silent=FALSE, multi=FALSE) {
+
+custom test
+acousticTest <- function(bias=3, real=FALSE, exact=FALSE, multi=FALSE, showPlots=FALSE, paper=FALSE, silent=FALSE, debug=FALSE) {
+	Executes a test run of the program, using default parameters.  No additional 
+	parameters are necessary. The code for this function can be used as a template for new projects.
+
+
+* Intended to be used as a loose R framework, where users define new sub functions and add them to the dispatcher functions.
+* dispatcher functions
+* Provided implementation is very simple.
+* parameters are very loose, allowing for easy implementation. makes it more flexible but less neat and concise and error prone.
+
+Major Modules
+Inputs
+Libraries used
+
+	
+	
+
+
+Web Server
+separate and optional
+GUI generates json paramter list, calls webserver with json string, webserver translates json to R data and calls main module.  process blocks.  there's fork, but not availabile on all systems
+GUI waits for output files to be generated, loads data once it is.
+
+
+Implementation Hurdles
+arcGIS rgdal - arcgis has a butt load of file formats and encoding schemes.  Not easy to support them all.  
+Netcdf - old version required fortran library and in some cases compiler pre-installed.  ncdf4 fixes that.
+rook didnt have template support, had to hand write lots of stuff using jquery load
+rook is single threaded; blocks real-time updates.
+rook has max packet size, had to split packets up and recombine on server side.
