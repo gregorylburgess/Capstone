@@ -1,30 +1,68 @@
 \chapter{Implementation}
-The framework presented is intended to serve as a loose, extensible skeleton.  While a functional application is provided, its intent is to serve as a sample template.  It is expected that researchers will want to define and use customized versions of the provided functions (herein referred to as ''subfunctions'').  To support this, the framework utilizes generic dispatcher functions and a dictionary for parameter passing.  
+\label{implementation}
+This project is intended to be treated as a tool box for the optimization of acoustic networks.  While a fully-functional application is provided, its intent is to serve as a template for integrating various functions.  It is expected that researchers will want to define and use customized versions of the provided functions (herein referred to as ''subfunctions'').  To support this, the framework utilizes generic ''dispatcher functions'' and dictionary-based parameter passing.  
 
 \subsection{Parameter Dictionary}
-The framework takes as an input to the main program a dictionary of named values, and passes this dictionary throughout the program.  This allows for dispatcher functions with concrete function signatures (simply the parameter dictionary), and sub-functions with widely varied signatures.  The cost of this approach is of course that substantial data validation must be preformed by the program before the execution of sub-functions in order to avoid run-time failures.  
+\label{parameterDictionary}
+The framework takes as an input to the main program a dictionary of named values, and passes this dictionary throughout the program.  This allows for dispatcher functions with concrete function signatures (including the parameter dictionary), and sub-functions with widely varied signatures.  The benefit of this is that the function signatures of the dispatcher functions will rarely need to be changed, leading to a stable but flexible framework. The cost of this approach is of course that substantial data validation must be preformed by the program before the execution of sub-functions in order to avoid run-time errors within the varied sub-functions.  
+
+
+\subsection{Sub-Functions}
+\label{sub-functions}
+Section \ref{design} discusses the framework's conceptual models such as Goodness computation and animal modeling.  These models have loose operational requirements that can be thought of as roles.  For example, it is expected that an animal model populates the Behavior Grid, and that an Evaluation Algorithm populate the Goodness Grid.  As long as a user-customized sub-function fulfills its role within the prescribed model (suppressing a given location, populating a Grid, etc.), it can be easily integrated into the framework.
 
 \subsection{Dispatcher Functions}
+\label{dispatcherFunctions}
+The primary purpose of dispatcher functions is to create a uniform interface within the framework for calling various sub-functions.  Each model has a corresponding dispatcher function, and these dispatcher functions are responsible for preparing and calling sub-functions which belong to that model.  E.g. The Animal Model dispatcher is responsible for functions which populate the Behavior Grid.  A dispatcher function simply performs a series of if-else check statements over a switch variable (included in the parameter dictionary), and calls the corresponding sub-function.  Once a user defines a new sub-function, they should add the name of the sub-function to the corresponding dispatcher's check list of available options.  This will allow a user to call the new sub-function by simply changing the value of the dispatcher's check variable.  Any sub-function specific data checking should be done within the $checkParams()$ function, which validates data at the beginning of the program before any computationally-expensive operations are preformed.
 
 
 \subsection{Major Modules}
-checkParams
-validates parameters
+\label{majorModules}
+\subsubsection{Parameter Checking}
+\label{checkParams}
+As previously mentioned in Section~\ref{parameterDictionary}, the cost of flexible inputs is substantial data validation.  Within our framework, data validation should occur early on so that errors can be identified before too much time has been invested in computation or data-loading.  To this end, the checkParams() function is provided to handle all data validation and reporting.  The function takes in the $params$ parameter dictionary and a $stop$ boolean (set to True by default).  The function and validates all internal dependencies, reporting any errors found, and halting the program if $stop$ is True.  The function also assigns necessary default values if no user-defined values are provided.  The function returns the validated $params$ parameter dictionary (with default values if necessary).  
 
-bathymetry dispatcher
+\subsubsection{File Output}
+Graphic and text outputs are handled by the$ graph()$ function.  $graph()$ requires a $result$ parameter dictionary, containing the key-value pairs described in Table~\ref{resultDict}.  This dictionary contains the results from successfully running the simulation, and finding optimal receiver locations.  The $result$ dictionary is separate from the $params$ dictionary as the values in the Bathymetry, Behavior, and Goodness Grids may have been modified by Suppression.  Filenames for output files are given by $timestamp$-$FileName$.$extension$, where $timestamp$ is a user-specified string (defaulting to the time the request passed Parameter Validation), $FileName$ is a contextual identifier (GoodnessGrid, BehaviorGrid, etc), and $extension$ is either $.png$ for a a graphic, or $.txt$ for a text file.  The $graph()$ function takes in four parameters, the $result$ and $params$ dictionaries, $plot.bathy$ (a boolean, set to True by default, indicating whether or not bathymetric contour lines should be drawn on Grid graphs), and $debug$ (a boolean, set to False by default, which enables debug error printing).
+
+\begin{table}[h!]
+	\begin{tabular}{l l l l}
+		Key	&	Value &	Description\\
+		\hline
+		topographyGrid	&	The Bathymetry Grid	&	An alias for the unmodified Bathymetry Grid.\\
+		behaviorGrid	&	The Behavior Grid			&	The unmodified Behavior Grid.\\
+		goodnessGrid	&	The Goodness Grid			&	The unmodified Goodness Grid.\\
+		coverageGrid	& 	The Coverage Grid			&	The coverage computed from the resulting\\
+						&								&	receiver array.\\
+		recoveryRates	& 	Receiver array data			&	A dictionary of receiver array-related results\\
+						&								&  obtained as an output from the simulation. \\ &								&  The dictionary is generated by $sensorFun()$.\\
+		stats			& 	Receiver array statistics	&	A dictionary of receiver array-related statistics\\
+						&								&  obtained from calling getStats().\\
+	\end{tabular}
+	\caption{A summary of the key-value pairs in the $result$ dictionary.
+		\label{resultDict}}
+\end{table}
+
+
+
+\subsubsection{Bathymetry Import}
+The Bathymetry module is responsible for populating a Bathymetry Grid of given size.$XDist$ columns and $YDist$ rows.  The module checks the $inputFileType$ parameter to determine the data format, and calls the appropriate parser.  The specified parser begins reading at column $startX$ and row $startY$ from the data file located at the file path given by $inputFile$.
+
+All cells in the Bathymetry Grid must have rational depth values.  N/A and INF or -INF values will contaminate future computations, resulting in runtime errors.
+
 getBathy <- function(inputFile, inputFileType, startX=0, startY=0, XDist, YDist, seriesName, timestamp, debug=FALSE) {
 	ncdf/ncdf4
 	
-animal model dispatcher
+\subsubsection{Animal Modelling}
 fish <- function(params, topographyGrid) {
 
-Goodness dispatcher
+\subsubsection{Goodness Computation}
 goodnessGridFun = function (grids, range, bias, params, debug=FALSE, silent=FALSE, multi=FALSE) 
 
-Sensor selection function
+\subsubsection{Sensor selection function}
 sensorFun = function(numSensors, topographyGrid, behaviorGrid, range, bias, params, debug=FALSE, silent = FALSE, save.inter=FALSE, multi=FALSE) {
 
-suppression dispatcher
+\subsubsection{Suppression}
 sensorFun.suppressHelper = function(loc, grids, range, bias, params, debug=FALSE, multi=FALSE) {
 
 custom main
@@ -54,6 +92,7 @@ separate and optional
 GUI generates json paramter list, calls webserver with json string, webserver translates json to R data and calls main module.  process blocks.  there's fork, but not availabile on all systems
 GUI waits for output files to be generated, loads data once it is.
 
+Test Suite
 
 Implementation Hurdles
 arcGIS rgdal - arcgis has a butt load of file formats and encoding schemes.  Not easy to support them all.  

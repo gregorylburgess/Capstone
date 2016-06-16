@@ -365,10 +365,11 @@ As stated in Section~\ref{staticSuppression}, the Static Suppression Algorithm m
 \subsubsection{Exact Suppression}
 As stated in Section~\ref{exactSuppression}, the Exact Suppression Algorithm uses the user-specified Evaluation Algorithm to calculate the number of transmissions that have already been observed and should be discounted from future consideration.  We define $E_{x}$ to denote the expected runtime for Evaluation Algorithm x's computation of a single cell's ERT.  In addition, we define $T_{x}$ to denote the expected temporary storage requirement for Evaluation Algorithm $x$'s single-cell ERT computation.  The Exact Suppression Algorithm is broken into three distinct steps: Suppression Area ERT computation, Behavior Grid Update, and Goodness Grid Recalculation.
 \newline
-
+\newline 
 \textbf{Suppression Area ERT Computation}\newline
 The Suppression Algorithm first determines the ERT for each cell within the Suppression Area, and stores them in the ERT Area, a temporary Grid with the same dimension as the Suppression Area.  This step is similar to the Evaluation process, with the exception that the Suppression Area's dimensions differ from those of the Detection Area by a factor of $f_{supp}$.  The computation of the ERT Area requires $E_{x}$ time and  $T_x$ temporary space for each of the $d_{supp}^2$ cells in the Suppression Area.  An additional  $O(1)$ temporary space will be needed to store the resulting ERT values for each cell.  Therefore, the ERT computation will require $O(E_{x} * d_{supp}^2)$ time and $O((1 + T_x)* d_{supp}^2) = O(d_{supp}^2 * T_x)$ temporary storage.
-
+\newline
+\newline
 \textbf{Behavior Grid Update}\newline
 Next, the suppression algorithm subtracts the ERT Area from the corresponding area in the Behavior Grid.  This is a simple subtraction operation between each of the $d_{supp}^2$ pairs of corresponding cells in the Grids.  Because each subtraction takes $O(1)$ time and temporary storage, the time and space complexities are both given by $O(1) * O(d_{supp}^2) = O(d_{supp}^2)$.
 %%Left off here
