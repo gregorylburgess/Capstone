@@ -13,7 +13,7 @@ Section \ref{design} discusses the framework's conceptual models such as Goodnes
 
 \subsection{Dispatcher Functions}
 \label{dispatcherFunctions}
-The primary purpose of dispatcher functions is to create a uniform interface within the framework for calling various sub-functions.  Each model has a corresponding dispatcher function, and these dispatcher functions are responsible for preparing and calling sub-functions which belong to that model.  E.g. The Animal Model dispatcher is responsible for functions which populate the Behavior Grid.  A dispatcher function simply performs a series of if-else check statements over a switch variable (included in the parameter dictionary), and calls the corresponding sub-function.  Once a user defines a new sub-function, they should add the name of the sub-function to the corresponding dispatcher's check list of available options.  This will allow a user to call the new sub-function by simply changing the value of the dispatcher's check variable.  Any sub-function specific data checking should be done within the $checkParams()$ function, which validates data at the beginning of the program before any computationally-expensive operations are preformed.
+The primary purpose of dispatcher functions is to create a uniform interface within the framework for calling various sub-functions.  Each model has a corresponding dispatcher function, and these dispatcher functions are responsible for preparing and calling sub-functions which belong to that model.  E.g. The Animal Model dispatcher is responsible for functions which populate the Behavior Grid.  A dispatcher function simply performs a series of if-else checks over a switch variable (included in the parameter dictionary), and calls the corresponding sub-function.  Once a user defines a new sub-function, they should add the name of the sub-function to the corresponding dispatcher's check list of available options.  This will allow a user to call the new sub-function by simply changing the value of the dispatcher's check variable.  Any sub-function specific data checking should be done within the $checkParams()$ function, which validates data at the beginning of the program before any computationally-expensive operations are preformed.
 
 
 \subsection{Major Modules}
@@ -25,7 +25,7 @@ As previously mentioned in Section~\ref{parameterDictionary}, the cost of flexib
 \subsubsection{File Output}
 Graphic and text outputs are handled by the$ graph()$ function.  $graph()$ requires a $result$ parameter dictionary, containing the key-value pairs described in Table~\ref{resultDict}.  This dictionary contains the results from successfully running the simulation, and finding optimal receiver locations.  The $result$ dictionary is separate from the $params$ dictionary as the values in the Bathymetry, Behavior, and Goodness Grids may have been modified by Suppression.  Filenames for output files are given by $timestamp$-$FileName$.$extension$, where $timestamp$ is a user-specified string (defaulting to the time the request passed Parameter Validation), $FileName$ is a contextual identifier (GoodnessGrid, BehaviorGrid, etc), and $extension$ is either $.png$ for a a graphic, or $.txt$ for a text file.  The $graph()$ function takes in four parameters, the $result$ and $params$ dictionaries, $plot.bathy$ (a boolean, set to True by default, indicating whether or not bathymetric contour lines should be drawn on Grid graphs), and $debug$ (a boolean, set to False by default, which enables debug error printing).
 
-\begin{table}[h!]
+\begin{table}[ht]
 	\begin{tabular}{l l l l}
 		Key	&	Value &	Description\\
 		\hline
@@ -46,15 +46,18 @@ Graphic and text outputs are handled by the$ graph()$ function.  $graph()$ requi
 
 
 \subsubsection{Bathymetry Import}
-The Bathymetry module is responsible for populating a Bathymetry Grid of given size.$XDist$ columns and $YDist$ rows.  The module checks the $inputFileType$ parameter to determine the data format, and calls the appropriate parser.  The specified parser begins reading at column $startX$ and row $startY$ from the data file located at the file path given by $inputFile$.
-
-All cells in the Bathymetry Grid must have rational depth values.  N/A and INF or -INF values will contaminate future computations, resulting in runtime errors.
+The Bathymetry module is responsible for populating a Bathymetry Grid of $XDist$ columns and $YDist$ rows.  The module checks the $inputFileType$ parameter to determine the data format, and calls the appropriate parser.  The parser begins reading at column $startX$ and row $startY$ from the data file specified by $inputFile$.  The bathymetry module also checks to makes sure that all cells in the Bathymetry Grid have rational depth values.  N/A, INF, or -INF values are invalid as they will contaminate future computations, resulting in runtime errors.  The module replaces these values with a value of '0'.  
 
 getBathy <- function(inputFile, inputFileType, startX=0, startY=0, XDist, YDist, seriesName, timestamp, debug=FALSE) {
 	ncdf/ncdf4
 	
-\subsubsection{Animal Modelling}
-fish <- function(params, topographyGrid) {
+\subsubsection{Animal Modeling}
+The Animal Modeling module is responsible for populating the Behavior Grid (which has the same dimensions as the Bathymetry Grid).  As mentioned in Section~\ref{animalModeling}, the Animal Model offers horizontal and vertical movement models.  The $fishModel$ parameter specifies which horizontal movement model should be employed by the module to generate a population distribution.  Because the vertical movement models operate independently of the horizontal movement model and each other, we provide separate switches for both vertical movement models.  The Restricted Vertical Habitat Range model is used if two parameters ($mindepth$ and $maxdepth$) are specified within the $params$ dictionary.  Similarly, the Habitat Preference model is used if $depth_off_bottom$ and $depth_off_bottom_sd$ entries are present  within the $params$ dictionary.
+
+\paragraph{Vertical Habitat Restriction}
+
+
+ fish <- function(params, topographyGrid) {
 
 \subsubsection{Goodness Computation}
 goodnessGridFun = function (grids, range, bias, params, debug=FALSE, silent=FALSE, multi=FALSE) 
