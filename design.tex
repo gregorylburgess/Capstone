@@ -65,7 +65,8 @@ Our program works on a two-dimensional, grid-based system, taking advantage of t
 We refer to a cell $x$ (with row index $i$ and column index $j$) on the Bathymetry Grid ($A$) as $A_x$ or $A_{(i,j)}$.
 
 \subsubsection{Bathymetric Filetypes}
-Two highly popular file formats in Geographical Information Systems are provided by NetCDF and ArcGIS.  NetCDF provides an open source file format that lists a header of meta-data and a white-space delimited matrix of numerical values.  ArcGIS is a private institution that supplies many different file types, formats, and encodings for a family of GIS-related software systems.  ArcGIS also supports the encoding and transcription of its proprietary formats to the NetCDF format.  Due to the large number of possible format and encoding combinations in ArcGIS file formats and the ability to translate file these various formats to NetCDF, we natively support the NetCDF standard, and assume that users are capable of converting their data into the NetCDF format.  
+\label{bathymetricFiletypes}
+Two highly popular file formats for Geographical Information Systems are provided by NetCDF and ArcGIS.  NetCDF provides an open source file format that lists a header of meta-data and a white-space delimited matrix of numerical values.  ArcGIS is a private institution that supplies many different file types, formats, and encodings for a family of GIS-related software systems.  ArcGIS also supports the encoding and transcription of its proprietary formats to the NetCDF format.  Due to the large number of possible format and encoding combinations in ArcGIS file formats and the ability to translate file these various formats to NetCDF, we natively support the NetCDF standard, and assume that users are capable of converting their data into the NetCDF format.  
 
 
 \subsubsection{Bathymetric Resolution}
@@ -372,7 +373,7 @@ The Suppression Algorithm first determines the ERT for each cell within the Supp
 \newline
 \textbf{Behavior Grid Update}\newline
 Next, the suppression algorithm subtracts the ERT Area from the corresponding area in the Behavior Grid.  This is a simple subtraction operation between each of the $d_{supp}^2$ pairs of corresponding cells in the Grids.  Because each subtraction takes $O(1)$ time and temporary storage, the time and space complexities are both given by $O(1) * O(d_{supp}^2) = O(d_{supp}^2)$.
-%%Left off here
+
 \textbf{Goodness Grid Recalculation}\newline
 Finally, the Goodness values of all cells within Detection Range of the Suppression Area must have their Goodness value updated (as we have just reduced the ERT of one or more cells within their Detection Area).  The area affected by suppression, and therefore requiring recalculation, is a square with edge diameter $2 * (d_{supp} + D_{range}) + 1$.  Each cell in this area will require  $O(d_{detection}^2 * E_x)$ time to re-compute its Goodness Value.  The total time for updating the Goodness Grid is then: $O([2 * (d_{supp} + D_{range}) + 1]^2 * O(d_{detection}^2 * E_x)) = O((d_{supp} + D_{range})^2 * d_{detection}^2 * E_x)$.  The Goodness Grid update will require $d_{detection}^2 * (T_x + 1) = O(d_{detection}^2 * T_x)$ temporary storage to compute and store intermediate ERT values.  This temporary storage can be recycled for each sequential Goodness Cell computation.
 

@@ -13,57 +13,85 @@ Section \ref{design} discusses the framework's conceptual models such as Goodnes
 
 \subsection{Dispatcher Functions}
 \label{dispatcherFunctions}
-The primary purpose of dispatcher functions is to create a uniform interface within the framework for calling various sub-functions.  Each model has a corresponding dispatcher function, and these dispatcher functions are responsible for preparing and calling sub-functions which belong to that model.  E.g. The Animal Model dispatcher is responsible for functions which populate the Behavior Grid.  A dispatcher function simply performs a series of if-else checks over a switch variable (included in the parameter dictionary), and calls the corresponding sub-function.  Once a user defines a new sub-function, they should add the name of the sub-function to the corresponding dispatcher's check list of available options.  This will allow a user to call the new sub-function by simply changing the value of the dispatcher's check variable.  Any sub-function specific data checking should be done within the $checkParams()$ function, which validates data at the beginning of the program before any computationally-expensive operations are preformed.
+The primary purpose of dispatcher functions is to create a uniform interface within the framework for calling various sub-functions.  Each model has a corresponding dispatcher function, and these dispatcher functions are responsible for preparing and calling sub-functions which belong to that model.  E.g. The Animal Model dispatcher is responsible for functions which populate the Behavior Grid.  A dispatcher function simply performs a series of if-else checks over one or more ''check variables'' in the parameter dictionary, and fires the corresponding code snippet or sub-function.  Once a user defines a new sub-function, they should add a check statement (over the dispatcher's check variable) within the corresponding dispatcher that calls the new sub-function.  This will allow a user to use the new sub-function by simply changing the value of the dispatcher's check variable.  Any sub-function specific data validation should be done within the \texttt{checkParams()} function (Section~\ref{checkParams}), which validates data at the beginning of the program before any computationally-expensive operations are preformed.
 
 
 \subsection{Major Modules}
 \label{majorModules}
 \subsubsection{Parameter Checking}
 \label{checkParams}
-As previously mentioned in Section~\ref{parameterDictionary}, the cost of flexible inputs is substantial data validation.  Within our framework, data validation should occur early on so that errors can be identified before too much time has been invested in computation or data-loading.  To this end, the checkParams() function is provided to handle all data validation and reporting.  The function takes in the $params$ parameter dictionary and a $stop$ boolean (set to True by default).  The function and validates all internal dependencies, reporting any errors found, and halting the program if $stop$ is True.  The function also assigns necessary default values if no user-defined values are provided.  The function returns the validated $params$ parameter dictionary (with default values if necessary).  
+As previously mentioned in Section~\ref{parameterDictionary}, the cost of flexible inputs is substantial data validation.  Within our framework, data validation should occur early on so that errors can be identified before too much time has been invested in computation or data-loading.  To this end, the \texttt{checkParams()} function is provided to handle all data validation and reporting.  The function takes in the \texttt{params} parameter dictionary and a \texttt{stop} boolean (set to True by default).  The function and validates all internal dependencies, reporting any errors found, and halting the program if \texttt{stop} is True.  The function also assigns necessary default values if no user-defined values are provided.  The function returns the validated \texttt{params} parameter dictionary (with default values if necessary).  
 
 \subsubsection{File Output}
-Graphic and text outputs are handled by the$ graph()$ function.  $graph()$ requires a $result$ parameter dictionary, containing the key-value pairs described in Table~\ref{resultDict}.  This dictionary contains the results from successfully running the simulation, and finding optimal receiver locations.  The $result$ dictionary is separate from the $params$ dictionary as the values in the Bathymetry, Behavior, and Goodness Grids may have been modified by Suppression.  Filenames for output files are given by $timestamp$-$FileName$.$extension$, where $timestamp$ is a user-specified string (defaulting to the time the request passed Parameter Validation), $FileName$ is a contextual identifier (GoodnessGrid, BehaviorGrid, etc), and $extension$ is either $.png$ for a a graphic, or $.txt$ for a text file.  The $graph()$ function takes in four parameters, the $result$ and $params$ dictionaries, $plot.bathy$ (a boolean, set to True by default, indicating whether or not bathymetric contour lines should be drawn on Grid graphs), and $debug$ (a boolean, set to False by default, which enables debug error printing).
+Graphic and text outputs are handled by the \texttt{graph()} function. \texttt{graph()} requires a \texttt{result} parameter dictionary, containing the key-value pairs described in Table~\ref{resultDict}.  This dictionary contains the results from successfully running the simulation, and finding optimal receiver locations.  The \texttt{result} dictionary is separate from the \texttt{params} dictionary as the values in the Bathymetry, Behavior, and Goodness Grids may have been modified by Suppression.  Filenames for output files are given by \texttt{timestamp-FileName.extension}, where \texttt{timestamp} is a user-specified string (defaulting to the time the request passed Parameter Validation), \texttt{FileName} is a contextual identifier (''GoodnessGrid'', ''BehaviorGrid'', etc), and \texttt{extension} is either \texttt{.png} for a a graphic, \texttt{.zip} for a zip archive, or \texttt{.txt} for a text file.  The \texttt{graph()} function takes in four parameters, the \texttt{result} and \texttt{params} dictionaries, \texttt{plot.bathy} (a boolean, set to True by default, indicating whether or not bathymetric contour lines should be drawn on Grid graphs), writes the output files described in Section~\ref{outputFiles}, and returns a dictionary of file paths that point to the the newly written files.
 
 \begin{table}[ht]
-	\begin{tabular}{l l l l}
+	\begin{tabular}{l l l}
 		Key	&	Value &	Description\\
 		\hline
-		topographyGrid	&	The Bathymetry Grid	&	An alias for the unmodified Bathymetry Grid.\\
-		behaviorGrid	&	The Behavior Grid			&	The unmodified Behavior Grid.\\
-		goodnessGrid	&	The Goodness Grid			&	The unmodified Goodness Grid.\\
-		coverageGrid	& 	The Coverage Grid			&	The coverage computed from the resulting\\
-						&								&	receiver array.\\
-		recoveryRates	& 	Receiver array data			&	A dictionary of receiver array-related results\\
-						&								&  obtained as an output from the simulation. \\ &								&  The dictionary is generated by $sensorFun()$.\\
-		stats			& 	Receiver array statistics	&	A dictionary of receiver array-related statistics\\
-						&								&  obtained from calling getStats().\\
+		\texttt{topographyGrid}	&	The Bathymetry Grid			&	An alias for the unmodified Bathymetry Grid.\\
+		\texttt{behaviorGrid}	&	The Behavior Grid			&	The unmodified Behavior Grid.\\
+		\texttt{goodnessGrid}	&	The Goodness Grid			&	The unmodified Goodness Grid.\\
+		\texttt{coverageGrid}	& 	The Coverage Grid			&	The coverage computed from the resulting\\
+								&								&	receiver array.\\
+		\texttt{recoveryRates}	& 	Receiver array data			&	A dictionary of receiver array-related results\\
+								&								&  obtained as an output from the simulation. \\
+								&								&  The dictionary is generated by \texttt{sensorFun()}.\\
+		\texttt{stats}			& 	Receiver array statistics	&	A dictionary of receiver array-related statistics\\
+								&								&  obtained from calling getStats().\\
 	\end{tabular}
-	\caption{A summary of the key-value pairs in the $result$ dictionary.
+	\caption{A summary of the key-value pairs in the \texttt{result} dictionary.
 		\label{resultDict}}
 \end{table}
 
 
+\subsubsection{Bathymetry Parsing}
+The parsing, loading, and validation of bathymetric data is handled by the \texttt{getBathy()} function, which requires a \texttt{params} parameter dictionary containing the key-value pairs described in Table~\ref{bathyParams}.  The function returns a validated Bathymetry Grid of \texttt{XDist} columns and \texttt{YDist} rows.  As previously mentioned in Section~\ref{bathymetricFiletypes}, there are a multitude of data formats for bathymetric data, each requiring a unique data parser.  To support this diversity, the \texttt{getBathy()} function reads the \texttt{inputFileType} from the \texttt{params} dictionary to select an appropriate parser.  The selected parser begins reading data at column \texttt{startX} and row \texttt{startY} from the data file specified by \texttt{inputFile}.  The \texttt{getBathy()} function also checks to makes sure that all cells in the Bathymetry Grid have rational depth values.  N/A, INF, or -INF values are invalid as they will contaminate future computations, resulting in runtime errors.  The module replaces invalid values with a value of '0'.  By default, the framework supports the NetCDF type, and thus requires the ''ncdf'' or ''ncdf4'' R packages.  The ''ncdf'' package serves as an R interface for the NetCDF C/FORTRAN library, and thus requires that a working NetCDF distribution be installed on the system.  The ''ncdf4'' package interacts directly with NetCDF files, and thus does not require a working NetCDF distribution.  
 
-\subsubsection{Bathymetry Import}
-The Bathymetry module is responsible for populating a Bathymetry Grid of $XDist$ columns and $YDist$ rows.  The module checks the $inputFileType$ parameter to determine the data format, and calls the appropriate parser.  The parser begins reading at column $startX$ and row $startY$ from the data file specified by $inputFile$.  The bathymetry module also checks to makes sure that all cells in the Bathymetry Grid have rational depth values.  N/A, INF, or -INF values are invalid as they will contaminate future computations, resulting in runtime errors.  The module replaces these values with a value of '0'.  
+\begin{table}[ht]
+	\begin{tabular}{l l l}
+		Key						&	Value 								&	Description\\
+		\hline
+		\texttt{inputFile}		& 	File path to Bathymetry File.		&	A relative or absolute Bathymetry File\\
+								&										&	path.\\
+		\texttt{inputFileType}	& 	Parser name.						&	Indicates which parser to use to read the \\
+								&										&	Bathymetry File.\\
+		\texttt{XDist}			&	Bathymetry Grid col count.			&	Number of columns in the Behavior Grid.\\
+		\texttt{YDist}			&	Bathymetry Grid row count.			&	Number of rows in the Behavior 	Grid.\\		
+		\texttt{startX}			& 	Col index to read from. 			& 	The column index in the Bathymetry\\
+								&										&   File to	begin reading from.\\
+		\texttt{startY}			& 	Row index to read from.				&	The row index in the Bathymetry\\
+								&										&	File to begin reading from.\\
+	\end{tabular}
+	\caption{A summary of the \texttt{params} key-value pairs used in Bathymetry Parsing module .
+		\label{bathyParams}}
+\end{table}
 
-getBathy <- function(inputFile, inputFileType, startX=0, startY=0, XDist, YDist, seriesName, timestamp, debug=FALSE) {
-	ncdf/ncdf4
-	
 \subsubsection{Animal Modeling}
-The Animal Modeling module is responsible for populating the Behavior Grid (which has the same dimensions as the Bathymetry Grid).  As mentioned in Section~\ref{animalModeling}, the Animal Model offers horizontal and vertical movement models.  The $fishModel$ parameter specifies which horizontal movement model should be employed by the module to generate a population distribution.  Because the vertical movement models operate independently of the horizontal movement model and each other, we provide separate switches for both vertical movement models.  The Restricted Vertical Habitat Range model is used if two parameters ($mindepth$ and $maxdepth$) are specified within the $params$ dictionary.  Similarly, the Habitat Preference model is used if $depth_off_bottom$ and $depth_off_bottom_sd$ entries are present  within the $params$ dictionary.
+The Animal Modeling module is responsible for populating the Behavior Grid (which has the same dimensions as the Bathymetry Grid).  As mentioned in Section~\ref{animalModeling}, the Animal Model offers separate horizontal and vertical movement models.  The animal movement models are handled by the \texttt{fish()} function, which requires a \texttt{params} parameter dictionary.  The \texttt{fishModel} dictionary key specifies which horizontal movement model should be employed by the module to generate a population distribution.  Because the vertical movement models operate independently of the horizontal movement model and each other, we provide separate keys for both vertical movement models.  The Restricted Vertical Habitat Range model is used if two keys, (\texttt{mindepth} and \texttt{maxdepth}), are specified within the \texttt{params} dictionary.  Similarly, the Habitat Preference model is used if \texttt{depth\_off\_bottom} and \texttt{depth\_off\_bottom\_sd} keys are present within the \texttt{params} dictionary.
 
-\paragraph{Vertical Habitat Restriction}
-
-
- fish <- function(params, topographyGrid) {
+\begin{table}[ht]
+	\begin{tabular}{l l l}
+		Key									&	Value 							&	Description\\
+		\hline
+		\texttt{fishModel}					& 	Behavior Model Name.			&	The chosen Horizontal Behavioral\\
+					 						&									&    Model.\\
+		\texttt{Behavior Grid}				&	The Behavior Grid.				&	The resulting Behavior Grid.\\
+		\texttt{mindepth}*					& 	Min depth for animal habitat.	&	Minimum depth in the Restricted\\
+					 						&									&   Vertical Habitat Range Model.\\
+		\texttt{maxdepth}*					& 	Max depth for animal habitat.	&	Maximum depth in the Restricted\\
+					 						&									&   Vertical Habitat Range Model.\\
+		\texttt{depth\_off\_bottom}*		& 	Preferred animal habitat depth.	&   Preferred depth in the Habitat\\
+					 						&									&   Preference Model.\\
+		\texttt{depth\_off\_bottom\_sd}*	& 	SD of preferred depth.			&   Standard Deviation of preferred\\
+					 						&									&   depth in the Habitat Preference Model.\\
+	\end{tabular}
+	\caption{A summary of the \texttt{params} key-value pairs used in Animal Modeling module.  \newline * optional parameters.
+		\label{animalParams}}
+\end{table}
 
 \subsubsection{Goodness Computation}
-goodnessGridFun = function (grids, range, bias, params, debug=FALSE, silent=FALSE, multi=FALSE) 
-
-\subsubsection{Sensor selection function}
-sensorFun = function(numSensors, topographyGrid, behaviorGrid, range, bias, params, debug=FALSE, silent = FALSE, save.inter=FALSE, multi=FALSE) {
+Goodness Computation is handled by the \texttt{goodnessGridFun()}, which takes in \texttt{params}, a parameter dictionary and \texttt{grids}, a parameter dictionary containing the Bathymetry Grid, and Behavior Grid.  The \texttt{bias} key is used to tell the module which sub-function should be used to compute Goodness.  The module will then simply populate the Goodness Grid according to the chosen sub-function.  The populated GoodnessGrid is then inserted into the $grids$ parameter dictionary.  Because the Goodness computation can take a substantial amount of time, the sub-functions should provide textual output to signify what percentage of the Grid has been computed.  The \texttt{silent} parameter is a boolean that enables this output if set to True.  A \texttt{debug} boolean is also available to toggle debug printing.
 
 \subsubsection{Suppression}
 sensorFun.suppressHelper = function(loc, grids, range, bias, params, debug=FALSE, multi=FALSE) {
@@ -82,20 +110,9 @@ acousticTest <- function(bias=3, real=FALSE, exact=FALSE, multi=FALSE, showPlots
 * Provided implementation is very simple.
 * parameters are very loose, allowing for easy implementation. makes it more flexible but less neat and concise and error prone.
 
-Major Modules
-Inputs
-Libraries used
+\subsubsection{Web Server}
+Included alongside the framework is a web-application (webapp) with a Graphical User Interface (GUI) that runs a simple demonstrative application of the framework.  The webapp utilizes the $Rook$ R package, which allows the display of static content and the handling of HTTP requests/responses.  The GUI is a simple HTML page that generates a list of parameters (including a unique $timestamp$ identifier) based on user input, and creates a JSON (JavaScript Object Notation) string, and sends an HTTP request to the Rook server with that string.  Using the $rjson$ library, the Rook server receives the GUI's request, decodes the JSON string into R data objects, and calls the demo application using the translated parameters.  The Rook application signals the successful reception of parameters to the user as an HTTP 200 status update.  The GUI then begins waiting for the completion of the simulation (which may take some time) by continuously checking (ignoring failures) for the existence of a text document (named for the unique $timestamp$ identifier) on the server.  When the simulation finishes its execution (either via error or normal completion), it writes its several output files (Section~\ref{outputFiles}), and a text document containing the JSON representation of the outputs (file paths to graphics and a dictionary of results).  All output files are tagged with a unique $timestamp$ identifier.  Once the GUI finds an output file with the correct $timestamp$ signature, it reads the file, parses the results, and displays them as a web page.  If the local system supports it, a zip file of all result files is also supplied for download.  
 
-	
-	
-
-
-Web Server
-separate and optional
-GUI generates json paramter list, calls webserver with json string, webserver translates json to R data and calls main module.  process blocks.  there's fork, but not availabile on all systems
-GUI waits for output files to be generated, loads data once it is.
-
-Test Suite
 
 Implementation Hurdles
 arcGIS rgdal - arcgis has a butt load of file formats and encoding schemes.  Not easy to support them all.  

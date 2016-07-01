@@ -1,5 +1,6 @@
 \chapter{Results}
 \section{Output Files}
+\label{outputFiles}
 Our program outputs 6 files:\newline
 1) The Bathymetry Grid as a heat map\newline
 2) The Behavior Grid as a heat map\newline
@@ -44,23 +45,32 @@ Coordinates are returned in both a Global (with respect to the original Topograp
 	\includegraphics[scale=.5]{CoverageGrid.png}
 	\caption{The Coverage Grid represented as a heatmap showing the quantity of Estimated Receivable Transmissions from each cell in the study site, for the designated receiver array configuration.  The legend in the top right assigns color coding to various ERT values.  The optimal receiver locations are shown on the Grid as blue numbered circles, user-placed sensors as grey circles, and projected receivers as green circles.  All receivers have their Detection Range shown as dotted lines.  The missing corner of of Receiver 4's Detection Area is due to the presence of an obscuring section of Bathymetry (dry land).\label{coverageGraph}}
 \end{figure}
+	
+\section{Distinguishing Characteristics}
+The challenge of acoustic network design is one that is common within the acoustic tracking community, yet rarely addressed.  While there are many methodologies, applications, and services that focus on achieving various objectives, this framework distinguishes itself in its availability, and adaptability.  
 
-\section{Nature of Results}
-The challenge of acoustic network design is one that is common within the acoustic tracking community, yet rarely addressed.  While there are many methodologies, applications, and services that focus on achieving various objectives, this framework distinguishes itself in its availability, transparency, and adaptability.  
+\subsection{Availability}
+As previously stated, our framework is freely available \cite{acousitcdeploy} and falls under the GNU General Public License (GPL 2).  This availability means our methodologies are open-sourced, fully transparent, and are available for peer-review.  Furthermore, our framework is accessible to researchers without requiring expertise in R.  The web application provides a useful set of well-documented functionalities with a user-friendly interface.
 
-As previously stated, our framework is freely available \cite{acousitcdeploy} and falls under the GNU General Public License (GPL 2).  This availability means our methodologies are fully transparent, and are available for peer-review.  Furthermore, our application is accessible to researchers with and without expertise in R.  We provide a useful set of default options in with a user-friendly interface for users less experienced R developers, and ample documentation for those users with expertise in R.  The modularity of our framework allows R-savvy researchers to adapt the framework to their specific needs.  While other applications and methodologies optimize for fixed-objective functions (k-neighbor coverage, fixed detection probability, etc), our framework allows for user-customized objective functions.
+\subsection{Adaptability}
+\subsubsection{Flexability}
+Many of the modules in this framework can be used as stand-alone functions that perform useful operations (reading bathymetric data, calculating distribution densities, etc).  This modularity allows the framework to function more like a library for acoustic simulation than a fixed application.  
 
-\subsection{Advantages}
-The primary advantage of our framework is its flexibility.  Many key functionalities of our framework (Evaluation Algorithms, Suppression, Animal Modeling, Network Statistics) operate over very simple data containers (Grids).   
+\subsubsection{Simple Data Formats}
+Many key functionalities of our framework (Evaluation Algorithms, Suppression, Animal Modeling, Network Statistics) operate over very simple data containers (Grids).   This simplified data format makes it easy to import, export, and convert between other data formats.  This simplified format also makes it easy to move data between this framework and other R packages.
 
-* Framework = flexible, extensible
-* more of a "library" than an application.
-* input your own grids
+\subsubsection{Customizable}
+While other applications and methodologies optimize for fixed-objective functions (k-neighbor coverage, fixed detection probability, etc), our framework allows for user-customized objective (''Goodness'') functions.  Section~\ref{dispatcherFunctions} discusses dispatcher functions, which serve as abstract entry points into stand-alone modules, and allow highly-customized sub-functions to be aggregated together into uniform modules.  These dispatcher functions makes it easy to integrate new functionality into the framework without affecting other sub-functions.  
 
-\subsection{Disadvantages}
-* using it as a library requires substantial programming ability.
-* the default application is quite slow (exhaustive search)
-* written in R (slow, brittle)
+\subsection{Drawbacks}
+\subsubsection{Explicit Data Validation}
+In most all software systems, future efforts to add new functionality require a different set of parameters than those initially specified.  Thus, future developers will likely need to modify function signatures to incorporate said functionality.  This modification can substantially impact the way users interact with the system, and will require other developers to become familiar with a modified interface.  Additionally, these changes can potentially break older functions that relied upon the old function definition.  To reduce this brittleness (a small change causing a system to break) associated with explicit parameters, we utilize dictionary-based parameter passing.  While explicit parameters cause brittleness within a system, they serve to create a contract between users and functions, such that if users provide those explicit parameters, the function will operate as intended.  This contract is enforced by the programming language, resulting in compilation/interpretation errors when these parameters are violated.  Without explicit parameters, this contract is gone, and the responsibility of enforcing the relationship (by way of key-value validation within the dictionary) between users and functions falls to either the user or the developer.  In short, dictionary-based parameter passing provides reduced brittleness and simplified future-development but passes the responsibility of data validation to users and developers.
+
+\subsubsection{Technical Capability}
+While a fully functional application is provided as a demonstration of this framework, the framework's greatest usefulness to a tracking project will likely not be realized unless custom Goodness functions are defined.  Because substantial expertise in programming is required to author these custom functions, the framework is less useful to users with little R experience.  
+
+\subsubsection{Language Limitations}
+This framework was implemented in the R programming language primarily due to its popularity within the biological community.  While R is sufficient for small and medium scale simulations, a compiled language would offer significantly faster execution at all simulation levels.  Additionally, the R platform does not offer good support for reverse compatibility.  Specifically, R packages need to be recompiled under the local system's version of R.  If this compilation is unsuccessful (perhaps due to a difference in R versions, or operating system limitations), the package will not function.  If an application requires a significant number of R packages, then it is likely to be limited to operating within specific versions of R.
 
 \section{Future Work}
 \subsection{Emperical Analysis}
