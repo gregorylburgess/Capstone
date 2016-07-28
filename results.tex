@@ -1,7 +1,7 @@
 \chapter{Results}
 \section{Output Files}
 \label{outputFiles}
-Our program outputs 6 files:\newline
+The program outputs 6 files:\newline
 1) The Bathymetry Grid as a heat map\newline
 2) The Behavior Grid as a heat map\newline
 3) The Goodness Grid as a heat map\newline
@@ -24,7 +24,7 @@ The program also produces a graph of the marginal increase in and cumulative sum
 \subsection{Text Files}
 The program returns a comprehensive text representation of the program output (text dump of gridded data and input parameters), and a short, human-readable document that lists the primary simulation parameters (Evaluation Algorithm, Suppression Algorithm, Behavioral Model, Input Grid Size, and Detection Range), as well as a tabular output of receiver placements (coordinates), data recovery rates for each receiver, and network sparsity.  Projected receivers are excluded from the total UDRR, ADRR, and sparsity values.
 
-Coordinates are returned in both a Global (with respect to the original Topography file) and local (the user specified area of interest) frame.  While the curvature of the earth is well documented, different bathymetric maps may handle the mapping of a 3D curved plane to a 2D Grid differently.  For example, one Grid may implement some scaling on Grid cells a function of the cell's latitude or distance from a certain point.  Other Grid files may simply provide non-square Grid files.  By proving a small-scale (local) and large-scale (global) frame of reference for our receiver locations, irregularities of this nature are more easily detected.
+Coordinates are returned in both a Global (with respect to the original Topography file) and local (the user specified area of interest) frame.  While the curvature of the earth is well documented, different bathymetric maps may handle the mapping of a 3D curved plane to a 2D Grid differently.  For example, one Grid may implement some scaling on Grid cells a function of the cell's latitude or distance from a certain point.  Other Grid files may simply provide non-square Grid files.  By proving a small-scale (local) and large-scale (global) frame of reference for output receiver locations, irregularities of this nature are more easily detected.
 
 \begin{figure}[ht]
 	\includegraphics[scale=.5]{TopographyGrid.png}
@@ -50,21 +50,21 @@ Coordinates are returned in both a Global (with respect to the original Topograp
 The challenge of acoustic network design is one that is common within the acoustic tracking community, yet rarely addressed.  While there are many methodologies, applications, and services that focus on achieving various objectives, this framework distinguishes itself in its availability, and adaptability.  
 
 \subsection{Availability}
-As previously stated, our framework is freely available \cite{acousitcdeploy} and falls under the GNU General Public License (GPL 2).  This availability means our methodologies are open-sourced, fully transparent, and are available for peer-review.  Furthermore, our framework is accessible to researchers without requiring expertise in R.  The web application provides a useful set of well-documented functionalities with a user-friendly interface.
+As previously stated, MANDe is freely available \cite{acousitcdeploy} and falls under the GNU General Public License (GPL 2).  This availability means its methodologies are open-sourced, fully transparent, and are available for peer-review.  Furthermore, MANDe is accessible to researchers without requiring expertise in R.  The web application provides a useful set of well-documented functionalities with a user-friendly interface.
 
 \subsection{Adaptability}
 \subsubsection{Flexability}
 Many of the modules in this framework can be used as stand-alone functions that perform useful operations (reading bathymetric data, calculating distribution densities, etc).  This modularity allows the framework to function more like a library for acoustic simulation than a fixed application.  
 
 \subsubsection{Simple Data Formats}
-Many key functionalities of our framework (Evaluation Algorithms, Suppression, Animal Modeling, Network Statistics) operate over very simple data containers (Grids).   This simplified data format makes it easy to import, export, and convert between other data formats.  This simplified format also makes it easy to move data between this framework and other R scripts.
+Many of MANDe's key functionalities (Evaluation Algorithms, Suppression, Animal Modeling, Network Statistics) operate over very simple data containers (Grids).   This simplified data format makes it easy to import, export, and convert between other data formats.  This simplified format also makes it easy to move data between MANDe and other R scripts.
 
 \subsubsection{Customizable}
-While other applications and methodologies optimize for fixed-objective functions (k-neighbor coverage, fixed detection probability, etc), our framework allows for user-customized objective (''Goodness'') functions.  Section~\ref{dispatcherFunctions} discusses dispatcher functions, which serve as abstract entry points into stand-alone modules, and allow highly-customized sub-functions to be aggregated together into uniform modules.  These dispatcher functions makes it easy to integrate new functionality into the framework without affecting other sub-functions.  
+While other applications and methodologies optimize for fixed-objective functions (k-neighbor coverage, fixed detection probability, etc), MANDe allows for user-customized objective (''Goodness'') functions.  Section~\ref{dispatcherFunctions} discusses dispatcher functions, which serve as abstract entry points into stand-alone modules, and allow highly-customized sub-functions to be aggregated together into uniform modules.  These dispatcher functions makes it easy to integrate new functionality into the framework without affecting other sub-functions.  
 
 \subsection{Drawbacks}
 \subsubsection{Explicit Data Validation}
-In most all software systems, future efforts to add new functionality require a different set of parameters than those initially specified.  Thus, future developers will likely need to modify function signatures to incorporate said functionality.  This modification can substantially impact the way users interact with the system, and will require other developers to become familiar with a modified interface.  Additionally, these changes can potentially break older functions that relied upon the old function definition.  To reduce this brittleness (a small change causing a system to break) associated with explicit parameters, we utilize dictionary-based parameter passing.  While explicit parameters cause brittleness within a system, they serve to create a contract between users and functions, such that if users provide those explicit parameters, the function will operate as intended.  This contract is enforced by the programming language, resulting in compilation/interpretation errors when these parameters are violated.  Without explicit parameters, this contract is gone, and the responsibility of enforcing the relationship (by way of key-value validation within the dictionary) between users and functions falls to either the user or the developer.  In short, dictionary-based parameter passing provides reduced brittleness and simplified future-development but passes the responsibility of data validation to users and developers.
+In most all software systems, future efforts to add new functionality require a different set of parameters than those initially specified.  Thus, future developers will likely need to modify function signatures to incorporate said functionality.  This modification can substantially impact the way users interact with the system, and will require other developers to become familiar with a modified interface.  Additionally, these changes can potentially break older functions that relied upon the old function definition.  To reduce this brittleness (a small change causing a system to break) associated with explicit parameters, dictionary-based parameter passing is employed.  While explicit parameters cause brittleness within a system, they serve to create a contract between users and functions, such that if users provide those explicit parameters, the function will operate as intended.  This contract is enforced by the programming language, resulting in compilation/interpretation errors when these parameters are violated.  Without explicit parameters, this contract is gone, and the responsibility of enforcing the relationship (by way of key-value validation within the dictionary) between users and functions falls to either the user or the developer.  In short, dictionary-based parameter passing provides reduced brittleness and simplified future-development but passes the responsibility of data validation to users and developers.
 
 \subsubsection{Technical Capability}
 While a fully functional application is provided as a demonstration of this framework, the framework's greatest usefulness to a tracking project will likely not be realized unless custom Goodness functions are defined.  Because substantial expertise in programming is required to author these custom functions, the framework is less useful to users with little R experience.  
@@ -74,16 +74,13 @@ This framework was implemented in the R programming language primarily due to it
 
 \section{Future Work}
 \subsection{Emperical Analysis}
-The analytical framework described herein is largely theoretical, despite a basis in well documented physical phenomena.  In order to better understand the correctness of our analysis, it would be useful to analyze empirical data from acoustic networks, of varying scales, designed with this application.
+The analytical framework described herein is largely theoretical, despite a basis in well documented physical phenomena.  In order to better understand the correctness of this framework, it would be useful to analyze empirical data from acoustic networks, of varying scales, designed with it.
 
 \subsubsection{Acoustic Coverage}
-Recall that estimated data recovery rates are calculated based upon acoustic coverage and animal distribution.  While we provide basic Animal Models, the accuracy of these models (and as a result the accuracy of our data recovery rates) is very species-dependent and outside the scope of this paper.  While data recovery rates are based on animal models, our acoustic coverage model is not.  Thus, we are very interested in the accuracy and optimality of our bathymetric shadowing and network coverage models.  It would be interesting to compare the acoustic coverage of a real-world network designed by our application against our theoretical coverage of that same network.
-
-\subsubsection{Bathymetric Resolution}
-Section~\ref{bathymetyricModeling} describes the nature of artificially increasing bathymetric resolution.  It would be interesting to see how varying the native resolution of bathymetry affects the acoustic coverage of network topology both within our framework and in the real world.
+Recall that estimated data recovery rates are calculated based upon acoustic coverage and animal distribution.  While basic Animal Models are provided, the accuracy of these models (and as a result the accuracy of the resulting data recovery rates) is very species-dependent and outside the scope of this paper.  While data recovery rates are based on animal models, the acoustic coverage model is not.  Thus, the accuracy and optimality of MANDe's bathymetric shadowing and network coverage models is a priority.  It would be interesting to design a real-world acoustic network with MANDe, and then compare the actual and theoretical coverage.
 
 \subsubsection{Workflows}
-The workflows described in Section~\ref{workflows} were based upon both personal experience and imagined use.  It would be good to investigate the actual use cases, workflows, and problems that researchers face at various points throughout the lifetime of an acoustic tracking project.  By identifying unconsidered problems and workflows, the framework can be modified/expanded to encompass new roles and features, leading to greater usefulness.
+The workflows described in Section~\ref{workflows} were based upon both personal experience and imagined use.  It would be useful to investigate the actual use cases, workflows, and problems that researchers face at various points throughout the lifetime of an acoustic tracking project.  By identifying unconsidered problems and workflows, the framework can be modified/expanded to encompass new roles and features, leading to greater usefulness.
 
 \subsection{Heuristic Algorithms}
 \label{heuristics}
