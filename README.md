@@ -1,6 +1,6 @@
 # Procedural Optimiazation and Measurement of Passive Acoustic Sensor Networks for Animal Observaion in Marine Environments
-##A thesis submitted to the Graduate Division of The University of Hawaii at Manoa in partial fufillment of the requirements for the degree of Master of Science in Computer Science
-###August 2016
+## A thesis submitted to the Graduate Division of The University of Hawaii at Manoa in partial fufillment of the requirements for the degree of Master of Science in Computer Science
+### August 2016
 
 This is a repository containing a LaTeX document for generating the above titled thesis in the format perscribed by the University of Hawaii.
 
