@@ -9,7 +9,7 @@ While detriments to SAON technologies are well documented \cite{Akbarzadeh2013} 
 
 \subsubsection{Cost Efficiency}
 \label{motivationCost}
-Section~\ref{CostAltTech} discusses the costs of marine telemetry systems, noting that acoustic telemetry systems produce data at a significantly lower ($\ge$10x cheaper) cost than VHF or GPS/Satellite based technologies.  In order to maintain the cost-efficiency of acoustic technology, a significant number of detections $\ge$~10$\%$ of the produced transmissions must be captured by the SAON's receiver array.  Given the numerous (but avoidable) impediments to reception of these acoustic signals (\ref{RulesOfThumb}), the array-design process becomes critical to maintaining the cost-efficiency of SAON technologies.  A free network design tool would help to maintain the cost-efficiency of SAONs by eliminating costs surrounding their design and evaluation, and increasing their data recovery rates.  
+Section~\ref{CostAltTech} discusses the costs of marine telemetry systems, noting that acoustic telemetry systems produce data at a significantly lower ($\ge$10x cheaper) cost than VHF, or GPS, or other Satellite based technologies.  In order to maintain the cost-efficiency of acoustic technology, a significant number of detections $\ge$~10$\%$ of the produced transmissions must be captured by the SAON's receiver array.  Given the numerous (but avoidable) impediments to reception of these acoustic signals (\ref{RulesOfThumb}), the array-design process becomes critical to maintaining the cost-efficiency of SAON technologies.  A free network design tool would help to maintain the cost-efficiency of SAONs by eliminating costs surrounding their design and evaluation, and increasing their data recovery rates.  
 
 
 \subsubsection{Metrics}
@@ -60,7 +60,7 @@ Modeling a 3-dimensional environment over time is computationally intensive, as 
 \label{bathymetricGrid}
 Bathymetry files are generally given as two-dimensional matrix of numerical values or a list of x,y,z values.  Bathymetric files describe a three-dimensional space as a regular grid of rectangular prisms (cells) with constant length (x-dimension) and width (y-dimension), but varying negative (depth is negative)  heights (z-dimension).  The resolution of a bathymetric file is given by the x and y (length and width) dimensions of its cells.  For example, a 50 meter Bathymetry file has cell sizes of approximately 50 meters square (although these cells are not necessarily perfectly square).  Bathymetric files include meta-data listing the file's beginning and ending coordinates (North/South Latitudes and East/West Longitudes), the grid size (the number of rows and columns) in cells, and grid resolution (either in linear distance or degrees of latitude/longitude).
 
-MANDe works on a two-dimensional, grid-based system, taking advantage of the grid given by the user-provided bathymetric file.  The Bathymetric Grid is a 2D Grid containing numerical values that describe a third dimension (depth).  The exact spatial extent and resolution of this description are given by the bathymetric file.  Thus, the resolution of MANDE's simulation and output are dictated by the resolution of the input bathymetric file. 
+MANDe works on a two-dimensional, grid-based system, taking advantage of the grid given by the user-provided bathymetric file.  The Bathymetric Grid is a 2D Grid containing numerical values that describe a third dimension (depth).  The exact spatial extent and resolution of this description are given by the bathymetric file.  Thus, the resolution of MANDe's simulation and output are dictated by the resolution of the input bathymetric file. 
 
 A cell $x$ (with row index $i$ and column index $j$) on the Bathymetry Grid ($A$) is referred to as $A_x$ or $A_{(i,j)}$.
 
@@ -98,7 +98,7 @@ Both strategies (duplicating depth and applying a smoothing function) for artifi
 		\caption{
 			\label{smooth}}
 	\end{subfigure}
-	\caption{(a) illustrates the bathymetric shadowing model for two adjacent cells within a bathymetric grid.  (b) shows how artifically increasing the resolution of the bathymetric grid from (a) using the duplication method of cell sub-division does not affect the bathymetric shadowing model but increases the number of cells to consider.  (c) shows how artificially increasing the resolution using a smoothing function increased the number of cells to consider and can lead to inflated signal reception.}
+	\caption{(a) illustrates the bathymetric shadowing model for two adjacent cells within a bathymetric grid.  (b) shows how artificially increasing the resolution of the bathymetric grid from (a) using the duplication method of cell sub-division does not affect the bathymetric shadowing model but increases the number of cells to consider.  (c) shows how artificially increasing the resolution using a smoothing function increased the number of cells to consider and can lead to inflated signal reception.}
 \end{figure}
 
 
@@ -114,9 +114,9 @@ In the real world, the transmission of an acoustic ping originates from the tagg
 
 \subsubsection{Behavior Grid}
 \label{behaviorGrid}
-Animals exhibit many different movement patterns and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution within the study space, and thus the network configuration that should be deployed to capture their movement.  To describe the distribution of transmissions released from tagged animals, a two dimensional Grid with the same dimensions and resolution as the Bathymetry Grid (Section~\ref{bathymetricGrid}) is used.  Each cell in this ''Behavior Grid'' ($B$) contains a positive real value indicating, out of all transmissions that will be released over the entire study period, the percentage of transmissions that are expected to be released from within that cell's water column.  This value can loosely be though of as the ''animal-residency'' of a cell.  A cell $x$ (with row index $i$ and column index $j$) on the Behavior Grid ($B$) is referred to as $B_x$ or $B_{(i,j)}$.
+Animals exhibit many different movement patterns and habitat preferences (both of which can vary in three-dimensional space).  This greatly affects their distribution within the study space, and thus the network configuration that should be deployed to capture their movement.  To describe the distribution of transmissions released from tagged animals, a two dimensional Grid with the same dimensions and resolution as the Bathymetry Grid (Section~\ref{bathymetricGrid}) is used.  Each cell in this ``Behavior Grid'' ($B$) contains a positive real value indicating, out of all transmissions that will be released over the entire study period, the percentage of transmissions that are expected to be released from within that cell's water column.  This value can loosely be though of as the ``animal-residency'' of a cell.  A cell $x$ (with row index $i$ and column index $j$) on the Behavior Grid ($B$) is referred to as $B_x$ or $B_{(i,j)}$.
 
-To populate this 2D grid with values, two behavioral models are provided to simulate the horizontal animal distribution.  Two more models are provided to simulate the vertical distribution.  $Note$: the terms ''animal'' and ''transmission'' are used interchangeably since acoustic transmissions are the metric being counted, but are emitted from the tags carried by animals.  
+To populate this 2D grid with values, two behavioral models are provided to simulate the horizontal animal distribution.  Two more models are provided to simulate the vertical distribution.  $Note$: the terms ``animal'' and ``transmission'' are used interchangeably since acoustic transmissions are the metric being counted, but are emitted from the tags carried by animals.  
 
 
 \subsubsection{Horizontal Movement Modeling}
@@ -231,7 +231,7 @@ Next, the slope between the receiver at $p$ and each cell in $C$ is determined. 
 \begin{figure}[ht]
 	\centering
 	\includegraphics[scale=0.5]{criticalSlope.png}
-	\caption{An illustration of how the critical slope, and $D_{max}$ are computed between cells $p$ and $q$.  The slope between the receiver and all interveening cells are computed (blue and red arrows).  Then, the greatest slope is selected as $m_{crit}$ (dark red arrow) because it poses the greates obstruction to vision of cell $q$.  Finally, $m_{crit}$ is projected into cell $q$ (the light red arrow) to determine $D_{max}$.
+	\caption{An illustration of how the critical slope, and $D_{max}$ are computed between cells $p$ and $q$.  The slope between the receiver and all intervening cells are computed (blue and red arrows).  Then, the greatest slope is selected as $m_{crit}$ (dark red arrow) because it poses the greatest obstruction to vision of cell $q$.  Finally, $m_{crit}$ is projected into cell $q$ (the light red arrow) to determine $D_{max}$.
 		\label{LoSimage}}
 \end{figure}
 

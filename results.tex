@@ -60,7 +60,7 @@ Many of the modules in this framework can be used as stand-alone functions that 
 Many of MANDe's key functionalities (Evaluation Algorithms, Suppression, Animal Modeling, Network Statistics) operate over very simple data containers (Grids).   This simplified data format makes it easy to import, export, and convert between other data formats.  This simplified format also makes it easy to move data between MANDe and other R scripts.
 
 \subsubsection{Customizable}
-While other applications and methodologies optimize for fixed-objective functions (k-neighbor coverage, fixed detection probability, etc), MANDe allows for user-customized objective (''Goodness'') functions.  Section~\ref{dispatcherFunctions} discusses dispatcher functions, which serve as abstract entry points into stand-alone modules, and allow highly-customized sub-functions to be aggregated together into uniform modules.  These dispatcher functions makes it easy to integrate new functionality into the framework without affecting other sub-functions.  
+While other applications and methodologies optimize for fixed-objective functions (k-neighbor coverage, fixed detection probability, etc), MANDe allows for user-customized objective (``Goodness'') functions.  Section~\ref{dispatcherFunctions} discusses dispatcher functions, which serve as abstract entry points into stand-alone modules, and allow highly-customized sub-functions to be aggregated together into uniform modules.  These dispatcher functions makes it easy to integrate new functionality into the framework without affecting other sub-functions.  
 
 \subsection{Drawbacks}
 \subsubsection{Explicit Data Validation}
@@ -73,7 +73,7 @@ While a fully functional application is provided as a demonstration of this fram
 This framework was implemented in the R programming language primarily due to its popularity within the biological community.  While R is sufficient for small and medium scale simulations, a compiled language would offer significantly faster execution at all simulation levels.  Additionally, the R platform does not offer good support for reverse compatibility.  Specifically, R packages need to be recompiled under the local system's version of R.  If this compilation is unsuccessful (perhaps due to a difference in R versions, or operating system limitations), the package will not function.  If an application requires a significant number of R packages, then it is likely to be limited to operating within a specific version of R.
 
 \section{Future Work}
-\subsection{Emperical Analysis}
+\subsection{Empirical  Analysis}
 The analytical framework described herein is largely theoretical, despite a basis in well documented physical phenomena.  In order to better understand the correctness of this framework, it would be useful to analyze empirical data from acoustic networks, of varying scales, designed with it.
 
 \subsubsection{Acoustic Coverage}
@@ -89,9 +89,9 @@ Recall that the function of the Goodness Grid is to store Goodness values for va
 \subsection{Interactive Visualizations}
 It could be useful to allow users to interact with the output graphs as a graphical user interface.  Users would able to move receivers around the graph and see how new placements affects network statistics in real-time.  Given that the Goodness Grid can be pre-computed, moving receivers and updating the effects of that movement in real-time requires very little re-computation.  In this case, it might be unnecessary to even pre-compute the Goodness Grid, but instead only preform the Evaluation Algorithm on cells where a user places a receiver.  This would allow users to quickly see how various receiver arrangements affect their network design, and facilitate rapid, impromptu prototyping of various configurations.  
 
-Utilizing 3D visualizations could further enhance the user's understanding of network topology.  Figure~\ref{3d} illustrates a first-person view of the 3D environment modeled by the program.  Here, bathymetry is rendered as 3D mounds, with animal distributions represented by green fish, and receiver coverage by red spheres.  Users might be able to ''swim'' through the 3D environment, viewing their network from various angles.  Such a visualization would help users better understand what kind of animal behavior is being modeled, how their array is laid out, and where modifications might be helpful.
+Utilizing 3D visualizations could further enhance the user's understanding of network topology.  Figure~\ref{3d} illustrates a first-person view of the 3D environment modeled by the program.  Here, bathymetry is rendered as 3D mounds, with animal distributions represented by green fish, and receiver coverage by red spheres.  Users might be able to ``swim'' through the 3D environment, viewing their network from various angles.  Such a visualization would help users better understand what kind of animal behavior is being modeled, how their array is laid out, and where modifications might be helpful.
 
 \begin{figure}[ht]
 	\includegraphics[scale=.45]{3d.png}
-	\caption{A first-person view of the 3D space modeled in the program.  Users would be able to ''swim'' through the environment and gain a better perspective on what they are modelling, what their receiver array might look like in the environment, and where more receivers might be needed.\label{3d}}
+	\caption{A first-person view of the 3D space modeled in the program.  Users would be able to ``swim'' through the environment and gain a better perspective on what they are modeling, what their receiver array might look like in the environment, and where more receivers might be needed.\label{3d}}
 \end{figure}
