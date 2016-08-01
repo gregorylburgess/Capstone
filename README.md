@@ -1,13 +1,12 @@
-# sample-thesis
+# Procedural Optimiazation and Measurement of Passive Acoustic Sensor Networks for Animal Observaion in Marine Environments
+## A thesis submitted to the Graduate Division of The University of Hawaii at Manoa in partial fufillment of the requirements for the degree of Master of Science in Computer Science
+### August 2016
 
-This is a repository containing a skeleton LaTeX document for generating University of Hawaii theses.
+This is a repository containing a LaTeX document for generating the above titled thesis in the format perscribed by the University of Hawaii.
 
 It uses  [LaTeX UHM Thesis Style, v 2.2.0beta](https://github.com/rbrewer/latex-uhm-thesis/releases/tag/v2.2.0beta).
 
-To use this, I recommend downloading and installing [TexLive 2015](https://www.tug.org/texlive/).
-
 The sample document is organized in the following way:
-
 uhthesis.cls  (The style file.)
 
 thesis.tex    (The 'master' file.   Sets up the document, and includes the following files:)
@@ -22,7 +21,7 @@ thesis.tex    (The 'master' file.   Sets up the document, and includes the follo
 * conclusion.tex
 * references.bib
 
-This repo also includes a convenient Makefile for generating the PDF.  After downloading this repo and installing TexLive, you should be able to generate a PDF version of the sample document (called thesis.pdf) by typing 'make':
+This repo includes a convenient Makefile for generating the PDF.  After downloading this repo, you should be able to generate a PDF version of the sample document (called thesis.pdf) by typing 'make':
 
 ```
 [~/github/csdl/sample-thesis]-> make
@@ -54,5 +53,3 @@ i-ble out-put $\OML/cmm/m/it/10.95 <$\OT1/cmr/m/n/10.95 http://www.hotwired.com
 
 Success!  Wrote 16 pages, 138631 bytes to thesis.pdf
 ```
-
-The gitignore file is set up to exclude all the intermediate files from being committed to the repo.  You can also do 'make clean' to get rid of them (but this will also delete the PDF file.)
